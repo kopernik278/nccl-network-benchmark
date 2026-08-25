@@ -4,32 +4,52 @@
 
 NCCL / RDMA Communication Benchmark
 
-## Goal
+## Career Target
 
-Build a systems-oriented GPU communication benchmark and analysis platform
-for studying communication used by distributed LLM training.
+This project is designed primarily as portfolio evidence for:
 
-The project is intended as portfolio evidence for:
+- AI Training Infrastructure Engineer
+- Distributed Training Engineer
+- HPC Engineer
+- GPU Performance Engineer
 
-- AI Training Infrastructure
-- Distributed Training
-- HPC
-- GPU Performance Engineering
+## Project Goal
 
-## Main Questions
+Build a systems-oriented GPU communication benchmark, implementation,
+profiling, and optimization platform for studying communication used in
+distributed LLM training.
 
-1. How do NCCL collective operations behave across message sizes?
-2. How does GPU topology affect communication performance?
-3. What is the difference between intra-node and inter-node communication?
-4. Where do latency and bandwidth bottlenecks come from?
-5. How do TCP, RoCE and InfiniBand differ?
-6. How does NCCL choose communication algorithms and paths?
+The project should demonstrate the ability to:
+
+- understand GPU communication;
+- implement communication components;
+- benchmark real hardware;
+- analyze topology;
+- profile communication behavior;
+- identify bottlenecks;
+- optimize communication;
+- explain engineering trade-offs.
+
+---
+
+## Main Research Questions
+
+1. How do NCCL collectives behave across different message sizes?
+2. How does GPU topology affect collective performance?
+3. How do intra-node and inter-node communication differ?
+4. Where do communication latency and bandwidth bottlenecks originate?
+5. How do TCP, RoCE, and InfiniBand differ in distributed GPU training?
+6. How does NCCL choose algorithms, protocols, and communication paths?
 7. How does Ring AllReduce work internally?
-8. When can communication overlap with computation?
+8. How close can a simplified implementation get to NCCL?
+9. When can communication overlap with computation?
+10. What factors limit distributed training scaling efficiency?
 
-## Collectives
+---
 
-Primary:
+## Primary Collectives
+
+Study and benchmark:
 
 - Point-to-Point
 - AllReduce
@@ -37,7 +57,9 @@ Primary:
 - ReduceScatter
 - Broadcast
 
-## Metrics
+---
+
+## Primary Metrics
 
 Measure where applicable:
 
@@ -45,72 +67,365 @@ Measure where applicable:
 - algorithmic bandwidth
 - bus bandwidth
 - scaling efficiency
+- communication time
 - GPU utilization
 - CPU utilization
-- communication time
-- synchronization / idle time
+- synchronization
+- GPU idle time
+- communication/computation overlap
+
+---
 
 ## Project Phases
 
-Phase 0
-Development environment and repository setup
+### Phase 0 — Development Platform
 
-Phase 1
-Single-node NCCL baseline
+Build:
 
-Phase 2
-Topology-aware multi-GPU experiments
+- VS Code
+- Claude Code
+- GitHub
+- RunPod integration
+- repository structure
+- autonomous infrastructure workflow
 
-Phase 3
-Multi-node TCP baseline
+### Phase 1 — NCCL Baseline
 
-Phase 4
-RoCE experiments
+Establish basic NCCL functionality and benchmark methodology.
 
-Phase 5
-InfiniBand experiments
+Validate:
 
-Phase 6
-Simplified Ring AllReduce implementation
+- environment
+- NCCL initialization
+- correctness
+- benchmark harness
+- result capture
 
-Phase 7
-Communication profiling
+### Phase 2 — Single-Node Multi-GPU Communication
 
-Phase 8
-Communication optimization
+Study:
 
-Phase 9
-Final reproducibility and portfolio documentation
+- PCIe
+- NVLink
+- NVSwitch where available
+- GPU topology
+- collective scaling
+- message-size behavior
 
-## Cost Policy
+### Phase 3 — Multi-Node TCP Baseline
 
-Cloud GPU hardware must be used economically.
+Establish inter-node communication baseline without assuming RDMA.
 
-Development hierarchy:
+### Phase 4 — RoCE
 
-Local Mac
-→ cheapest suitable single GPU
-→ single-node multi-GPU
-→ two-node cluster
-→ larger cluster only when justified
+Run real RoCE experiments only on infrastructure that actually exposes
+RoCE networking.
 
-Multi-node RDMA resources are reserved primarily for experiments that
-cannot be reproduced on cheaper hardware.
+Study:
 
-GPU instances should be stopped immediately after required measurements
-and artifacts have been saved.
+- RDMA behavior
+- bandwidth
+- latency
+- NCCL behavior
+- scaling
+- topology
+- GPUDirect RDMA where available
 
-## Project Standard
+### Phase 5 — InfiniBand
 
-A phase is not considered complete merely because code executes.
+Run real InfiniBand experiments on matching infrastructure.
 
-Important phases should produce:
+Study:
 
-- implementation
-- correctness evidence
-- benchmark configuration
-- real measurements
-- analysis
-- profiling evidence when applicable
+- IB transport
+- GPUDirect RDMA
+- collective performance
+- scaling behavior
+- topology
+
+### Phase 6 — Simplified Ring AllReduce
+
+Implement and verify a simplified Ring AllReduce.
+
+Compare with NCCL.
+
+Analyze:
+
+- algorithm
+- correctness
+- bandwidth utilization
+- synchronization
+- implementation overhead
+
+### Phase 7 — Communication Profiling
+
+Use:
+
+- NCCL logs
+- Nsight Systems
+- Nsight Compute where appropriate
+- GPU/system topology tools
+
+Identify real bottlenecks.
+
+### Phase 8 — Communication Optimization
+
+Investigate techniques such as:
+
+- communication/computation overlap
+- message/bucket tuning
+- collective selection
+- NCCL configuration
+- topology-aware configuration
+- algorithm/protocol tuning where supported
+
+### Phase 9 — Final Reproducibility
+
+Produce:
+
+- reproducible experiments
+- final benchmark tables
+- plots
+- architecture documentation
+- bottleneck analysis
+- before/after optimization comparison
 - limitations
-- reproducibility instructions
+- portfolio-quality README
+
+---
+
+## Engineering Workflow
+
+Every important component should follow:
+
+Theory
+→ Architecture
+→ Design
+→ Implementation
+→ Correctness
+→ Baseline
+→ Profiling
+→ Bottleneck
+→ Optimization
+→ Benchmark Again
+→ Documentation
+
+Correctness comes before optimization.
+
+Measurements come before performance claims.
+
+---
+
+## Infrastructure Architecture
+
+Development:
+
+Mac
++ VS Code
++ Claude Code
+
+Source control:
+
+GitHub
+
+Cloud execution:
+
+RunPod
+
+Claude Code acts as the infrastructure execution agent.
+
+Claude may autonomously:
+
+- choose suitable RunPod hardware;
+- create resources;
+- configure resources;
+- start resources;
+- stop resources;
+- terminate resources;
+- deploy code;
+- execute experiments;
+- collect results.
+
+Individual infrastructure operations do not require user approval.
+
+---
+
+## Cost Philosophy
+
+Cloud GPU resources represent real monetary cost.
+
+Infrastructure must therefore be used economically.
+
+The governing principle is:
+
+USE THE CHEAPEST RESOURCE THAT CAN CORRECTLY ANSWER THE CURRENT QUESTION.
+
+Escalation hierarchy:
+
+Local
+→ cheapest suitable single GPU
+→ smallest suitable multi-GPU node
+→ smallest suitable multi-node system
+→ premium cluster only when required
+
+Development and debugging should be moved away from expensive hardware
+whenever possible.
+
+Multi-node RDMA hardware should primarily be used for experiments that
+cannot be reproduced on cheaper infrastructure.
+
+Expensive machines should primarily perform measurements rather than
+general development.
+
+---
+
+## Infrastructure Cleanup
+
+After a GPU-dependent experiment:
+
+results
+→ logs
+→ metadata
+→ repository
+→ terminate compute
+→ verify cleanup
+
+Do not leave GPU resources running during offline analysis,
+documentation, or plotting.
+
+---
+
+## Benchmark Integrity
+
+Never fabricate performance results.
+
+Measured numbers must come from actual experiments.
+
+Vendor specifications must be labelled as specifications.
+
+Estimated results must be labelled as estimates.
+
+RoCE measurements require real RoCE infrastructure.
+
+InfiniBand measurements require real InfiniBand infrastructure.
+
+Do not silently substitute TCP results for RDMA measurements.
+
+---
+
+## Reproducibility
+
+Every important experiment should record:
+
+- experiment ID
+- Git commit
+- hardware
+- GPU count
+- node count
+- topology
+- network
+- CUDA
+- driver
+- NCCL
+- MPI where relevant
+- compiler
+- message sizes
+- datatype
+- iteration count
+- environment variables
+- command
+- timestamp
+
+---
+
+## AI Collaboration
+
+### User
+
+Role:
+
+Engineer / learner / project owner
+
+Responsibilities:
+
+- understand system design;
+- understand important code;
+- understand experiments;
+- make high-level project decisions;
+- develop independent engineering ability.
+
+The user does not need to manually operate RunPod during normal project
+execution.
+
+### ChatGPT
+
+Role:
+
+AI Infra tutor and systems/performance reasoning partner
+
+Responsibilities:
+
+- explain theory;
+- explain implementation;
+- design architecture;
+- design experiments;
+- review technical decisions;
+- interpret benchmark results;
+- analyze profiling;
+- identify bottlenecks;
+- propose optimizations;
+- connect project work to interview expectations.
+
+### Claude Code
+
+Role:
+
+Coding and infrastructure execution agent
+
+Responsibilities:
+
+- repository navigation;
+- implementation;
+- tests;
+- debugging;
+- scripts;
+- builds;
+- Git workflow;
+- RunPod infrastructure;
+- environment setup;
+- benchmark execution;
+- profiling execution;
+- result collection;
+- resource cleanup.
+
+Claude must remain cost-aware while operating infrastructure
+autonomously.
+
+---
+
+## Final Project Standard
+
+The project is not complete merely because NCCL executes.
+
+Completion requires:
+
+- correct implementation;
+- correctness tests;
+- benchmark harness;
+- actual benchmark results;
+- topology analysis;
+- profiling evidence;
+- bottleneck analysis;
+- at least one meaningful optimization;
+- before/after comparison;
+- simplified Ring AllReduce implementation;
+- reproducibility;
+- clear documentation;
+- explicit limitations.
+
+The strongest final evidence should be:
+
+"I identified a real GPU communication bottleneck, measured it,
+understood its cause, changed the system or configuration, and
+demonstrated the resulting performance difference using reproducible
+experiments."

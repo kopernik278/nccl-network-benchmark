@@ -4,116 +4,80 @@
 
 Distributed LLM training depends heavily on GPU communication.
 
-This project studies GPU collective communication from the application,
-runtime, topology, and network levels.
+As training scales across multiple GPUs and multiple nodes,
+collective communication can become a major performance bottleneck.
+
+This project studies GPU communication from several levels:
+
+- collective communication algorithms;
+- NCCL runtime behavior;
+- GPU topology;
+- intra-node interconnects;
+- inter-node networking;
+- RDMA;
+- RoCE;
+- InfiniBand;
+- communication/computation overlap.
+
+The goal is not only to run existing benchmarks.
+
+The project should develop the ability to understand, measure,
+profile, diagnose, implement, and optimize GPU communication systems
+used by distributed AI training.
+
+---
 
 ## Goals
 
 - Benchmark important NCCL collectives.
-- Understand latency/bandwidth behavior.
-- Analyze topology effects.
-- Study intra-node and inter-node communication.
-- Experiment with RoCE and InfiniBand where real hardware is available.
+- Understand latency and bandwidth behavior across message sizes.
+- Analyze GPU topology effects.
+- Compare intra-node and inter-node communication.
+- Study TCP, RoCE, and InfiniBand communication.
+- Investigate NCCL algorithms, protocols, and communication paths.
 - Implement a simplified Ring AllReduce.
+- Compare the simplified implementation with NCCL.
 - Profile communication behavior.
+- Identify real communication bottlenecks.
 - Investigate communication/computation overlap.
+- Perform measurable communication optimization.
+
+---
 
 ## Non-Goals
 
 Initially this project will not:
 
 - build a complete replacement for NCCL;
-- implement a production RDMA stack;
-- reproduce data-center-scale measurements;
-- claim RoCE/InfiniBand performance without real matching hardware.
+- implement a production-quality RDMA stack;
+- implement a production InfiniBand or RoCE driver;
+- reproduce hyperscale datacenter benchmarks;
+- claim RoCE performance without real RoCE infrastructure;
+- claim InfiniBand performance without real InfiniBand infrastructure;
+- present theoretical or vendor bandwidth as measured benchmark data.
+
+---
 
 ## Architecture
 
-Benchmark Runner
-      |
-      +-- NCCL tests
-      |
-      +-- Custom P2P
-      |
-      +-- Custom Collectives
-      |
-      +-- Ring AllReduce
-      |
-      +-- Profiling
-      |
-      +-- Result Parser
-      |
-      +-- Analysis / Plotting
-
-## Experimental Layers
-
-Layer 1:
-single GPU / development validation
-
-Layer 2:
-single-node multi-GPU
-
-Layer 3:
-multi-node TCP
-
-Layer 4:
-multi-node RoCE
-
-Layer 5:
-multi-node InfiniBand
-
-## Correctness
-
-Before benchmark data is accepted:
-
-- processes/ranks must initialize correctly;
-- collective outputs must be verified;
-- CUDA/NCCL errors must be checked;
-- benchmark configuration must be recorded.
-
-## Performance Measurements
-
-Primary metrics:
-
-- latency
-- algorithmic bandwidth
-- bus bandwidth
-- scaling efficiency
-
-Supporting metrics:
-
-- GPU utilization
-- CPU utilization
-- synchronization
-- communication timeline
-
-## Cost Strategy
-
-Paid GPU resources are only used when required by the experiment.
-
-Before multi-node experiments:
-
-1. implementation must already work;
-2. command-line interface must already be validated;
-3. output parser must already work;
-4. experiment matrix must be defined;
-5. expected run count must be known.
-
-Expensive cluster time should primarily be measurement time,
-not development/debugging time.
-
-## Risks
-
-- cloud providers may expose different network fabrics;
-- GPU/NIC topology may vary;
-- RDMA privileges may be restricted;
-- Nsight hardware counters may be unavailable;
-- multi-node debugging may consume excessive cloud time.
-
-## Future Work
-
-- NCCL algorithm comparison
-- NCCL protocol comparison
-- topology-aware analysis
-- communication/computation overlap
-- collective tuning
+```text
+                    Benchmark Platform
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ↓                ↓                ↓
+      NCCL Tests       Custom Code      Profiling
+          │                │                │
+          │          ┌─────┴──────┐         │
+          │          ↓            ↓         │
+          │         P2P      Ring AllReduce │
+          │                               │
+          └───────────────┬───────────────┘
+                          ↓
+                    Result Collection
+                          ↓
+                    Result Parser
+                          ↓
+                     Analysis
+                          ↓
+                       Plots

@@ -5,9 +5,22 @@
 NCCL / RDMA Communication Benchmark
 
 Target roles:
+
 - AI Training Infrastructure Engineer
 - Distributed Training Engineer
 - HPC / GPU Performance Engineer
+
+Claude Code acts as both:
+
+1. the coding agent;
+2. the RunPod infrastructure execution agent.
+
+Claude is allowed to autonomously create, start, stop, terminate,
+and configure RunPod resources without asking the user for approval.
+
+However, all infrastructure decisions must be cost-aware.
+
+---
 
 ## Core Engineering Workflow
 
@@ -29,6 +42,8 @@ Do not optimize without measurements.
 
 Do not claim performance results that were not actually measured.
 
+---
+
 ## Correctness First
 
 Before performance optimization:
@@ -37,80 +52,320 @@ Before performance optimization:
 - verify collective communication correctness;
 - verify tensor/data consistency across ranks;
 - check return codes;
-- check NCCL/CUDA errors;
-- keep deterministic tests where feasible.
+- check CUDA errors;
+- check NCCL errors;
+- preserve deterministic tests where feasible.
+
+A benchmark result is invalid if correctness has not been established.
+
+---
 
 ## Benchmark Rules
 
 Every real benchmark must record:
 
+- experiment ID
 - date/time
 - git commit
+- cloud/provider
 - GPU model
 - GPU count
 - node count
-- topology
-- NIC/network
+- CPU where relevant
+- GPU topology
+- NIC/network type
 - CUDA version
+- NVIDIA driver version
 - NCCL version
-- driver version
+- compiler version
+- MPI version where applicable
 - message size
 - collective
+- datatype
 - number of iterations
 - warmup iterations
 - environment variables
-- command used
+- benchmark command
 
 Never fabricate benchmark numbers.
 
-Theoretical or expected values must be explicitly labelled as theoretical/estimated.
+Theoretical, estimated, expected, or vendor-advertised numbers must be
+clearly labelled and must never be presented as measured results.
 
-## Cost-Aware Infrastructure Policy
+Do not claim RoCE or InfiniBand measurements unless the actual
+experiment ran on matching hardware/network infrastructure.
 
-RunPod and other GPU cloud resources cost real money.
+---
 
-Default rule:
+## Autonomous RunPod Infrastructure Policy
 
-LOCAL FIRST
-→ CHEAPEST GPU VALIDATION
-→ SINGLE NODE
-→ MULTI GPU
-→ MULTI NODE RDMA
+Claude is responsible for normal RunPod infrastructure operations.
 
-Use the smallest resource capable of validating the current hypothesis.
+Claude may autonomously:
 
-Claude must NOT:
+- inspect available GPU types;
+- inspect pricing;
+- inspect datacenters;
+- inspect existing Pods/resources;
+- create Pods;
+- create required infrastructure;
+- start Pods;
+- stop Pods;
+- terminate Pods;
+- configure environments;
+- connect through SSH;
+- deploy the repository;
+- run experiments;
+- collect results;
+- inspect billing information;
+- clean up resources.
 
-- create RunPod resources autonomously;
-- resize or scale a cluster autonomously;
-- start expensive multi-node experiments without explicit user approval;
-- leave GPU instances running unnecessarily;
-- launch long benchmark sweeps without first estimating experiment scope;
-- repeat failed expensive experiments without diagnosing the failure first.
+User approval is NOT required for individual RunPod operations.
 
-Before proposing a paid GPU experiment, provide:
+Infrastructure autonomy does NOT mean unrestricted spending.
 
-1. Purpose
-2. Minimum hardware required
-3. GPU count
-4. Node count
-5. Expected commands
-6. Number of benchmark runs
-7. Expected output
-8. Stop condition
+Claude must treat cloud GPU resources as expensive experimental equipment.
 
-Prefer development, compilation, unit tests, parsing, plotting,
-documentation, and static analysis on local hardware whenever possible.
+---
 
-## Experimental Discipline
+## Cost-Aware Execution Policy
 
-Change one important variable at a time.
+Always use the cheapest infrastructure capable of answering the current
+engineering question correctly.
 
-Keep raw benchmark output separate from processed summaries.
+Use the following hierarchy:
 
-Do not overwrite benchmark results.
+Local development
+→ cheapest suitable single GPU
+→ smallest suitable multi-GPU node
+→ smallest suitable multi-node configuration
+→ larger or premium hardware only when technically necessary
 
-Each experiment should have an identifiable experiment ID.
+Do not use expensive hardware merely because it is faster.
+
+Do not use H100, H200, B200, or similar premium GPUs when a cheaper GPU
+can validate the same correctness, software, NCCL, or profiling question.
+
+Premium hardware is justified when required by:
+
+- topology;
+- interconnect;
+- GPU count;
+- RDMA capability;
+- RoCE capability;
+- InfiniBand capability;
+- GPUDirect RDMA;
+- memory capacity;
+- architecture-specific investigation;
+- final representative benchmark.
+
+Before provisioning infrastructure, Claude should internally determine:
+
+1. what question the experiment answers;
+2. minimum GPU count;
+3. minimum node count;
+4. required network/interconnect;
+5. cheapest suitable hardware;
+6. expected benchmark scope;
+7. expected runtime;
+8. termination condition.
+
+The user does not need to approve this plan.
+
+---
+
+## Avoid Paying for Development Time
+
+Whenever possible, perform the following locally before starting RunPod:
+
+- architecture design;
+- documentation;
+- Python result parsers;
+- plotting code;
+- benchmark matrix generation;
+- shell script development;
+- configuration generation;
+- static analysis;
+- code review;
+- experiment planning.
+
+For GPU-dependent work:
+
+prepare as much as possible before provisioning hardware.
+
+Expensive GPU time should primarily be used for:
+
+- CUDA compilation when required;
+- GPU correctness tests;
+- NCCL execution;
+- topology experiments;
+- multi-GPU experiments;
+- RDMA experiments;
+- RoCE experiments;
+- InfiniBand experiments;
+- GPU profiling;
+- final performance measurements.
+
+---
+
+## Progressive Hardware Escalation
+
+Do not immediately escalate to expensive multi-node infrastructure.
+
+Use:
+
+L0 — Local machine
+L1 — Single GPU
+L2 — Single-node multi-GPU
+L3 — Multi-node networked GPUs
+
+Only move to a higher level when the current experiment genuinely
+requires capabilities unavailable at the lower level.
+
+Examples:
+
+A parser bug does not require a GPU.
+
+An NCCL initialization test does not require a multi-node cluster.
+
+An intra-node AllReduce benchmark does not require RoCE.
+
+A true RoCE or InfiniBand benchmark requires matching real infrastructure.
+
+---
+
+## Experiment Efficiency
+
+Before starting an expensive experiment:
+
+- ensure the code path is ready;
+- ensure configuration is ready;
+- ensure the benchmark command is ready;
+- ensure output collection is ready;
+- ensure result parsing is ready where possible.
+
+Avoid interactive debugging on expensive multi-node hardware.
+
+Prefer:
+
+prepare
+→ provision
+→ execute
+→ collect
+→ terminate
+→ analyze locally
+
+rather than:
+
+provision
+→ begin development
+→ debug interactively
+→ leave GPUs idle
+
+---
+
+## Automatic Resource Cleanup
+
+Claude is responsible for cleaning up RunPod resources.
+
+After an experiment finishes:
+
+1. save required benchmark results;
+2. save useful logs;
+3. preserve reproducibility metadata;
+4. push important code/results where appropriate;
+5. terminate unnecessary GPU compute;
+6. remove unnecessary persistent resources;
+7. verify that unintended paid resources are not still running.
+
+Do not keep GPUs running while performing long result analysis or writing
+documentation.
+
+If another GPU experiment is not immediately required, terminate the
+compute resource.
+
+---
+
+## Failure Policy
+
+Cloud failures can waste significant money.
+
+If an expensive experiment fails unexpectedly:
+
+1. capture the failure;
+2. preserve logs;
+3. stop repeated execution;
+4. diagnose the root cause;
+5. fix locally or on cheaper hardware where possible;
+6. rerun the expensive experiment only after a plausible fix exists.
+
+Do not repeatedly retry the same failing multi-node job.
+
+---
+
+## Benchmark Sweep Policy
+
+Do not launch unnecessarily large parameter sweeps.
+
+Start with a small representative experiment matrix.
+
+Example:
+
+small message
+medium message
+large message
+
+Verify behavior first.
+
+Only then expand to the full benchmark matrix.
+
+Change one major independent variable at a time where practical.
+
+---
+
+## Experimental Data
+
+Never overwrite benchmark results.
+
+Store experiments using unique experiment IDs.
+
+Raw measurements and processed summaries must remain distinguishable.
+
+Suggested structure:
+
+results/raw/<experiment-id>/
+results/summary/<experiment-id>/
+
+Important benchmark summaries should include enough metadata to reproduce
+the run.
+
+---
+
+## Profiling Policy
+
+Use profiling to answer a specific performance question.
+
+Nsight Systems:
+
+- CPU/GPU timeline
+- NCCL communication
+- GPU idle time
+- synchronization
+- communication/computation overlap
+- kernel launch gaps
+
+Nsight Compute:
+
+- individual GPU kernels
+- occupancy
+- memory throughput
+- register pressure
+- instruction behavior
+- Tensor Core utilization where relevant
+
+Do not collect expensive profiling traces without a specific question.
+
+---
 
 ## Code Changes
 
@@ -120,9 +375,22 @@ Do not rewrite large parts of the repository unnecessarily.
 
 Preserve working baselines.
 
-Performance-sensitive code should be isolated and measurable.
+Add correctness tests where appropriate.
 
-Explain non-obvious CUDA, NCCL, MPI, RDMA, RoCE, and InfiniBand behavior.
+Performance-sensitive code should remain isolated and measurable.
+
+Explain non-obvious behavior involving:
+
+- CUDA
+- NCCL
+- MPI
+- RDMA
+- RoCE
+- InfiniBand
+- GPUDirect RDMA
+- GPU topology
+
+---
 
 ## Git
 
@@ -130,20 +398,68 @@ Use small logical commits.
 
 Do not commit:
 
-- large Nsight traces;
-- build artifacts;
 - secrets;
-- SSH keys;
-- API tokens.
+- API keys;
+- OAuth tokens;
+- SSH private keys;
+- credentials;
+- large raw Nsight traces;
+- temporary build artifacts.
 
-## Communication With User
+Never print secrets into logs or documentation.
 
-After important changes report:
+---
 
-1. What changed
-2. Why
-3. How to test
-4. Expected result
-5. Whether GPU resources are required
-6. Estimated experiment scope
-7. Next step
+## Claude ↔ RunPod Security
+
+Prefer authenticated official tooling and OAuth where available.
+
+Never place RunPod credentials inside:
+
+- source files;
+- README;
+- PROJECT_CONTEXT.md;
+- CLAUDE.md;
+- git history.
+
+Never expose authentication tokens in benchmark output.
+
+---
+
+## Reporting
+
+After each important experiment, report:
+
+1. experiment purpose;
+2. infrastructure used;
+3. actual hardware;
+4. actual cost-relevant resource configuration;
+5. what was executed;
+6. correctness result;
+7. benchmark result;
+8. observed bottleneck;
+9. limitations;
+10. infrastructure cleanup status;
+11. next recommended experiment.
+
+If billing information is available, include the observed experiment cost.
+
+---
+
+## Primary Goal
+
+The purpose of this project is not to run as many GPU experiments as
+possible.
+
+The goal is to demonstrate that the engineer can:
+
+understand
+→ implement
+→ measure
+→ profile
+→ diagnose
+→ optimize
+→ explain
+
+distributed GPU communication systems while using infrastructure
+efficiently.
