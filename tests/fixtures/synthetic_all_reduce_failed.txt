@@ -1,0 +1,20 @@
+# ============================================================================
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. See synthetic_all_reduce.txt.
+#
+# A run that FAILED validation: nonzero #wrong on one row and a FAILED trailer.
+# Used to prove the parser refuses to mark such rows correctness_ok, so they
+# are excluded from performance analysis rather than quietly averaged in.
+# ============================================================================
+# nThread 1 nGpus 2 minBytes 8 maxBytes 32768 step: 4096(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   9999 on  synthetic-host device  0 [0x01] NVIDIA RTX A5000
+#  Rank  1 Group  0 Pid   9999 on  synthetic-host device  1 [0x02] NVIDIA RTX A5000
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                                       (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)
+           8             2     float     sum      -1    30.00    0.00    0.00      0    29.00    0.00    0.00      0
+       32768          8192     float     sum      -1    40.00    0.82    0.82     17    39.00    0.84    0.84      0
+# Out of bounds values : 17 FAILED
+#

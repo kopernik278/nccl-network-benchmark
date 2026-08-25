@@ -1,0 +1,25 @@
+# ============================================================================
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. See synthetic_all_reduce.txt.
+#
+# Layout: legacy nccl-tests header for a non-reduction collective, which omits
+# the redop and root columns. This exists to prove the parser derives column
+# positions from the header instead of assuming fixed offsets — a fixed-offset
+# parser would silently read algbw out of the wrong column here.
+#
+# busbw is deliberately algbw * (n-1)/n = algbw * 0.5 for n=2, so the H5
+# bus/algorithmic bandwidth self-check must pass.
+# ============================================================================
+# nThread 1 nGpus 2 minBytes 8 maxBytes 33554432 step: 2048(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   4321 on  synthetic-host device  0 [0x01] NVIDIA RTX A5000
+#  Rank  1 Group  0 Pid   4321 on  synthetic-host device  1 [0x02] NVIDIA RTX A5000
+#
+#                                              out-of-place                       in-place
+#       size         count      type     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                     (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)
+       32768          4096     float    40.00    0.82    0.41      0    39.00    0.84    0.42      0
+    33554432       4194304     float  2800.00   11.98    5.99      0  2750.00   12.20    6.10      0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 3.23
+#

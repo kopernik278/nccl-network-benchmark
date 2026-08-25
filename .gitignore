@@ -25,9 +25,16 @@ cmake-build-*/
 *.qdrep
 *.ncu-rep
 
-# Raw benchmark data can become large
+# Raw benchmark data can become large.
+# Keep the small text artifacts that make a run reproducible — verbatim tool
+# output, env.json, run_manifest.json — and exclude everything else (dumps,
+# archives, traces). Reproducibility requires the raw evidence to be in git.
 results/raw/*
 !results/raw/.gitkeep
+!results/raw/*/
+results/raw/*/*
+!results/raw/*/*.txt
+!results/raw/*/*.json
 
 profiles/raw/*
 !profiles/raw/.gitkeep

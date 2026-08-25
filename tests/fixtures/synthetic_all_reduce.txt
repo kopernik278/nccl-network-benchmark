@@ -1,0 +1,27 @@
+# ============================================================================
+# SYNTHETIC FIXTURE — NOT MEASURED DATA.
+#
+# Hand-written input for the parser unit tests. The numbers below were made up
+# to exercise column parsing and were NEVER produced by running nccl-tests on
+# any hardware. They must never be cited, plotted, or copied into results/.
+#
+# The literal token SYNTHETIC above is an interlock: parse_nccl_output.py
+# detects it and tags every resulting row value_kind="synthetic".
+#
+# Layout: modern nccl-tests header (includes the redop and root columns).
+# ============================================================================
+# nThread 1 nGpus 2 minBytes 8 maxBytes 134217728 step: 4096(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   1234 on  synthetic-host device  0 [0x01] NVIDIA RTX A5000
+#  Rank  1 Group  0 Pid   1234 on  synthetic-host device  1 [0x02] NVIDIA RTX A5000
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                                       (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)
+           8             2     float     sum      -1    30.00    0.00    0.00      0    29.00    0.00    0.00      0
+       32768          8192     float     sum      -1    40.00    0.82    0.82      0    39.00    0.84    0.84      0
+   134217728      33554432     float     sum      -1 11000.00   12.20   12.20      0 10900.00   12.31   12.31      0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 4.35
+#
