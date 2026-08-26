@@ -246,7 +246,11 @@ Claude may autonomously:
 - execute experiments;
 - collect results.
 
-Individual infrastructure operations do not require user approval.
+Individual infrastructure operations do not require user approval when
+the total planned compute cost is at or below USD 3.00 per hour.
+
+Above that threshold, Claude must obtain user approval before provisioning
+or starting the resource. See "Cost Philosophy" below.
 
 ---
 
@@ -267,6 +271,32 @@ Local
 → smallest suitable multi-GPU node
 → smallest suitable multi-node system
 → premium cluster only when required
+
+### Cost Approval Threshold
+
+- Total planned compute cost <= USD 3.00 per hour:
+  no user approval required; Claude proceeds autonomously.
+
+- Total planned compute cost > USD 3.00 per hour:
+  Claude must ask the user for approval BEFORE provisioning or starting
+  the resource.
+
+The threshold applies to the TOTAL resource configuration, not the per-GPU
+price.
+
+2 GPUs x $0.50/GPU/hour = $1.00/hour -> autonomous execution allowed.
+8 GPUs x $0.50/GPU/hour = $4.00/hour -> user approval required.
+
+If pricing cannot be determined reliably before provisioning and the
+configuration could plausibly exceed $3.00/hour, Claude must ask first.
+
+The threshold is permission, not justification. It does not relax the
+cheapest-sufficient-resource principle above: Claude must still prefer local
+work over paid GPU work, single GPU over multi-GPU when sufficient,
+single-node over multi-node when sufficient, avoid premium
+H100/H200/B200-class hardware unless technically justified, terminate unused
+paid resources promptly, and avoid offline analysis or documentation while
+GPUs remain running.
 
 Development and debugging should be moved away from expensive hardware
 whenever possible.

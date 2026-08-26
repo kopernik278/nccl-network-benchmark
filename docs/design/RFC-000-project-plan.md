@@ -81,3 +81,524 @@ Initially this project will not:
                      Analysis
                           ↓
                        Plots
+```
+
+Raw tool output enters at Result Collection and is never edited. Everything
+downstream of Result Parser is derived and regenerable.
+
+---
+
+## Experimental Layers
+
+The project escalates through progressively more capable — and more
+expensive — infrastructure. A layer is used only when the question genuinely
+cannot be answered at a lower one.
+
+```text
+L0  Local development        no GPU; design, parsers, plots, scripts, tests
+        ↓
+L1  Single GPU               CUDA build, single-device correctness
+        ↓
+L2  Single-node multi-GPU    NCCL collectives, PCIe / NVLink / NVSwitch
+        ↓
+L3  Multi-node TCP           inter-node communication without RDMA
+        ↓
+L4  RoCE                     RDMA over Converged Ethernet
+        ↓
+L5  InfiniBand               IB transport, GPUDirect RDMA
+```
+
+Mapping the layer to the question is a hard rule: a parser bug does not
+require a GPU, an NCCL initialization test does not require a cluster, and an
+intra-node AllReduce benchmark does not require RoCE.
+
+L4 and L5 require infrastructure that genuinely exposes those fabrics. Whether
+such infrastructure is reachable on the chosen provider at acceptable cost is
+an open question to be verified before those phases begin, not an assumption
+this plan rests on.
+
+---
+
+## Collectives
+
+Primary operations under study:
+
+| Collective | Why it matters |
+|------------|----------------|
+| AllReduce | Gradient synchronization in data-parallel training |
+| AllGather | Parameter/activation gathering in sharded (ZeRO/FSDP-style) training |
+| ReduceScatter | The reduce half of sharded optimizers; pairs with AllGather |
+| Broadcast | Parameter and state distribution |
+| Point-to-Point | Pipeline-parallel stage transfer; building block for everything else |
+
+Phase 1 begins with AllReduce, AllGather, and ReduceScatter — the three that
+dominate data-parallel and sharded training and that exercise the full
+reduce-plus-gather machinery. Broadcast and P2P follow once the harness is
+established; adding them is a configuration change, not a code change.
+
+Datatypes start at fp32 for correctness clarity. Reduced-precision datatypes
+(fp16, bf16) are a later variable, changed one at a time.
+
+---
+
+## Correctness
+
+Correctness is a gate, not a footnote. Performance work does not begin until
+it passes.
+
+Requirements before any performance number is reported:
+
+- program correctness verified;
+- collective communication results validated against a reference;
+- tensor/data consistency verified across all ranks;
+- return codes checked;
+- CUDA errors checked;
+- NCCL errors checked;
+- deterministic tests preserved where feasible.
+
+Operationally, for nccl-tests-based runs this means a zero validation-error
+count on every measured row, a clean out-of-bounds trailer, a zero exit code,
+and no CUDA or NCCL error output. Rows failing any check are marked incorrect
+and excluded from performance analysis.
+
+Failed runs are preserved with their logs rather than deleted, so the failure
+itself stays diagnosable and reproducible.
+
+**A benchmark result whose correctness has not been established is not a
+result.**
+
+---
+
+## Performance Measurements
+
+Primary metrics:
+
+| Metric | Meaning |
+|--------|---------|
+| Latency | Wall time of one collective operation |
+| Algorithmic bandwidth | Message size / time — throughput as the application sees it |
+| Bus bandwidth | Algorithmic bandwidth × a collective-specific factor, approximating bytes actually crossing the interconnect |
+| Scaling efficiency | How performance holds up as ranks and nodes increase |
+| Communication time | Time attributable to communication within a workload |
+| GPU / CPU utilization | Resource occupancy during communication |
+| GPU idle time | Time GPUs spend waiting |
+| Communication/computation overlap | Degree to which the two proceed concurrently |
+
+Bus bandwidth exists so that different collectives and rank counts can be
+compared against hardware peak on equal terms. Its correction factor is
+collective-specific — `2(n−1)/n` for AllReduce, `(n−1)/n` for AllGather and
+ReduceScatter — and the relationship serves as a units self-check on the
+measurement pipeline.
+
+Bandwidth is recorded in GB/s meaning 10⁹ **bytes** per second, not gigabits.
+
+Utilization, idle time, and overlap require profiling and are introduced in
+Phase 7 rather than estimated earlier.
+
+---
+
+## Benchmark Methodology
+
+Every measurement follows the same discipline:
+
+1. **Warmup before measurement.** Early iterations include channel setup,
+   buffer registration, context and module load, memory pool growth, and clock
+   ramp. They are excluded.
+2. **Repeated iterations.** Reported figures are means over a defined
+   iteration count, not single samples.
+3. **Repeated runs.** Whole sweeps are repeated as separate process launches
+   to expose run-to-run variance. A single run is not treated as a measurement
+   of the machine; spread is reported alongside central tendency.
+4. **Small matrix first.** A minimal representative sweep — small, medium, and
+   large message sizes — validates the pipeline before any larger sweep is
+   paid for. The small sweep gates the large one.
+5. **One variable at a time.** Message size, collective, rank count, node
+   count, transport, algorithm, and protocol are changed independently where
+   practical, so an observed difference has one candidate cause.
+6. **Full metadata capture.** Every run records the environment needed to
+   reproduce it (see Reproducibility).
+7. **Analysis off the clock.** Parsing, plotting, and interpretation happen
+   locally after compute is released.
+
+---
+
+## Ring AllReduce
+
+A simplified Ring AllReduce is implemented from scratch and compared against
+NCCL.
+
+The purpose is understanding, not replacement: implementing the algorithm
+forces engagement with chunking, the reduce-scatter plus all-gather structure,
+ring ordering, synchronization, and buffer management — the mechanics that
+NCCL otherwise hides.
+
+Scope:
+
+- implement the algorithm;
+- verify numerical correctness against a reference;
+- verify consistency across all ranks;
+- measure latency and bandwidth on the same harness as NCCL;
+- compare bandwidth utilization against NCCL on identical hardware;
+- analyze the gap: synchronization cost, chunk sizing, protocol overhead,
+  lack of topology awareness, absence of multi-channel parallelism.
+
+The expected outcome is that NCCL wins, and that the project can **explain
+precisely why**. A quantified, well-understood gap is the deliverable; beating
+NCCL is not a goal.
+
+---
+
+## Profiling
+
+Profiling answers specific performance questions. Traces are not collected
+speculatively — they are expensive to gather and to store.
+
+**Nsight Systems** — system-level timeline:
+
+- CPU/GPU timeline correlation
+- NCCL communication behavior
+- GPU idle time
+- synchronization points
+- communication/computation overlap
+- kernel launch gaps
+
+**Nsight Compute** — individual kernel analysis:
+
+- occupancy
+- memory throughput
+- register pressure
+- instruction behavior
+- Tensor Core utilization where relevant
+
+**NCCL logs** (`NCCL_DEBUG=INFO` and subsystem filters) reveal ring and tree
+construction, channel counts, and the algorithm and protocol NCCL selected —
+often the fastest route to understanding an unexpected result.
+
+**Topology tools** (`nvidia-smi topo -m`, `nvidia-smi nvlink`, `lspci`) record
+the physical paths that explain the numbers.
+
+Large raw traces stay out of version control.
+
+---
+
+## Cost Strategy
+
+Cloud GPU resources are real money. The governing principle:
+
+> **Use the cheapest resource that can correctly answer the current question.**
+
+Escalation hierarchy:
+
+```text
+Local
+  → cheapest suitable single GPU
+    → smallest suitable multi-GPU node
+      → smallest suitable multi-node configuration
+        → premium hardware only when technically necessary
+```
+
+### Cost Approval Threshold
+
+Claude Code operates the project's cloud infrastructure autonomously and may
+create, purchase, start, stop, configure, and terminate resources.
+
+- **Total planned compute cost ≤ USD 3.00 per hour** — no user approval
+  required; Claude proceeds autonomously.
+- **Total planned compute cost > USD 3.00 per hour** — Claude must obtain user
+  approval **before** provisioning or starting the resource.
+
+The threshold applies to the **total** configuration cost, not the per-GPU
+price:
+
+| Configuration | Total | Decision |
+|---------------|-------|----------|
+| 2 GPUs × $0.50/GPU/hr | $1.00/hr | autonomous |
+| 8 GPUs × $0.50/GPU/hr | $4.00/hr | approval required |
+
+If pricing cannot be determined reliably before provisioning and the
+configuration could plausibly exceed $3.00/hour, Claude asks first.
+
+### The threshold does not relax cost efficiency
+
+Being under $3.00/hour is permission, not justification. Independently of the
+threshold, Claude must still:
+
+- choose the cheapest hardware capable of answering the engineering question;
+- prefer local work over paid GPU work;
+- prefer a single GPU over multi-GPU when sufficient;
+- prefer a single node over multi-node when sufficient;
+- avoid premium H100 / H200 / B200-class hardware unless technically
+  justified;
+- terminate unused paid resources promptly;
+- avoid offline analysis, plotting, or documentation while GPUs are running.
+
+Premium hardware is justified only when required by topology, interconnect,
+GPU count, RDMA / RoCE / InfiniBand capability, GPUDirect RDMA, memory
+capacity, architecture-specific investigation, or a final representative
+benchmark.
+
+### Before provisioning
+
+Determine: what question the experiment answers; minimum GPU count; minimum
+node count; required network/interconnect; cheapest suitable hardware;
+benchmark scope; expected runtime; total hourly cost; and the termination
+condition.
+
+### Execution pattern
+
+```text
+prepare → provision → execute → collect → terminate → analyze locally
+```
+
+rather than provisioning first and developing on paid hardware. Design,
+documentation, parsers, plotting, sweep generation, scripts, and static
+analysis are all built at L0 before any GPU is started.
+
+---
+
+## Failure Policy
+
+Cloud failures waste money quickly. On unexpected failure of an expensive
+experiment:
+
+1. capture the failure;
+2. preserve logs;
+3. stop repeated execution;
+4. diagnose the root cause;
+5. fix locally or on cheaper hardware where possible;
+6. rerun the expensive experiment only after a plausible fix exists.
+
+Repeatedly retrying the same failing multi-node job is prohibited. Interactive
+debugging on expensive multi-node hardware is avoided; failures are reproduced
+at the lowest layer that still exhibits them.
+
+---
+
+## Experimental Data
+
+```text
+results/raw/<experiment-id>/       verbatim evidence, append-only
+results/summary/<experiment-id>/   parsed, derived, regenerable
+```
+
+Rules:
+
+- benchmark results are never overwritten;
+- every experiment gets a unique experiment ID;
+- raw measurements and processed summaries stay distinguishable;
+- summaries carry enough metadata to reproduce the run;
+- failed runs are retained, not discarded;
+- large binary artifacts (profiling traces, archives) stay out of git, while
+  the small text artifacts that constitute the evidence for a result are
+  committed with it.
+
+Result rows are machine-readable and self-contained, carrying their full
+environment so that rows from different phases and different hardware remain
+comparable and unambiguously distinguishable. Each row records a `value_kind`
+so that measured, estimated, theoretical, and synthetic numbers can never be
+silently confused.
+
+---
+
+## Optimization Strategy
+
+Optimization follows measurement and bottleneck analysis. Nothing is tuned
+before a profile identifies why it is slow.
+
+Techniques to investigate:
+
+- communication/computation overlap;
+- message and bucket size tuning;
+- collective selection and restructuring;
+- NCCL environment configuration (channels, buffer sizes, thresholds);
+- topology-aware placement and configuration;
+- algorithm and protocol selection where supported (ring vs. tree; simple,
+  low-latency, and LL128 protocols).
+
+Each optimization is evaluated the same way: baseline, change one variable,
+re-benchmark under identical conditions, report before and after with the
+correctness gate still passing. Optimizations that do not help are reported as
+such — a negative result honestly measured is a finding.
+
+---
+
+## Risks
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| RoCE / InfiniBand infrastructure unavailable or unaffordable | Phases 4–5 blocked | Verify catalog availability cheaply before committing; if genuinely unavailable, document as an explicit limitation rather than substituting TCP |
+| Shared/community cloud hosts produce noisy measurements | Misleading conclusions | Repeat whole sweeps as separate launches; report spread, not just means |
+| Cloud spend escalates | Project cost | $3.00/hour approval threshold; cheapest-sufficient hardware; terminate immediately after collection; verify cleanup |
+| Multi-node setup complexity burns paid time | Wasted spend | Prepare everything at L0; no interactive debugging on expensive hardware; smoke test gates full sweeps |
+| Consumer GPUs disable peer-to-peer access | Unrepresentative intra-node results | Record topology and P2P status with every run; interpret results against the interconnect actually present |
+| Benchmark tool version differences change output format | Silent parsing errors | Parse tool output by header rather than fixed offsets; pin and record tool commit |
+| Confusing theoretical and measured figures | Integrity failure | Explicit `value_kind` on every result row; vendor numbers always labelled |
+| Scope creep across ten phases | Nothing finished well | Phases gate each other; correctness gates performance; small matrices gate large ones |
+
+---
+
+## Reproducibility
+
+Every important experiment records:
+
+- experiment ID
+- timestamp (UTC)
+- git commit
+- cloud provider
+- GPU model, GPU count, node count
+- CPU where relevant
+- GPU topology
+- NIC / network type
+- CUDA version
+- NVIDIA driver version
+- NCCL version
+- compiler version
+- MPI version where applicable
+- message size
+- collective
+- datatype
+- iteration count
+- warmup iterations
+- environment variables
+- exact benchmark command
+
+Environment variables are captured through an allowlist with credential
+redaction, so secrets never reach results, logs, documentation, or version
+control.
+
+Unavailable values are recorded as null with a reason — never guessed, never
+silently omitted.
+
+---
+
+## Project Phases / Roadmap
+
+Status reflects the repository as of this revision. Later phases have **not**
+been executed.
+
+### Phase 0 — Development platform and infrastructure automation
+
+Repository structure, version control, development environment, cloud provider
+integration, and the autonomous infrastructure workflow.
+
+*Status: complete.*
+
+### Phase 1 — NCCL baseline
+
+Establish the first reproducible NCCL baseline: environment validation, NCCL
+initialization, collective correctness, benchmark harness, result capture, and
+reproducible metadata. Collectives: AllReduce, AllGather, ReduceScatter.
+
+*Status: harness prepared and locally tested; GPU execution pending. No
+measurements exist yet.*
+
+### Phase 2 — Single-node multi-GPU topology and collective benchmarks
+
+PCIe, NVLink, and NVSwitch where available; GPU topology analysis; collective
+scaling with rank count; message-size behavior across the latency-bound to
+bandwidth-bound transition.
+
+*Status: not started.*
+
+### Phase 3 — Multi-node TCP baseline
+
+Inter-node communication baseline that assumes no RDMA. Establishes the
+reference against which RDMA benefit is later measured, and introduces
+multi-process launching.
+
+*Status: not started.*
+
+### Phase 4 — RoCE experiments
+
+RDMA over Converged Ethernet, on infrastructure that actually exposes RoCE.
+RDMA behavior, bandwidth, latency, NCCL behavior, scaling, topology, and
+GPUDirect RDMA where available.
+
+*Status: not started. Infrastructure availability not yet verified.*
+
+### Phase 5 — InfiniBand experiments
+
+InfiniBand transport, GPUDirect RDMA, collective performance, scaling
+behavior, and topology, on matching real infrastructure.
+
+*Status: not started. Infrastructure availability not yet verified.*
+
+### Phase 6 — Simplified Ring AllReduce
+
+Implement, verify, and benchmark a simplified Ring AllReduce; compare against
+NCCL; analyze algorithm, correctness, bandwidth utilization, synchronization,
+and implementation overhead.
+
+*Status: not started.*
+
+### Phase 7 — Communication profiling
+
+NCCL logs, Nsight Systems, Nsight Compute where appropriate, and topology
+tools, used to identify real bottlenecks rather than suspected ones.
+
+*Status: not started.*
+
+### Phase 8 — Communication optimization
+
+Communication/computation overlap, message and bucket tuning, collective
+selection, NCCL configuration, topology-aware configuration, and algorithm or
+protocol tuning where supported — each measured before and after.
+
+*Status: not started.*
+
+### Phase 9 — Reproducibility and final portfolio documentation
+
+Reproducible experiments, final benchmark tables, plots, architecture
+documentation, bottleneck analysis, before/after optimization comparison,
+explicit limitations, and portfolio-quality documentation.
+
+*Status: not started.*
+
+---
+
+## Future Work
+
+Beyond the current roadmap, natural extensions include:
+
+- reduced-precision collectives (fp16, bf16) and their reduction accuracy
+  implications;
+- larger scale-out behavior and scaling-efficiency limits across many nodes;
+- collective behavior under realistic training workloads rather than
+  microbenchmarks;
+- interaction between communication and framework-level features such as
+  gradient bucketing and sharded optimizer states;
+- NCCL algorithm and protocol selection modelling across message-size regimes;
+- alternative communication libraries for comparison;
+- network congestion and multi-tenant interference effects.
+
+These are explicitly out of scope for the current plan and are recorded so
+that scope boundaries stay deliberate.
+
+---
+
+## Success Criteria
+
+The project is not complete merely because NCCL executes. Completion requires:
+
+- correct implementation;
+- correctness tests;
+- a working benchmark harness;
+- actual measured benchmark results;
+- GPU topology analysis;
+- profiling evidence;
+- bottleneck analysis grounded in that evidence;
+- at least one meaningful, measured optimization;
+- a before/after comparison under identical conditions;
+- a simplified Ring AllReduce implementation compared against NCCL;
+- reproducible experiments with complete metadata;
+- clear documentation;
+- explicit, honest limitations.
+
+The strongest final evidence is a single demonstrable claim:
+
+> "I identified a real GPU communication bottleneck, measured it, understood
+> its cause, changed the system or configuration, and demonstrated the
+> resulting performance difference using reproducible experiments."
+
+Any result that cannot be reproduced from recorded metadata, or whose
+correctness was not established, does not count toward these criteria.

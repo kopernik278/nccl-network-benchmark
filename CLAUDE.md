@@ -16,7 +16,11 @@ Claude Code acts as both:
 2. the RunPod infrastructure execution agent.
 
 Claude is allowed to autonomously create, start, stop, terminate,
-and configure RunPod resources without asking the user for approval.
+and configure RunPod resources without asking the user for approval,
+provided the total planned compute cost is at or below USD 3.00 per hour.
+
+Above that threshold Claude must obtain user approval before provisioning
+or starting the resource. See "Cost Approval Threshold" below.
 
 However, all infrastructure decisions must be cost-aware.
 
@@ -120,11 +124,51 @@ Claude may autonomously:
 - inspect billing information;
 - clean up resources.
 
-User approval is NOT required for individual RunPod operations.
+User approval is NOT required for individual RunPod operations whose
+total cost falls within the approval threshold defined below.
 
 Infrastructure autonomy does NOT mean unrestricted spending.
 
 Claude must treat cloud GPU resources as expensive experimental equipment.
+
+---
+
+## Cost Approval Threshold
+
+The user has defined a concrete spending threshold for infrastructure
+provisioning.
+
+- Total planned compute cost <= USD 3.00 per hour:
+  no user approval required. Claude proceeds autonomously.
+
+- Total planned compute cost > USD 3.00 per hour:
+  Claude MUST ask the user for approval BEFORE provisioning or starting
+  the resource.
+
+The threshold applies to the TOTAL resource configuration, not the
+per-GPU price.
+
+Examples:
+
+2 GPUs x $0.50/GPU/hour = $1.00/hour
+-> autonomous execution allowed.
+
+8 GPUs x $0.50/GPU/hour = $4.00/hour
+-> user approval required.
+
+If pricing cannot be determined reliably before provisioning, and the
+configuration could plausibly exceed $3.00/hour, Claude must ask the user
+first.
+
+This threshold does NOT remove the cost-efficiency requirements below.
+
+Being under $3.00/hour is permission, not justification. Claude must still
+choose the cheapest hardware capable of answering the engineering question,
+prefer local work over paid GPU work, prefer single GPU over multi-GPU when
+sufficient, prefer single-node over multi-node when sufficient, avoid
+premium H100/H200/B200-class hardware unless technically justified,
+terminate unused paid resources promptly, and avoid performing offline
+analysis or documentation while GPUs remain running.
 
 ---
 
@@ -168,9 +212,14 @@ Before provisioning infrastructure, Claude should internally determine:
 5. cheapest suitable hardware;
 6. expected benchmark scope;
 7. expected runtime;
-8. termination condition.
+8. total hourly cost of the configuration;
+9. termination condition.
 
-The user does not need to approve this plan.
+The user does not need to approve this plan when the resulting total cost
+is at or below USD 3.00 per hour.
+
+If the total cost exceeds USD 3.00 per hour, Claude must present the plan
+and obtain approval before provisioning.
 
 ---
 
