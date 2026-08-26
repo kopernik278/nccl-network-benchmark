@@ -1,8 +1,17 @@
 # Results Layout
 
-Contains the Phase 1 baseline measured on 2026-08-26
-(`p1-nccl-baseline-20260826T181721Z-16cea6a`): 2 × NVIDIA L4, single node,
-AllReduce / AllGather / ReduceScatter, 468 rows, zero validation errors.
+Contains three measured experiments from 2026-08-26, 468 rows each, all with
+zero validation errors:
+
+| Experiment ID | Configuration |
+|---|---|
+| `p1-nccl-baseline-20260826T181721Z-16cea6a` | Phase 1B baseline, 2 × NVIDIA L4 |
+| `p2-scaling-g2-20260826T185443Z-cbb1f68` | Phase 2, 2 ranks on a 4 × RTX PRO 4500 node |
+| `p2-scaling-g4-20260826T185443Z-cbb1f68` | Phase 2, 4 ranks on the same node |
+
+Two additional `...184532Z...` raw directories hold a **failed** run preserved as
+evidence (NCCL 2.25.1 lacks sm_120 support); they contain no measurements and
+each carries a `FAILED-RUN-NOTE.md`.
 
 ## Structure
 

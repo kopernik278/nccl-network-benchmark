@@ -1,0 +1,43 @@
+# nccl-tests version 2.19.7 nccl-headers=23102 nccl-library=23102
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 2 minBytes 8 maxBytes 134217728 step: 2(factor) warmup iters: 20 iters: 50 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   5648 on 1fde004aaa97 device  0 [0000:81:00] NVIDIA RTX PRO 4500 Blackwell
+#  Rank  1 Group  0 Pid   5648 on 1fde004aaa97 device  1 [0000:82:00] NVIDIA RTX PRO 4500 Blackwell
+NCCL version 2.31.2+cuda12.9
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+           8             2     float     sum      -1    13.08    0.00    0.00       0    13.04    0.00    0.00       0
+          16             4     float     sum      -1    12.73    0.00    0.00       0    12.98    0.00    0.00       0
+          32             8     float     sum      -1    13.12    0.00    0.00       0    12.87    0.00    0.00       0
+          64            16     float     sum      -1    13.03    0.00    0.00       0    12.86    0.00    0.00       0
+         128            32     float     sum      -1    12.87    0.01    0.01       0    11.00    0.01    0.01       0
+         256            64     float     sum      -1    11.60    0.02    0.02       0    10.90    0.02    0.02       0
+         512           128     float     sum      -1    11.04    0.05    0.05       0    11.02    0.05    0.05       0
+        1024           256     float     sum      -1    11.07    0.09    0.09       0    11.00    0.09    0.09       0
+        2048           512     float     sum      -1    10.89    0.19    0.19       0    11.43    0.18    0.18       0
+        4096          1024     float     sum      -1    10.97    0.37    0.37       0    11.08    0.37    0.37       0
+        8192          2048     float     sum      -1    10.93    0.75    0.75       0    11.22    0.73    0.73       0
+       16384          4096     float     sum      -1    10.97    1.49    1.49       0    10.88    1.51    1.51       0
+       32768          8192     float     sum      -1    10.86    3.02    3.02       0    11.35    2.89    2.89       0
+       65536         16384     float     sum      -1    11.49    5.71    5.71       0    11.46    5.72    5.72       0
+      131072         32768     float     sum      -1    17.67    7.42    7.42       0    17.67    7.42    7.42       0
+      262144         65536     float     sum      -1    31.00    8.46    8.46       0    30.95    8.47    8.47       0
+      524288        131072     float     sum      -1    39.00   13.44   13.44       0    39.24   13.36   13.36       0
+     1048576        262144     float     sum      -1    63.64   16.48   16.48       0    63.62   16.48   16.48       0
+     2097152        524288     float     sum      -1   116.63   17.98   17.98       0   116.69   17.97   17.97       0
+     4194304       1048576     float     sum      -1   224.26   18.70   18.70       0   222.60   18.84   18.84       0
+     8388608       2097152     float     sum      -1   445.41   18.83   18.83       0   438.82   19.12   19.12       0
+    16777216       4194304     float     sum      -1   877.18   19.13   19.13       0   865.30   19.39   19.39       0
+    33554432       8388608     float     sum      -1  1719.73   19.51   19.51       0  1696.04   19.78   19.78       0
+    67108864      16777216     float     sum      -1  3387.56   19.81   19.81       0  3358.73   19.98   19.98       0
+   134217728      33554432     float     sum      -1  6662.39   20.15   20.15       0  6649.61   20.18   20.18       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 7.68377 
+#
+# Collective test concluded: all_reduce_perf
+#
+

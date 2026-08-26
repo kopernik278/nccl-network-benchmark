@@ -499,7 +499,9 @@ PCIe, NVLink, and NVSwitch where available; GPU topology analysis; collective
 scaling with rank count; message-size behavior across the latency-bound to
 bandwidth-bound transition.
 
-*Status: not started.*
+*Status: complete for the 2 vs 4 GPU PCIe case, measured 2026-08-26 — see
+`docs/experiments/p2-multigpu-scaling.md`. NVLink and NVSwitch remain
+unmeasured; no such hardware has been used.*
 
 ### Phase 3 — Multi-node TCP baseline
 

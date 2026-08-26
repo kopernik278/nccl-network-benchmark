@@ -86,19 +86,40 @@ InfiniBand
 
 **Current phase: Phase 1 — NCCL baseline (preparation).**
 
-The Phase 1 baseline has been **measured on real hardware**: 2 × NVIDIA L4 on a
-single node, all three collectives, 468 result rows, zero validation errors.
-See [`docs/experiments/p1b-first-2gpu-nccl-baseline.md`](docs/experiments/p1b-first-2gpu-nccl-baseline.md)
-for the full report and `results/` for the raw evidence and parsed output.
+Phases 1 and 2 have been **measured on real hardware** — 1404 result rows across
+three configurations, every one with zero validation errors:
+
+- [Phase 1B](docs/experiments/p1b-first-2gpu-nccl-baseline.md) — first baseline,
+  2 × NVIDIA L4, single node.
+- [Phase 2](docs/experiments/p2-multigpu-scaling.md) — 2 vs 4 GPU scaling,
+  4 × RTX PRO 4500 Blackwell, single node.
 
 No later phase has been executed. Nothing has been measured on NVLink,
 multi-node, RoCE, or InfiniBand hardware.
+
+### Headline result: collective scaling is governed by topology, not rank count
+
+![2 vs 4 GPU NCCL scaling](plots/p2-scaling-curves.png)
+
+Stepping from 2 to 4 GPUs on one node produced two distinct regimes:
+
+| | AllReduce | AllGather | ReduceScatter |
+|---|---:|---:|---:|
+| Small-message latency (≤ 1 KiB) | 1.91× | 1.90× | 1.93× |
+| Large-message latency (≥ 4 MiB) | 5.23× | 5.88× | 4.64× |
+| **Peak bus bandwidth retained** | **28.0%** | **24.4%** | **28.9%** |
+
+Small-message latency grew by ≈ 1.9×, matching a `log₂(n)` **tree** and rejecting
+the `2(n−1)` **ring** prediction of 3× — NCCL's algorithm choice is visible in the
+timing data. Large messages lost roughly three quarters of their bus bandwidth,
+because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
+(`isAllDirectP2p 0`), and a ring runs at the speed of its slowest hop.
 
 | Phase | Scope | Status |
 |-------|-------|--------|
 | 0 | Development platform and infrastructure automation | Complete |
 | 1 | NCCL baseline | Complete — first baseline measured 2026-08-26 |
-| 2 | Single-node multi-GPU topology and collective benchmarks | Not started |
+| 2 | Single-node multi-GPU topology and collective benchmarks | Complete — 2 vs 4 GPU scaling measured 2026-08-26 |
 | 3 | Multi-node TCP baseline | Not started |
 | 4 | RoCE experiments | Not started |
 | 5 | InfiniBand experiments | Not started |

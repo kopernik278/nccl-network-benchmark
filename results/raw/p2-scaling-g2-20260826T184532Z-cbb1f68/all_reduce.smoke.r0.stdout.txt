@@ -1,0 +1,18 @@
+# nccl-tests version 2.19.7 nccl-headers=22501 nccl-library=22501
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 2 minBytes 8 maxBytes 134217728 step: 4096(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   1923 on 1fde004aaa97 device  0 [0000:81:00] NVIDIA RTX PRO 4500 Blackwell
+#  Rank  1 Group  0 Pid   1923 on 1fde004aaa97 device  1 [0000:82:00] NVIDIA RTX PRO 4500 Blackwell
+NCCL version 2.25.1+cuda12.8
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+1fde004aaa97: Test NCCL failure common.cu:619 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. 1fde004aaa97 pid 1923: Test failure common.cu:928
+ .. 1fde004aaa97 pid 1923: Test failure all_reduce.cu:574
+ .. 1fde004aaa97 pid 1923: Test failure common.cu:972
+ .. 1fde004aaa97 pid 1923: Test failure common.cu:1768
+ .. 1fde004aaa97 pid 1923: Test failure common.cu:1454
