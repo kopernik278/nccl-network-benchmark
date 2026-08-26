@@ -1,7 +1,8 @@
 # Results Layout
 
-**This directory contains no benchmark results yet.** Phase 1 has been
-designed and its harness built, but no experiment has been run.
+Contains the Phase 1 baseline measured on 2026-08-26
+(`p1-nccl-baseline-20260826T181721Z-16cea6a`): 2 × NVIDIA L4, single node,
+AllReduce / AllGather / ReduceScatter, 468 rows, zero validation errors.
 
 ## Structure
 

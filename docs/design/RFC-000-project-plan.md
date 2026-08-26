@@ -489,8 +489,9 @@ Establish the first reproducible NCCL baseline: environment validation, NCCL
 initialization, collective correctness, benchmark harness, result capture, and
 reproducible metadata. Collectives: AllReduce, AllGather, ReduceScatter.
 
-*Status: harness prepared and locally tested; GPU execution pending. No
-measurements exist yet.*
+*Status: complete. First baseline measured 2026-08-26 on 2 × NVIDIA L4
+(single node, PCIe, no NVLink) — see
+`docs/experiments/p1b-first-2gpu-nccl-baseline.md`.*
 
 ### Phase 2 — Single-node multi-GPU topology and collective benchmarks
 

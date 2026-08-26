@@ -120,7 +120,10 @@ TOPOLOGY=""
 NVLINK_STATUS=""
 
 if have nvidia-smi; then
-  GPU_QUERY="$(nvidia-smi --query-gpu=index,name,pci.bus_id,memory.total,driver_version \
+  # PCIe link generation/width is required to interpret bandwidth on a
+  # PCIe-connected (non-NVLink) system: without it a measured GB/s figure
+  # cannot be compared against the link it actually crossed.
+  GPU_QUERY="$(nvidia-smi --query-gpu=index,name,pci.bus_id,memory.total,driver_version,pcie.link.gen.current,pcie.link.width.current,pcie.link.gen.max,pcie.link.width.max \
                           --format=csv,noheader,nounits 2>/dev/null)"
   if [ -n "$GPU_QUERY" ]; then
     GPU_COUNT="$(printf '%s\n' "$GPU_QUERY" | grep -c .)"
@@ -135,9 +138,13 @@ if have nvidia-smi; then
       nm="$(printf '%s' "$line" | awk -F', *' '{print $2}')"
       bus="$(printf '%s' "$line" | awk -F', *' '{print $3}')"
       mem="$(printf '%s' "$line" | awk -F', *' '{print $4}')"
+      lgen="$(printf '%s' "$line" | awk -F', *' '{print $6}')"
+      lwid="$(printf '%s' "$line" | awk -F', *' '{print $7}')"
+      mgen="$(printf '%s' "$line" | awk -F', *' '{print $8}')"
+      mwid="$(printf '%s' "$line" | awk -F', *' '{print $9}')"
       [ $first -eq 0 ] && GPUS_JSON="$GPUS_JSON,"
       first=0
-      GPUS_JSON="$GPUS_JSON{\"index\":$(json_num "$idx"),\"name\":$(json_str "$nm"),\"pci_bus_id\":$(json_str "$bus"),\"memory_total_mib\":$(json_num "$mem")}"
+      GPUS_JSON="$GPUS_JSON{\"index\":$(json_num "$idx"),\"name\":$(json_str "$nm"),\"pci_bus_id\":$(json_str "$bus"),\"memory_total_mib\":$(json_num "$mem"),\"pcie_link_gen_current\":$(json_num "$lgen"),\"pcie_link_width_current\":$(json_num "$lwid"),\"pcie_link_gen_max\":$(json_num "$mgen"),\"pcie_link_width_max\":$(json_num "$mwid")}"
     done <<EOF
 $GPU_QUERY
 EOF
@@ -180,6 +187,14 @@ if [ -n "$TOPOLOGY" ]; then
     | grep -E '^GPU[0-9]+' \
     | grep -oE '(NV[0-9]+|PIX|PXB|PHB|NODE|SYS)' \
     | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')"
+fi
+
+PCIE_SUMMARY=""
+if [ -n "${GPU_QUERY:-}" ]; then
+  _l="$(printf '%s\n' "$GPU_QUERY" | head -1)"
+  _g="$(printf '%s' "$_l" | awk -F', *' '{print $6}')"
+  _w="$(printf '%s' "$_l" | awk -F', *' '{print $7}')"
+  [ -n "$_g" ] && PCIE_SUMMARY="Gen${_g} x${_w}"
 fi
 
 # ---------------------------------------------------------------------------
@@ -369,6 +384,7 @@ RDMA_DEVICES="$(try ibv_devinfo -l)"
   echo "compiler        : ${COMPILER_VERSION:-<unavailable>}"
   echo "git commit      : ${GIT_COMMIT:-<unavailable>} (${GIT_BRANCH:-?}, dirty=$GIT_DIRTY)"
   echo "nvlink present  : $NVLINK_PRESENT"
+  echo "pcie link (gpu0): ${PCIE_SUMMARY:-<unavailable>}"
   echo "topology class  : ${TOPOLOGY_SUMMARY:-<unavailable>}"
   echo "rdma devices    : ${RDMA_DEVICES:-<none detected>}"
   echo

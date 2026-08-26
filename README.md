@@ -86,15 +86,18 @@ InfiniBand
 
 **Current phase: Phase 1 — NCCL baseline (preparation).**
 
-This repository contains **no benchmark results yet.** The Phase 1 measurement
-harness — experiment design, result schema, environment capture, benchmark
-runner, and output parser — has been built and tested locally, but no GPU
-experiment has been executed. `results/` is empty by design.
+The Phase 1 baseline has been **measured on real hardware**: 2 × NVIDIA L4 on a
+single node, all three collectives, 468 result rows, zero validation errors.
+See [`docs/experiments/p1b-first-2gpu-nccl-baseline.md`](docs/experiments/p1b-first-2gpu-nccl-baseline.md)
+for the full report and `results/` for the raw evidence and parsed output.
+
+No later phase has been executed. Nothing has been measured on NVLink,
+multi-node, RoCE, or InfiniBand hardware.
 
 | Phase | Scope | Status |
 |-------|-------|--------|
 | 0 | Development platform and infrastructure automation | Complete |
-| 1 | NCCL baseline | Harness prepared; execution pending |
+| 1 | NCCL baseline | Complete — first baseline measured 2026-08-26 |
 | 2 | Single-node multi-GPU topology and collective benchmarks | Not started |
 | 3 | Multi-node TCP baseline | Not started |
 | 4 | RoCE experiments | Not started |

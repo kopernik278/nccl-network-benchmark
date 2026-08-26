@@ -1,0 +1,101 @@
+# nccl-tests version 2.19.7 nccl-headers=22501 nccl-library=22501
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 2 minBytes 8 maxBytes 8 step: 2(factor) warmup iters: 1 iters: 1 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   1874 on 5c44f3e9a47e device  0 [0000:03:00] NVIDIA L4
+#  Rank  1 Group  0 Pid   1874 on 5c44f3e9a47e device  1 [0000:c3:00] NVIDIA L4
+5c44f3e9a47e:1874:1874 [0] NCCL INFO cudaDriverVersion 13000
+5c44f3e9a47e:1874:1874 [0] NCCL INFO NCCL version 2.25.1+cuda12.8
+5c44f3e9a47e:1874:1879 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. Using internal network plugin.
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Failed to open libibverbs.so[.1]
+5c44f3e9a47e:1874:1879 [0] NCCL INFO NET/Socket : Using [0]eth0:172.22.0.2<0>
+5c44f3e9a47e:1874:1879 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so.
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Using network Socket
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Using network Socket
+5c44f3e9a47e:1874:1880 [1] NCCL INFO ncclCommInitRankConfig comm 0x585aed7865f0 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId c3000 commId 0x2ab74c72d6e6fdd5 - Init START
+5c44f3e9a47e:1874:1879 [0] NCCL INFO ncclCommInitRankConfig comm 0x585aed706c90 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 3000 commId 0x2ab74c72d6e6fdd5 - Init START
+5c44f3e9a47e:1874:1880 [1] NCCL INFO RAS client listening socket at ::1<28028>
+5c44f3e9a47e:1874:1879 [0] NCCL INFO TOPO/NET : Importing network plugins to topology
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Retrieving state for Socket
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Initialized state 0 for Socket
+5c44f3e9a47e:1874:1879 [0] NCCL INFO ncclTopoPopulateNics : Filled eth0 in topo with pciPath=(null) keep=1 coll=(null)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO TOPO/NET : Importing network plugins to topology
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Retrieving state for Socket
+5c44f3e9a47e:1874:1880 [1] NCCL INFO ncclTopoPopulateNics : Filled eth0 in topo with pciPath=(null) keep=1 coll=(null)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO === System : maxBw 12.0 totalBw 12.0 ===
+5c44f3e9a47e:1874:1880 [1] NCCL INFO CPU/0-0 (1/2/-1)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO + PCI[5000.0] - NIC/0-0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO + PCI[12.0] - GPU/0-3000 (0)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO + PCI[12.0] - GPU/0-c3000 (1)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO ==========================================
+5c44f3e9a47e:1874:1880 [1] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-c3000 (2/12.0/PHB) CPU/0-0 (1/12.0/PHB) 
+5c44f3e9a47e:1874:1880 [1] NCCL INFO GPU/0-c3000 :GPU/0-3000 (2/12.0/PHB) GPU/0-c3000 (0/5000.0/LOC) CPU/0-0 (1/12.0/PHB) 
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Setting affinity for GPU 1 to ffff,ffffffff
+5c44f3e9a47e:1874:1879 [0] NCCL INFO === System : maxBw 12.0 totalBw 12.0 ===
+5c44f3e9a47e:1874:1879 [0] NCCL INFO CPU/0-0 (1/2/-1)
+5c44f3e9a47e:1874:1879 [0] NCCL INFO + PCI[5000.0] - NIC/0-0
+5c44f3e9a47e:1874:1879 [0] NCCL INFO + PCI[12.0] - GPU/0-3000 (0)
+5c44f3e9a47e:1874:1879 [0] NCCL INFO + PCI[12.0] - GPU/0-c3000 (1)
+5c44f3e9a47e:1874:1879 [0] NCCL INFO ==========================================
+5c44f3e9a47e:1874:1879 [0] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-c3000 (2/12.0/PHB) CPU/0-0 (1/12.0/PHB) 
+5c44f3e9a47e:1874:1879 [0] NCCL INFO GPU/0-c3000 :GPU/0-3000 (2/12.0/PHB) GPU/0-c3000 (0/5000.0/LOC) CPU/0-0 (1/12.0/PHB) 
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Setting affinity for GPU 0 to ffff,ffffffff
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 12.000000/12.000000, type PHB/PIX, sameChannels 1
+5c44f3e9a47e:1874:1880 [1] NCCL INFO  0 : GPU/0 GPU/1
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 12.000000/12.000000, type PHB/PIX, sameChannels 1
+5c44f3e9a47e:1874:1880 [1] NCCL INFO  0 : GPU/0 GPU/1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 12.000000/12.000000, type PHB/PIX, sameChannels 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO  0 : GPU/0 GPU/1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 12.000000/12.000000, type PHB/PIX, sameChannels 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO  0 : GPU/0 GPU/1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO comm 0x585aed706c90 rank 0 nRanks 2 nNodes 1 localRanks 2 localRank 0 MNNVL 0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO comm 0x585aed7865f0 rank 1 nRanks 2 nNodes 1 localRanks 2 localRank 1 MNNVL 0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Tree 0 : 0 -> 1 -> -1/-1/-1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Tree 0 : -1 -> 0 -> 1/-1/-1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Tree 1 : -1 -> 0 -> 1/-1/-1
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Tree 1 : 0 -> 1 -> -1/-1/-1
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Ring 00 : 0 -> 1 -> 0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Ring 01 : 0 -> 1 -> 0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0
+5c44f3e9a47e:1874:1880 [1] NCCL INFO P2P Chunksize set to 131072
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Channel 00/02 : 0 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Channel 01/02 : 0 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Ring 00 : 1 -> 0 -> 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Ring 01 : 1 -> 0 -> 1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1
+5c44f3e9a47e:1874:1879 [0] NCCL INFO P2P Chunksize set to 131072
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Check P2P Type intraNodeP2pSupport 1 directMode 1
+5c44f3e9a47e:1874:1882 [1] NCCL INFO [Proxy Service] Device 1 CPU core 38
+5c44f3e9a47e:1874:1884 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 37
+5c44f3e9a47e:1874:1883 [0] NCCL INFO [Proxy Service] Device 0 CPU core 44
+5c44f3e9a47e:1874:1885 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 22
+5c44f3e9a47e:1874:1880 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+5c44f3e9a47e:1874:1880 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5c44f3e9a47e:1874:1879 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+5c44f3e9a47e:1874:1879 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5c44f3e9a47e:1874:1879 [0] NCCL INFO CC Off, workFifoBytes 1048576
+5c44f3e9a47e:1874:1879 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so libnccl-net.so. Using internal tuner plugin.
+5c44f3e9a47e:1874:1879 [0] NCCL INFO ncclCommInitRankConfig comm 0x585aed706c90 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 3000 commId 0x2ab74c72d6e6fdd5 - Init COMPLETE
+5c44f3e9a47e:1874:1879 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 2 total 0.20 (kernels 0.16, alloc 0.02, bootstrap 0.00, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+5c44f3e9a47e:1874:1880 [1] NCCL INFO ncclCommInitRankConfig comm 0x585aed7865f0 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId c3000 commId 0x2ab74c72d6e6fdd5 - Init COMPLETE
+5c44f3e9a47e:1874:1880 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 2 total 0.20 (kernels 0.17, alloc 0.02, bootstrap 0.00, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+5c44f3e9a47e:1874:1886 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] via P2P/direct pointer
+5c44f3e9a47e:1874:1887 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/direct pointer
+5c44f3e9a47e:1874:1886 [1] NCCL INFO Channel 01/0 : 1[1] -> 0[0] via P2P/direct pointer
+5c44f3e9a47e:1874:1887 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/direct pointer
+5c44f3e9a47e:1874:1886 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+5c44f3e9a47e:1874:1887 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+           8             2     float     sum      -1    16.78    0.00    0.00       0    15.26    0.00    0.00       0
+5c44f3e9a47e:1874:1889 [0] NCCL INFO comm 0x585aed706c90 rank 0 nranks 2 cudaDev 0 busId 3000 - Destroy COMPLETE
+5c44f3e9a47e:1874:1889 [1] NCCL INFO comm 0x585aed7865f0 rank 1 nranks 2 cudaDev 1 busId c3000 - Destroy COMPLETE
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0.000500522 
+#
+# Collective test concluded: all_reduce_perf
+#
+
