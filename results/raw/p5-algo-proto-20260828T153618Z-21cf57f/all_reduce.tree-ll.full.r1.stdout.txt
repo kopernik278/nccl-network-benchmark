@@ -1,0 +1,29 @@
+# nccl-tests version 2.20.0 (b4d5bee) nccl-headers=22501 nccl-library=22501
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 4 minBytes 8 maxBytes 134217728 step: 8(factor) warmup iters: 20 iters: 50 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   4442 on cec425f13d09 device  0 [0000:61:00] NVIDIA L4
+#  Rank  1 Group  0 Pid   4442 on cec425f13d09 device  1 [0000:81:00] NVIDIA L4
+#  Rank  2 Group  0 Pid   4442 on cec425f13d09 device  2 [0000:a1:00] NVIDIA L4
+#  Rank  3 Group  0 Pid   4442 on cec425f13d09 device  3 [0000:e1:00] NVIDIA L4
+NCCL version 2.25.1+cuda12.8
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)        
+           8             2     float     sum      -1    45.08    0.00    0.00       0    43.36    0.00    0.00       0
+          64            16     float     sum      -1    33.12    0.00    0.00       0    33.46    0.00    0.00       0
+         512           128     float     sum      -1    32.64    0.02    0.02       0    32.62    0.02    0.02       0
+        4096          1024     float     sum      -1    32.71    0.13    0.19       0    24.49    0.17    0.25       0
+       32768          8192     float     sum      -1    48.73    0.67    1.01       0    48.01    0.68    1.02       0
+      262144         65536     float     sum      -1   248.84    1.05    1.58       0   239.31    1.10    1.64       0
+     2097152        524288     float     sum      -1  1769.90    1.18    1.78       0  1761.55    1.19    1.79       0
+    16777216       4194304     float     sum      -1  13974.3    1.20    1.80       0  14046.7    1.19    1.79       0
+   134217728      33554432     float     sum      -1   112420    1.19    1.79       0   111983    1.20    1.80       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0.916237 
+#
+# Collective test concluded: all_reduce_perf
+#
+

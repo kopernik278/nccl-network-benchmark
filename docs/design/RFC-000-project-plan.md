@@ -536,7 +536,11 @@ interacts with message size, and how close NCCL's automatic choice is to the
 best forced configuration. Single-node, no new fabric required — which is why
 it can proceed while the multi-node phases are blocked.
 
-*Status: in progress — see `docs/experiments/phase5_nccl_algo_protocol.md`.*
+*Status: complete, measured 2026-08-28 on 4 x NVIDIA L4 — see
+`docs/experiments/p5-nccl-algo-protocol.md`. Protocol dominates below ~4 KiB
+(LL vs Simple worth 45-85%); Tree+LL128 dominates above ~2 MiB and NCCL's
+automatic selection is 1.22x-1.53x slower there; the transition region proved
+too noisy on this host to rank.*
 
 ### Phase 6 — Simplified Ring AllReduce
 

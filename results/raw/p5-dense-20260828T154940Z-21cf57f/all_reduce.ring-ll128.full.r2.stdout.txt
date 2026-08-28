@@ -1,0 +1,26 @@
+# nccl-tests version 2.20.0 (b4d5bee) nccl-headers=22501 nccl-library=22501
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 4 minBytes 16384 maxBytes 524288 step: 2(factor) warmup iters: 20 iters: 50 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   3097 on c079194dceb5 device  0 [0000:61:00] NVIDIA L4
+#  Rank  1 Group  0 Pid   3097 on c079194dceb5 device  1 [0000:81:00] NVIDIA L4
+#  Rank  2 Group  0 Pid   3097 on c079194dceb5 device  2 [0000:a1:00] NVIDIA L4
+#  Rank  3 Group  0 Pid   3097 on c079194dceb5 device  3 [0000:e1:00] NVIDIA L4
+NCCL version 2.25.1+cuda12.8
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)        
+       16384          4096     float     sum      -1    38.13    0.43    0.64       0    38.17    0.43    0.64       0
+       32768          8192     float     sum      -1    39.88    0.82    1.23       0    40.40    0.81    1.22       0
+       65536         16384     float     sum      -1    53.27    1.23    1.85       0    47.98    1.37    2.05       0
+      131072         32768     float     sum      -1    77.82    1.68    2.53       0    76.11    1.72    2.58       0
+      262144         65536     float     sum      -1   205.03    1.28    1.92       0   189.85    1.38    2.07       0
+      524288        131072     float     sum      -1   361.01    1.45    2.18       0   343.39    1.53    2.29       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.76658 
+#
+# Collective test concluded: all_reduce_perf
+#
+
