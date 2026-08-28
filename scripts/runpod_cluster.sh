@@ -58,11 +58,24 @@ done
 # --- credential -------------------------------------------------------------
 get_key() {
   command -v security >/dev/null 2>&1 || die "macOS 'security' not available; this wrapper expects the Keychain"
-  local k
-  k="$(security find-generic-password -a "$USER" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null)"
-  [ -n "$k" ] || die "no RunPod API key in the Keychain under service '$KEYCHAIN_SERVICE'.
-       Store it interactively (the value is not echoed):
-         security add-generic-password -a \"\$USER\" -s $KEYCHAIN_SERVICE -w"
+  local k rc
+  k="$(security find-generic-password -a "$USER" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null)"; rc=$?
+  # Distinguish "no item" from "item exists but is empty". The second happens
+  # when the interactive -w prompt runs somewhere that cannot supply stdin, and
+  # it silently stores a zero-length secret that would otherwise look present.
+  if [ $rc -ne 0 ]; then
+    die "no RunPod API key in the Keychain under service '$KEYCHAIN_SERVICE'.
+       Store it from a REAL interactive terminal (the value is not echoed and
+       does not enter shell history):
+         security add-generic-password -U -a \"\$USER\" -s $KEYCHAIN_SERVICE -w"
+  fi
+  if [ -z "$k" ]; then
+    die "the Keychain entry '$KEYCHAIN_SERVICE' exists but is EMPTY.
+       The interactive prompt captured nothing — this happens when it runs
+       without a real tty. Re-store it from your own terminal:
+         security delete-generic-password -a \"\$USER\" -s $KEYCHAIN_SERVICE
+         security add-generic-password -U -a \"\$USER\" -s $KEYCHAIN_SERVICE -w"
+  fi
   printf '%s' "$k"
 }
 
@@ -124,6 +137,13 @@ price_check() {
   fi
   echo "$total"
 }
+
+# Every action below talks to the API. Resolve the credential HERE, in the main
+# shell, so a missing or empty key exits cleanly with one message — inside
+# api() the failure happens in a command-substitution subshell and cannot stop
+# the script, which produced a confusing "HTTP ? — request failed." after the
+# real error.
+get_key >/dev/null || exit 1
 
 case "$ACTION" in
   list)   show "$(api GET /clusters)" ;;
