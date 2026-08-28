@@ -1,0 +1,15 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA.
+# Hand-written output of src/ring_allreduce for parser tests. No GPU produced
+# these numbers; the parser tags rows from this file value_kind="synthetic".
+# ring-allreduce custom implementation
+# device 0: NVIDIA SYNTHETIC  sm_89  pci=0000:01:00
+# device 1: NVIDIA SYNTHETIC  sm_89  pci=0000:02:00
+# peer-access matrix (row can access column):
+#   dev0: - yes
+#   dev1: yes -
+# ring order: 0 1  transport=p2p-direct
+impl,subchunks,transport,ranks,size_bytes,elements,warmup,iters,latency_us,algbw_gbps,busbw_gbps,bytes_moved_per_rank,bytes_expected_per_rank,max_abs_err,mismatches
+v1-naive,0,p2p-direct,2,1048576,262144,5,20,500.000,2.0972,2.0972,1048576,1048576,0.000000,0
+v2-async,0,p2p-direct,2,1048576,262144,5,20,250.000,4.1943,4.1943,1048576,1048576,0.000000,0
+v3-pipelined,4,p2p-direct,2,1048576,262144,5,20,200.000,5.2429,5.2429,1048576,1048576,0.000000,0
+nccl-reference,0,p2p-direct,2,1048576,262144,5,20,100.000,10.4858,10.4858,0,1048576,0.000000,0

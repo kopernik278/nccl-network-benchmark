@@ -1,0 +1,7 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA.
+# A run whose correctness check FAILED. The benchmark writes latency -1 because
+# it refuses to time an implementation that produced wrong results; the parser
+# must mark the row incorrect and drop the timing rather than report it.
+# ring order: 0 1  transport=p2p-direct
+impl,subchunks,transport,ranks,size_bytes,elements,warmup,iters,latency_us,algbw_gbps,busbw_gbps,bytes_moved_per_rank,bytes_expected_per_rank,max_abs_err,mismatches
+v2-async,0,p2p-direct,2,1048576,262144,5,20,-1.000,0.0000,0.0000,1048576,1048576,7.500000,4096
