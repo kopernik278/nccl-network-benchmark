@@ -435,6 +435,34 @@
         "null"
       ],
       "description": "mpirun, srun, or null for single-process runs."
+    },
+    "config_label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Label distinguishing NCCL configurations that share one experiment (Phase 5), e.g. auto, ring-simple."
+    },
+    "nccl_algo": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Value forced via NCCL_ALGO (Ring, Tree, ...). Null when NCCL selected automatically."
+    },
+    "nccl_proto": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Value forced via NCCL_PROTO (Simple, LL, LL128). Null when NCCL selected automatically."
+    },
+    "nccl_extra_env": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Verbatim extra NCCL environment applied to this run."
     }
   }
 }

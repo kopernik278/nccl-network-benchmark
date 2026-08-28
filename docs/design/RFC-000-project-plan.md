@@ -518,20 +518,25 @@ B200/H200/H100/A100 only, making the cheapest viable cluster $25.44/hour —
 8.5x the project's $3.00/hour threshold. Verified against the live API, not
 assumed; no cluster was provisioned and nothing was billed.*
 
-### Phase 4 — RoCE experiments
+### Phase 4 — Single-node topology isolation
 
-RDMA over Converged Ethernet, on infrastructure that actually exposes RoCE.
-RDMA behavior, bandwidth, latency, NCCL behavior, scaling, topology, and
-GPUDirect RDMA where available.
+Repeat the Phase 2 rank-count sweep on a 4-GPU node whose GPUs sit in a single
+P2P domain (or an NVLink domain), to separate the rank-count effect from the
+topology effect that Phase 2 confounded. Phase 2's ~75% bandwidth loss moved
+rank count and topology together; only this experiment can attribute it.
 
-*Status: not started. Infrastructure availability not yet verified.*
+*Status: **deferred by the user**. The design is preserved here as a future
+extension — it remains the single most valuable follow-up to Phase 2, and the
+Phase 2 confound stands unresolved until it runs.*
 
-### Phase 5 — InfiniBand experiments
+### Phase 5 — NCCL algorithm and protocol characterization
 
-InfiniBand transport, GPUDirect RDMA, collective performance, scaling
-behavior, and topology, on matching real infrastructure.
+How NCCL's algorithm (Ring, Tree) and protocol (Simple, LL, LL128) selection
+interacts with message size, and how close NCCL's automatic choice is to the
+best forced configuration. Single-node, no new fabric required — which is why
+it can proceed while the multi-node phases are blocked.
 
-*Status: not started. Infrastructure availability not yet verified.*
+*Status: in progress — see `docs/experiments/phase5_nccl_algo_protocol.md`.*
 
 ### Phase 6 — Simplified Ring AllReduce
 
@@ -566,9 +571,36 @@ explicit limitations, and portfolio-quality documentation.
 
 ---
 
+## Roadmap revision (2026-08-28)
+
+The roadmap was revised after Phase 3. The original plan placed **RoCE at
+Phase 4 and InfiniBand at Phase 5**; both have been moved to Future Work
+below, and those slots now hold experiments that are actually reachable.
+
+The reason is measured, not assumed. Phase 3B established that the cheapest
+schedulable RunPod Instant Cluster is 2 nodes x 8 GPUs on A100/H100/H200/B200
+only, at **$25.44/hour — 8.5x the project's $3.00/hour threshold** (see
+`docs/experiments/phase3_multinode_tcp_baseline.md` section 9.2b). RoCE and
+InfiniBand require that same multi-node infrastructure or better, so they are
+further out of reach than the TCP baseline that already exceeded budget.
+
+Phase numbering elsewhere in this document and in the experiment reports
+follows the revised list. No completed phase changed number.
+
+---
+
 ## Future Work
 
-Beyond the current roadmap, natural extensions include:
+**RoCE experiments** — RDMA over Converged Ethernet: RDMA behaviour,
+bandwidth, latency, NCCL behaviour, scaling, topology, and GPUDirect RDMA.
+Requires multi-node infrastructure that genuinely exposes RoCE. *Blocked on
+cost, per the revision note above. No RoCE measurement exists or is claimed.*
+
+**InfiniBand experiments** — IB transport, GPUDirect RDMA, collective
+performance, scaling, topology, on matching real infrastructure. *Blocked on
+the same cost constraint. No InfiniBand measurement exists or is claimed.*
+
+Beyond those, natural extensions include:
 
 - reduced-precision collectives (fp16, bf16) and their reduction accuracy
   implications;

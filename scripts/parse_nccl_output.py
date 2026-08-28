@@ -61,6 +61,7 @@ CSV_COLUMNS = [
     "nvlink_present", "p2p_enabled",
     "cuda_version", "driver_version", "nccl_version", "nccl_version_source",
     "mpi_version", "compiler_version", "nccl_tests_commit",
+    "config_label", "nccl_algo", "nccl_proto", "nccl_extra_env",
     "hosts", "rank_to_host", "ranks_per_node", "net_interface",
     "transport", "transport_verified", "mpi_implementation", "launcher",
     "benchmark_tool", "collective", "datatype", "redop", "root",
@@ -237,9 +238,28 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
 
-def discover_runs(raw_dir: Path, manifest: dict[str, Any]) -> list[dict[str, Any]]:
-    """Prefer the manifest; fall back to filenames if it is missing."""
-    runs = manifest.get("runs") or []
+def load_manifests(raw_dir: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Merge every run_manifest*.json in the directory.
+
+    Phase 5 runs several NCCL configurations into one experiment, each writing
+    its own manifest. Experiment-level metadata is taken from the first one
+    (they agree by construction); the run lists are concatenated.
+    """
+    paths = sorted(raw_dir.glob("run_manifest*.json"))
+    base: dict[str, Any] = {}
+    runs: list[dict[str, Any]] = []
+    for path in paths:
+        m = load_json(path)
+        if not m:
+            continue
+        if not base:
+            base = {k: v for k, v in m.items() if k != "runs"}
+        runs.extend(m.get("runs") or [])
+    return base, runs
+
+
+def discover_runs(raw_dir: Path, runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Prefer the manifests; fall back to filenames if none are present."""
     if runs:
         return runs
 
@@ -248,12 +268,23 @@ def discover_runs(raw_dir: Path, manifest: dict[str, Any]) -> list[dict[str, Any
         stem = path.name[: -len(".stdout.txt")]
         parts = stem.split(".")
         collective = parts[0] if parts else stem
-        tier = parts[1] if len(parts) > 1 else None
+        # <collective>[.<label>].<tier>.r<N> — the label is optional, so locate
+        # the tier by its known values rather than by position.
+        label = None
+        tier = None
+        idx = None
+        for i, part in enumerate(parts[1:], start=1):
+            if part in ("smoke", "full"):
+                tier, idx = part, i
+                break
+        if idx is not None and idx > 1:
+            label = ".".join(parts[1:idx])
         repeat = 0
-        if len(parts) > 2 and parts[2].startswith("r"):
-            repeat = _to_int(parts[2][1:]) or 0
+        if idx is not None and len(parts) > idx + 1 and parts[idx + 1].startswith("r"):
+            repeat = _to_int(parts[idx + 1][1:]) or 0
         recovered.append({
             "collective": collective,
+            "config_label": label,
             "tier": tier,
             "repeat_index": repeat,
             "stdout_file": path.name,
@@ -269,14 +300,14 @@ def discover_runs(raw_dir: Path, manifest: dict[str, Any]) -> list[dict[str, Any
 
 def build_rows(raw_dir: Path, phase: str) -> tuple[list[dict[str, Any]], list[str]]:
     env = load_json(raw_dir / "env.json")
-    manifest = load_json(raw_dir / "run_manifest.json")
+    manifest, manifest_runs = load_manifests(raw_dir)
     problems: list[str] = []
 
     experiment_id = manifest.get("experiment_id") or raw_dir.name
     repo_root = Path(__file__).resolve().parent.parent
 
     rows: list[dict[str, Any]] = []
-    for run in discover_runs(raw_dir, manifest):
+    for run in discover_runs(raw_dir, manifest_runs):
         stdout_path = raw_dir / (run.get("stdout_file") or "")
         stdout_text = read_text(stdout_path)
         if not stdout_text:
@@ -381,6 +412,13 @@ def build_rows(raw_dir: Path, phase: str) -> tuple[list[dict[str, Any]], list[st
                 "compiler_version": env.get("compiler_version"),
                 "nccl_tests_commit": manifest.get("nccl_tests_commit"),
 
+                # Phase 5: NCCL configuration under test. These are per-RUN,
+                # not per-experiment — one experiment holds many configurations.
+                "config_label": run.get("config_label"),
+                "nccl_algo": run.get("nccl_algo"),
+                "nccl_proto": run.get("nccl_proto"),
+                "nccl_extra_env": run.get("nccl_extra_env"),
+
                 "benchmark_tool": manifest.get("benchmark_tool", "nccl-tests"),
                 "collective": collective,
                 "datatype": point["datatype"] or run.get("datatype") or "float",
@@ -484,6 +522,9 @@ def main() -> int:
     print(f"  value_kind       : {', '.join(kinds)}")
     print(f"  correctness fail : {bad}")
     print(f"  H5 ratio fail    : {ratio_bad}")
+    labels = sorted({r.get("config_label") for r in rows if r.get("config_label")})
+    if labels:
+        print(f"  configurations   : {', '.join(labels)}")
     if multinode:
         transports = sorted({r.get("transport") for r in rows if (r.get("node_count") or 1) > 1})
         ifaces = sorted({r.get("net_interface") for r in rows if (r.get("node_count") or 1) > 1})

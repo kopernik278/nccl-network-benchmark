@@ -318,6 +318,67 @@ class TestMultiNodeMetadata(unittest.TestCase):
                 self.assertFalse(set(r) - props, f"unknown fields: {set(r) - props}")
 
 
+class TestAlgoProtocolConfigs(unittest.TestCase):
+    """Phase 5: several NCCL configurations share one experiment directory."""
+
+    def _make(self, tmp: Path):
+        raw = TestEndToEnd()._make_raw_dir(tmp, "synthetic_all_reduce.txt")
+        base = json.loads((raw / "run_manifest.json").read_text())
+        (raw / "run_manifest.json").unlink()
+        # two labelled configurations, each with its own manifest and outputs
+        for label, algo, proto in [("ring-simple", "Ring", "Simple"),
+                                   ("tree-ll", "Tree", "LL")]:
+            for placement in ("stdout", "stderr"):
+                src = raw / f"all_reduce.smoke.r0.{placement}.txt"
+                (raw / f"all_reduce.{label}.smoke.r0.{placement}.txt").write_text(
+                    src.read_text(), encoding="utf-8")
+            m = dict(base)
+            run = dict(base["runs"][0])
+            run.update({"config_label": label, "nccl_algo": algo, "nccl_proto": proto,
+                        "nccl_extra_env": f"NCCL_ALGO={algo},NCCL_PROTO={proto}",
+                        "stdout_file": f"all_reduce.{label}.smoke.r0.stdout.txt",
+                        "stderr_file": f"all_reduce.{label}.smoke.r0.stderr.txt"})
+            m["runs"] = [run]
+            (raw / f"run_manifest.{label}.json").write_text(json.dumps(m))
+        for placement in ("stdout", "stderr"):
+            (raw / f"all_reduce.smoke.r0.{placement}.txt").unlink()
+        return raw
+
+    def test_both_configurations_are_parsed(self):
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = P.build_rows(self._make(Path(td)), "phase5")
+            labels = sorted({r["config_label"] for r in rows})
+            self.assertEqual(labels, ["ring-simple", "tree-ll"])
+            self.assertEqual(len(rows), 12)  # 2 configs x 3 sizes x 2 placements
+
+    def test_algo_and_proto_land_on_rows(self):
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = P.build_rows(self._make(Path(td)), "phase5")
+            by = {r["config_label"]: r for r in rows}
+            self.assertEqual(by["ring-simple"]["nccl_algo"], "Ring")
+            self.assertEqual(by["ring-simple"]["nccl_proto"], "Simple")
+            self.assertEqual(by["tree-ll"]["nccl_algo"], "Tree")
+            self.assertEqual(by["tree-ll"]["nccl_proto"], "LL")
+            self.assertIn("NCCL_ALGO=Tree", by["tree-ll"]["nccl_extra_env"])
+
+    def test_label_recovered_from_filename_without_manifests(self):
+        with tempfile.TemporaryDirectory() as td:
+            raw = self._make(Path(td))
+            for m in raw.glob("run_manifest*.json"):
+                m.unlink()
+            rows, _ = P.build_rows(raw, "phase5")
+            self.assertEqual(sorted({r["config_label"] for r in rows}),
+                             ["ring-simple", "tree-ll"])
+            self.assertTrue(all(r["tier"] == "smoke" for r in rows))
+
+    def test_single_config_rows_have_null_algo(self):
+        with tempfile.TemporaryDirectory() as td:
+            raw = TestEndToEnd()._make_raw_dir(Path(td), "synthetic_all_reduce.txt")
+            rows, _ = P.build_rows(raw, "phase1")
+            for f in ("config_label", "nccl_algo", "nccl_proto", "nccl_extra_env"):
+                self.assertIsNone(rows[0][f])
+
+
 class TestSchemaConformance(unittest.TestCase):
     """Validate emitted rows against schemas/nccl_result.schema.json.
 

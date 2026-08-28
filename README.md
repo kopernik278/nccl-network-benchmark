@@ -121,18 +121,18 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 1 | NCCL baseline | Complete — first baseline measured 2026-08-26 |
 | 2 | Single-node multi-GPU topology and collective benchmarks | Complete — 2 vs 4 GPU scaling measured 2026-08-26 |
 | 3 | Multi-node TCP baseline | Preparation complete; measurement deferred on cost |
-| 4 | RoCE experiments | Not started |
-| 5 | InfiniBand experiments | Not started |
+| 4 | Single-node topology isolation | Deferred by user; design preserved |
+| 5 | NCCL algorithm and protocol characterization | In progress |
 | 6 | Simplified Ring AllReduce | Not started |
 | 7 | Communication profiling | Not started |
 | 8 | Communication optimization | Not started |
 | 9 | Reproducibility and final portfolio documentation | Not started |
 
-Whether suitable RoCE and InfiniBand infrastructure is actually reachable at an
-acceptable cost is an **open question**, not a settled one. Phases 4 and 5 will
-proceed only on hardware that genuinely exposes those fabrics; if it turns out
-to be unavailable, that will be documented as a limitation rather than
-approximated with TCP results.
+RoCE and InfiniBand were originally Phases 4 and 5. Both have moved to future
+work: Phase 3 established that the cheapest schedulable multi-node cluster
+costs **$25.44/hour, 8.5× this project's cost threshold**, and RDMA fabrics
+need that infrastructure or better. **No RoCE or InfiniBand result exists or is
+claimed anywhere in this repository.**
 
 ## Benchmark Integrity
 
