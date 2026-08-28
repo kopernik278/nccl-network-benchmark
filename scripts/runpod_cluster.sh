@@ -44,12 +44,14 @@ ACTION="${1:-}"; shift 2>/dev/null || true
 [ -n "$ACTION" ] || { grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
 
 NAME=""; GPU_TYPE=""; PODS=2; GPUS_PER_POD=1; DC=""; CLUSTER_ID=""; FORCE=0; CTYPE="APPLICATION"
-while getopts ":n:g:p:c:d:i:t:fh" opt; do
+IMAGE="runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404"; DISK=20
+while getopts ":n:g:p:c:d:i:t:m:k:fh" opt; do
   case "$opt" in
     n) NAME="$OPTARG" ;;      g) GPU_TYPE="$OPTARG" ;;
     p) PODS="$OPTARG" ;;      c) GPUS_PER_POD="$OPTARG" ;;
     d) DC="$OPTARG" ;;        i) CLUSTER_ID="$OPTARG" ;;
-    t) CTYPE="$OPTARG" ;;     f) FORCE=1 ;;
+    t) CTYPE="$OPTARG" ;;     m) IMAGE="$OPTARG" ;;
+    k) DISK="$OPTARG" ;;      f) FORCE=1 ;;
     h) grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     \?) die "unknown option: -$OPTARG" ;;
   esac
@@ -147,6 +149,7 @@ get_key >/dev/null || exit 1
 
 case "$ACTION" in
   list)   show "$(api GET /clusters)" ;;
+  sshkeys) show "$(api GET /account/ssh-keys)" ;;
   get)    [ -n "$CLUSTER_ID" ] || die "get needs -i CLUSTER_ID";  show "$(api GET "/clusters/$CLUSTER_ID")" ;;
   pods)   [ -n "$CLUSTER_ID" ] || die "pods needs -i CLUSTER_ID"; show "$(api GET "/clusters/$CLUSTER_ID/pods")" ;;
   delete) [ -n "$CLUSTER_ID" ] || die "delete needs -i CLUSTER_ID"
@@ -158,11 +161,12 @@ case "$ACTION" in
     [ -n "$GPU_TYPE" ] || die "create needs -g GPU_TYPE_ID"
     [ "$PODS" -ge 2 ]  || die "podCount minimum is 2 (API schema constraint)"
     price_check >/dev/null
-    BODY="$(python3 - "$NAME" "$CTYPE" "$GPU_TYPE" "$PODS" "$GPUS_PER_POD" "$DC" <<'PY'
+    BODY="$(python3 - "$NAME" "$CTYPE" "$GPU_TYPE" "$PODS" "$GPUS_PER_POD" "$DC" "$IMAGE" "$DISK" <<'PY'
 import json,sys
-name,ctype,gpu,pods,gpp,dc = sys.argv[1:7]
+name,ctype,gpu,pods,gpp,dc,image,disk = sys.argv[1:9]
 body={"name":name,"type":ctype,
       "compute":{"gpuTypeId":gpu,"podCount":int(pods),"gpuCountPerPod":int(gpp)},
+      "image":image,"disk":int(disk),"ports":["22/tcp"],
       "startSsh":True}
 if dc: body["dataCenterIds"]=[dc]
 print(json.dumps(body))

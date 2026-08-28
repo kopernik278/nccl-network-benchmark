@@ -1,6 +1,6 @@
 # Phase 3 — Multi-Node NCCL Socket/TCP Baseline
 
-Status: **designed (Phase 3A complete); not executed**
+Status: **designed (Phase 3A complete); Phase 3B deferred on cost — see §9.2b**
 Design date: 2026-08-28
 Repo commit at design time: `47e6f34`
 Previous: [Phase 1B](p1b-first-2gpu-nccl-baseline.md) · [Phase 2](p2-multigpu-scaling.md)
@@ -271,32 +271,98 @@ Even 2 nodes × 2 GPUs would be $1.08/hour. Both are **under the $3.00/hour
 threshold, so Phase 3B may proceed autonomously** — provided the price is
 re-checked at provisioning time rather than taken from this table.
 
-### 9.3 Blocker: no cluster tooling in this session
+### 9.2b VERIFIED 2026-08-28: the minimum cluster is far larger and costlier
+### than §9.1 permits — Phase 3B is deferred
 
-**Neither the RunPod MCP server nor `runpodctl` exposes any cluster endpoint.**
-MCP surfaces pods, endpoints, templates, volumes, catalog and billing; its
-billing tool accepts a `clusters` scope, and `list-gpu-types` accepts
-`product: CLUSTER`, but there is no `create-cluster` / `list-clusters` tool.
-`runpodctl` has no `cluster` subcommand at all.
+The §9.4 assumption *"that a 2 × 1 cluster is actually schedulable"* was
+**tested against the live API and is false.** This section records the
+outcome, because it invalidates the plan in §9.2 and §17.
 
-Creating a cluster therefore requires calling `POST /v2/clusters` directly with
-a Bearer API key. This session does not hold one — the MCP server holds the
-credential internally and its own instructions forbid searching the environment
-or filesystem for it.
+**Attempted and refused.** With a working scoped API key, `POST /v2/clusters`
+was called for every configuration below. All returned
+`400 {"detail":"Insufficient resources"}` — **no resources were provisioned and
+nothing was billed**:
 
-**Phase 3B is currently blocked on tooling/credentials, not on cost.**
-Resolving it needs one of: cluster tools appearing in the MCP server; the user
-supplying an API key for direct REST calls; or the user creating the cluster in
-the RunPod console and handing over the node addresses.
+| GPU | Shape | Total | Data centre |
+|-----|-------|------:|-------------|
+| RTX A5000 | 2 × 1 | $0.54/hr | scheduler's choice |
+| RTX A5000 | 2 × 1 | $0.54/hr | CA-MTL-1, EU-SE-1, US-IL-1 (each explicitly) |
+| RTX A5000 | 2 × 2 | $1.08/hr | CA-MTL-1 |
+| RTX A5000 | 2 × 4 | $2.16/hr | CA-MTL-1 |
+| A40 | 2 × 1 | $0.88/hr | scheduler's choice |
+| A40 | 2 × 2 | $1.76/hr | CA-MTL-1 |
+| RTX 4090 | 2 × 1 | $1.48/hr | scheduler's choice |
+| L40S | 2 × 1 | $1.98/hr | scheduler's choice |
+
+**Cause, from RunPod's Instant Clusters documentation.** Instant Clusters are
+offered on **only four GPU types — B200, H200, H100, A100** — in a range of
+"2-8 nodes (16-64 GPUs)". Sixteen GPUs across two nodes means **8 GPUs per
+node**, and none of the workstation/consumer types tried above are cluster
+GPUs at all.
+
+**The catalog's CLUSTER availability figure is not cluster schedulability.**
+`list-gpu-types --product CLUSTER` reported RTX A5000 as HIGH, and
+`get-gpu-type` broke that down per data centre (CA-MTL-1 MEDIUM, EU-SE-1 LOW,
+US-IL-1 LOW) — yet every create was refused. The field reflects GPU stock in a
+cluster context, not whether a cluster of the requested shape can be placed.
+**Do not use it as a feasibility signal.**
+
+**Resulting minimum cost**, at live prices on 2026-08-28:
+
+| GPU | Cluster availability | $/GPU/hr | 2 nodes × 8 = 16 GPUs |
+|-----|----------------------|---------:|----------------------:|
+| **A100 SXM 80GB** | LOW (US-KS-2, US-MD-1, US-WA-1) | 1.59 | **$25.44/hr** |
+| A100 PCIe | **NONE** | 1.39 | unavailable |
+| H100 SXM | MEDIUM | 3.29 | $52.64/hr |
+| H200 SXM | HIGH | 4.59 | $73.44/hr |
+| B200 | LOW | 6.79 | $108.64/hr |
+
+**$25.44/hour is 8.5× the $3.00/hour project threshold**, so provisioning
+requires explicit user approval. It was put to the user on 2026-08-28 and
+**Phase 3B was deferred**. The Phase 3A tooling and this design are retained
+unchanged for whenever budget or a smaller cluster shape becomes available.
+
+A second cost consideration weighed in that decision: at the minimum shape,
+**16 GPUs are billed while only 2 participate** (one rank per node, by design
+— see §3). Fourteen idle paid GPUs is a poor ratio for a baseline whose whole
+purpose is to isolate the cost of one inter-node hop.
+
+**Also confirmed by the documentation**, and worth carrying into a future
+Phase 3B: cluster nodes expose **dedicated high-speed interfaces `ens1`–`ens8`**
+for inter-node traffic (A100: 1600 Gbps; H100/H200/B200: 3200 Gbps). This
+vindicates §8's refusal to hard-code an interface — the data plane is those
+dedicated NICs, and is neither `eth0` nor the VXLAN control-plane metadata.
+
+### 9.3 Cluster tooling: resolved
+
+Neither the RunPod MCP server nor `runpodctl` exposes any cluster endpoint, so
+Phase 3 calls `POST /v2/clusters` directly. `scripts/runpod_cluster.sh` wraps
+that API; the key lives in the macOS Keychain and never appears in a file, an
+argument, or shell history.
+
+RunPod API keys **cannot be created programmatically** — not via REST v2 (the
+34-path contract has no key endpoint), not via MCP, not via `runpodctl`, whose
+own help points at the console. RunPod's documentation confirms console-only
+creation. A scoped key named `project3-nccl-agent` was therefore created
+manually by the user and stored in the Keychain; `GET /v2/clusters` then
+authenticated successfully.
+
+One honest limitation on least privilege: RunPod's key model offers only
+**All / Restricted / Read Only**, where *Restricted* granularises Serverless
+endpoints alone. Cluster-scoped keys are not expressible, and *Read Only*
+cannot create a cluster. The mitigation is a dedicated project key that can be
+revoked when Phase 3 ends, not a narrower scope.
 
 ### 9.4 Assumptions still requiring runtime verification
 
 These are **not** established and must not be treated as facts:
 
-1. **That a 2 × 1 cluster is actually schedulable.** The schema permits it; the
-   scheduler may impose a larger minimum in practice.
+1. ~~That a 2 × 1 cluster is actually schedulable.~~ **RESOLVED — false.**
+   See §9.2b: the minimum is 2 nodes × 8 GPUs on one of four supported GPU
+   types.
 2. **That cluster GPU pricing equals pod pricing.** The catalog price is a pod
-   price, and `/v2/billing/clusters` is a separate billing scope.
+   price, and `/v2/billing/clusters` is a separate billing scope. Still
+   unverified — no cluster was ever billed.
 3. **Which interface carries cluster-internal traffic**, and what its
    name, MTU and speed are. The VXLAN evidence says "an overlay device",
    not which one. This is exactly why §8 refuses to guess.

@@ -513,8 +513,10 @@ multi-process launching.
 network discovery, transport verification and schema extension built and
 tested locally at zero cost; see
 `docs/experiments/phase3_multinode_tcp_baseline.md`. Phase 3B (measurement)
-not started, and currently blocked on cluster tooling: neither the RunPod MCP
-server nor runpodctl exposes the `/v2/clusters` endpoints.*
+**deferred on cost**: RunPod Instant Clusters require 2 nodes x 8 GPUs on
+B200/H200/H100/A100 only, making the cheapest viable cluster $25.44/hour —
+8.5x the project's $3.00/hour threshold. Verified against the live API, not
+assumed; no cluster was provisioned and nothing was billed.*
 
 ### Phase 4 — RoCE experiments
 
