@@ -509,7 +509,12 @@ Inter-node communication baseline that assumes no RDMA. Establishes the
 reference against which RDMA benefit is later measured, and introduces
 multi-process launching.
 
-*Status: not started.*
+*Status: Phase 3A (preparation) complete 2026-08-28 — design, MPI launcher,
+network discovery, transport verification and schema extension built and
+tested locally at zero cost; see
+`docs/experiments/phase3_multinode_tcp_baseline.md`. Phase 3B (measurement)
+not started, and currently blocked on cluster tooling: neither the RunPod MCP
+server nor runpodctl exposes the `/v2/clusters` endpoints.*
 
 ### Phase 4 — RoCE experiments
 

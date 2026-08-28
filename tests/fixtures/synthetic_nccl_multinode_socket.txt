@@ -1,0 +1,17 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. Hand-written NCCL_DEBUG=INFO output
+# for testing scripts/verify_nccl_transport.py. No cluster produced this.
+# nThread 1 nGpus 1 minBytes 8 maxBytes 134217728 step: 2(factor) warmup iters: 5 iters: 20 validation: 1
+#
+# Using devices
+#  Rank  0 Group  0 Pid   1101 on   node-a device  0 [0x03] NVIDIA RTX A5000
+#  Rank  1 Group  0 Pid   1102 on   node-b device  0 [0x03] NVIDIA RTX A5000
+node-a:1101:1110 [0] NCCL INFO Bootstrap : Using vxlan0:10.42.0.2<0>
+node-a:1101:1110 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. Using internal network plugin.
+node-a:1101:1110 [0] NCCL INFO NCCL_IB_DISABLE set by environment to 1.
+node-a:1101:1110 [0] NCCL INFO NET/Socket : Using [0]vxlan0:10.42.0.2<0>
+node-b:1102:1111 [0] NCCL INFO NET/Socket : Using [0]vxlan0:10.42.0.3<0>
+node-a:1101:1120 [0] NCCL INFO Channel 00/0 : 1[0] -> 0[0] [receive] via NET/Socket/0
+node-a:1101:1120 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[0] [send] via NET/Socket/0
+node-b:1102:1121 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[0] [receive] via NET/Socket/0
+node-b:1102:1121 [0] NCCL INFO Channel 01/0 : 1[0] -> 0[0] [send] via NET/Socket/0
+node-a:1101:1110 [0] NCCL INFO Connected all rings

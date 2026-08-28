@@ -43,36 +43,67 @@
       "description": "UTC ISO 8601, e.g. 2026-08-26T14:15:30Z"
     },
     "git_commit": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "git_dirty": {
-      "type": ["boolean", "null"]
+      "type": [
+        "boolean",
+        "null"
+      ]
     },
     "value_kind": {
-      "enum": ["measured", "estimated", "theoretical", "synthetic"],
+      "enum": [
+        "measured",
+        "estimated",
+        "theoretical",
+        "synthetic"
+      ],
       "description": "Integrity interlock. Only rows parsed from real tool output may be 'measured'."
     },
-
     "provider": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "provider_instance_id": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "hostname": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "os": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "kernel": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "cpu_model": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "cpu_cores": {
-      "type": ["integer", "null"],
+      "type": [
+        "integer",
+        "null"
+      ],
       "minimum": 1
     },
     "node_count": {
@@ -80,93 +111,171 @@
       "minimum": 1
     },
     "gpu_model": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "gpu_count": {
       "type": "integer",
       "minimum": 1
     },
     "gpus": {
-      "type": ["array", "null"],
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "type": "object",
         "additionalProperties": true,
         "properties": {
-          "index": { "type": ["integer", "null"] },
-          "name": { "type": ["string", "null"] },
-          "pci_bus_id": { "type": ["string", "null"] },
-          "memory_total_mib": { "type": ["integer", "null"] }
+          "index": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pci_bus_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "memory_total_mib": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
         }
       }
     },
     "topology": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Verbatim nvidia-smi topo -m output"
     },
     "topology_summary": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Dominant inter-GPU link class, e.g. PIX, PHB, NODE, SYS, NV12"
     },
     "network": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "none-single-node | tcp | roce | infiniband. Must reflect the fabric actually used."
     },
     "nvlink_present": {
-      "type": ["boolean", "null"]
+      "type": [
+        "boolean",
+        "null"
+      ]
     },
     "p2p_enabled": {
-      "type": ["boolean", "null"]
+      "type": [
+        "boolean",
+        "null"
+      ]
     },
-
     "cuda_version": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "driver_version": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "nccl_version": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "nccl_version_source": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "mpi_version": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "null in Phase 1: nccl-tests runs single-process multi-GPU, MPI intentionally unused."
     },
     "compiler_version": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "nccl_tests_commit": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
-
     "benchmark_tool": {
       "type": "string",
       "description": "nccl-tests | custom-ring-allreduce | ..."
     },
     "collective": {
-      "enum": ["all_reduce", "all_gather", "reduce_scatter", "broadcast", "p2p"]
+      "enum": [
+        "all_reduce",
+        "all_gather",
+        "reduce_scatter",
+        "broadcast",
+        "p2p"
+      ]
     },
     "datatype": {
       "type": "string"
     },
     "redop": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "root": {
-      "type": ["integer", "null"]
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "message_size_bytes": {
       "type": "integer",
       "minimum": 0
     },
     "count_elements": {
-      "type": ["integer", "null"],
+      "type": [
+        "integer",
+        "null"
+      ],
       "minimum": 0
     },
     "placement": {
-      "enum": ["out_of_place", "in_place"]
+      "enum": [
+        "out_of_place",
+        "in_place"
+      ]
     },
     "warmup_iterations": {
       "type": "integer",
@@ -181,58 +290,151 @@
       "minimum": 0
     },
     "tier": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "smoke | full"
     },
-
     "latency_us": {
-      "type": ["number", "null"],
+      "type": [
+        "number",
+        "null"
+      ],
       "minimum": 0,
       "description": "Mean wall time of one collective, microseconds"
     },
     "algorithmic_bandwidth_gbps": {
-      "type": ["number", "null"],
+      "type": [
+        "number",
+        "null"
+      ],
       "minimum": 0,
       "description": "GB/s = 10^9 BYTES per second (decimal), NOT gigabits"
     },
     "bus_bandwidth_gbps": {
-      "type": ["number", "null"],
+      "type": [
+        "number",
+        "null"
+      ],
       "minimum": 0,
       "description": "GB/s = 10^9 BYTES per second (decimal), NOT gigabits"
     },
-
     "wrong_count": {
-      "type": ["integer", "null"],
+      "type": [
+        "integer",
+        "null"
+      ],
       "minimum": 0
     },
     "correctness_ok": {
       "type": "boolean"
     },
     "out_of_bounds_ok": {
-      "type": ["boolean", "null"]
+      "type": [
+        "boolean",
+        "null"
+      ]
     },
     "bandwidth_ratio_ok": {
-      "type": ["boolean", "null"],
+      "type": [
+        "boolean",
+        "null"
+      ],
       "description": "Hypothesis H5: busbw == algbw * factor(collective, ranks). A units/rank-count self-check. null when algbw is too small to test at the printed precision."
     },
     "exit_code": {
-      "type": ["integer", "null"]
+      "type": [
+        "integer",
+        "null"
+      ]
     },
-
     "command": {
       "type": "string",
       "minLength": 1
     },
     "env": {
-      "type": ["object", "null"],
-      "additionalProperties": { "type": "string" },
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      },
       "description": "Allowlisted and redacted environment variables"
     },
     "raw_output_path": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "notes": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "hosts": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Hostnames participating in the run (multi-node)."
+    },
+    "rank_to_host": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Rank index -> hostname, parsed from NCCL/nccl-tests runtime output."
+    },
+    "ranks_per_node": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "net_interface": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Interface NCCL was explicitly pointed at (NCCL_SOCKET_IFNAME). Never guessed."
+    },
+    "transport": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Transport proven from runtime evidence, e.g. NET/Socket, NET/IB, P2P/direct."
+    },
+    "transport_verified": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "True only when a transport check passed against NCCL_DEBUG=INFO output. A performance row with false/null must not be used for a transport comparison."
+    },
+    "mpi_implementation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "launcher": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "mpirun, srun, or null for single-process runs."
     }
   }
 }

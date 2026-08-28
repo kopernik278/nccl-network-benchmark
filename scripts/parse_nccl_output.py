@@ -61,6 +61,8 @@ CSV_COLUMNS = [
     "nvlink_present", "p2p_enabled",
     "cuda_version", "driver_version", "nccl_version", "nccl_version_source",
     "mpi_version", "compiler_version", "nccl_tests_commit",
+    "hosts", "rank_to_host", "ranks_per_node", "net_interface",
+    "transport", "transport_verified", "mpi_implementation", "launcher",
     "benchmark_tool", "collective", "datatype", "redop", "root",
     "message_size_bytes", "count_elements", "placement",
     "warmup_iterations", "measured_iterations", "repeat_index", "tier",
@@ -360,6 +362,17 @@ def build_rows(raw_dir: Path, phase: str) -> tuple[list[dict[str, Any]], list[st
                 "nvlink_present": env.get("nvlink_present"),
                 "p2p_enabled": None,
 
+                # Multi-node (phase 3+). Single-node manifests omit these, so
+                # they stay null rather than being invented.
+                "hosts": manifest.get("hosts"),
+                "rank_to_host": manifest.get("rank_to_host"),
+                "ranks_per_node": manifest.get("ranks_per_node"),
+                "net_interface": manifest.get("net_interface"),
+                "transport": manifest.get("transport"),
+                "transport_verified": manifest.get("transport_verified"),
+                "mpi_implementation": manifest.get("mpi_implementation"),
+                "launcher": manifest.get("launcher"),
+
                 "cuda_version": env.get("cuda_version"),
                 "driver_version": env.get("driver_version"),
                 "nccl_version": nccl_version,
@@ -420,7 +433,7 @@ def write_csv(rows: list[dict[str, Any]], path: Path) -> None:
         writer.writeheader()
         for row in rows:
             flat = dict(row)
-            for key in ("gpus", "env"):
+            for key in ("gpus", "env", "hosts", "rank_to_host"):
                 if isinstance(flat.get(key), (dict, list)):
                     flat[key] = json.dumps(flat[key], separators=(",", ":"), sort_keys=True)
             if isinstance(flat.get("topology"), str):
@@ -460,6 +473,9 @@ def main() -> int:
     total = len(rows)
     bad = sum(1 for r in rows if not r["correctness_ok"])
     ratio_bad = sum(1 for r in rows if r["bandwidth_ratio_ok"] is False)
+    multinode = sum(1 for r in rows if (r.get("node_count") or 1) > 1)
+    unverified = sum(1 for r in rows
+                     if (r.get("node_count") or 1) > 1 and not r.get("transport_verified"))
     kinds = sorted({r["value_kind"] for r in rows})
     collectives = sorted({r["collective"] for r in rows})
 
@@ -468,6 +484,14 @@ def main() -> int:
     print(f"  value_kind       : {', '.join(kinds)}")
     print(f"  correctness fail : {bad}")
     print(f"  H5 ratio fail    : {ratio_bad}")
+    if multinode:
+        transports = sorted({r.get("transport") for r in rows if (r.get("node_count") or 1) > 1})
+        ifaces = sorted({r.get("net_interface") for r in rows if (r.get("node_count") or 1) > 1})
+        print(f"  multi-node rows  : {multinode}  transport={transports} iface={ifaces}")
+        if unverified:
+            print(f"  WARNING          : {unverified} multi-node row(s) have no verified "
+                  "transport; they must not be used for a transport comparison",
+                  file=sys.stderr)
     print(f"  -> {out_dir / 'results.jsonl'}")
     print(f"  -> {out_dir / 'results.csv'}")
 
@@ -478,7 +502,7 @@ def main() -> int:
         if len(problems) > 20:
             print(f"  ... and {len(problems) - 20} more", file=sys.stderr)
 
-    if args.strict and (bad or ratio_bad):
+    if args.strict and (bad or ratio_bad or unverified):
         return 1
     return 0
 

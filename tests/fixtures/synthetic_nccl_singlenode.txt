@@ -1,0 +1,10 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. A single-node run: every hop is P2P,
+# no NET/* transport at all. Proves the verifier rejects a run that never
+# actually crossed a node boundary.
+#
+# Using devices
+#  Rank  0 Group  0 Pid   3301 on   node-a device  0 [0x03] NVIDIA L4
+#  Rank  1 Group  0 Pid   3301 on   node-a device  1 [0xc3] NVIDIA L4
+node-a:3301:3310 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1
+node-a:3301:3320 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/direct pointer
+node-a:3301:3320 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] via P2P/direct pointer

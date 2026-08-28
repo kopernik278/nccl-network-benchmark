@@ -243,6 +243,81 @@ class TestEndToEnd(unittest.TestCase):
             self.assertIn("experiment_id", csv_text.splitlines()[0])
 
 
+class TestMultiNodeMetadata(unittest.TestCase):
+    """Phase 3 multi-node fields must survive from manifest to result row.
+
+    A multi-node row whose transport was not verified must be visibly
+    unverified: the TCP-vs-RDMA comparison depends on it.
+    """
+
+    MANIFEST_EXTRA = {
+        "node_count": 2,
+        "ranks_per_node": 1,
+        "gpu_count": 2,
+        "hosts": ["node-a", "node-b"],
+        "rank_to_host": {"0": "node-a", "1": "node-b"},
+        "network": "tcp",
+        "transport": "NET/Socket",
+        "transport_verified": True,
+        "net_interface": "vxlan0",
+        "mpi_implementation": "OpenMPI",
+        "mpi_version": "mpirun (Open MPI) 4.1.6",
+        "launcher": "mpirun",
+    }
+
+    def _build(self, tmp: Path, **manifest_overrides):
+        raw = TestEndToEnd()._make_raw_dir(tmp, "synthetic_all_reduce.txt")
+        man = json.loads((raw / "run_manifest.json").read_text())
+        man.update(self.MANIFEST_EXTRA)
+        man.update(manifest_overrides)
+        man["phase"] = "phase3"
+        (raw / "run_manifest.json").write_text(json.dumps(man))
+        return P.build_rows(raw, "phase3")
+
+    def test_multinode_fields_reach_rows(self):
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = self._build(Path(td))
+            r = rows[0]
+            self.assertEqual(r["node_count"], 2)
+            self.assertEqual(r["ranks_per_node"], 1)
+            self.assertEqual(r["hosts"], ["node-a", "node-b"])
+            self.assertEqual(r["rank_to_host"], {"0": "node-a", "1": "node-b"})
+            self.assertEqual(r["network"], "tcp")
+            self.assertEqual(r["transport"], "NET/Socket")
+            self.assertTrue(r["transport_verified"])
+            self.assertEqual(r["net_interface"], "vxlan0")
+            self.assertEqual(r["mpi_implementation"], "OpenMPI")
+            self.assertEqual(r["launcher"], "mpirun")
+            self.assertEqual(r["phase"], "phase3")
+
+    def test_unverified_transport_is_visible(self):
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = self._build(Path(td), transport_verified=False, transport=None)
+            self.assertTrue(all(r["transport_verified"] is False for r in rows))
+            self.assertTrue(all(r["transport"] is None for r in rows))
+
+    def test_single_node_rows_leave_multinode_fields_null(self):
+        """Phase 1/2 manifests must not acquire invented multi-node metadata."""
+        with tempfile.TemporaryDirectory() as td:
+            raw = TestEndToEnd()._make_raw_dir(Path(td), "synthetic_all_reduce.txt")
+            rows, _ = P.build_rows(raw, "phase1")
+            r = rows[0]
+            for field in ("hosts", "rank_to_host", "ranks_per_node",
+                          "net_interface", "transport", "transport_verified",
+                          "mpi_implementation", "launcher"):
+                self.assertIsNone(r[field], f"{field} should be null for single-node")
+            self.assertEqual(r["node_count"], 1)
+
+    def test_multinode_rows_still_schema_valid(self):
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = self._build(Path(td))
+            schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+            props, required = set(schema["properties"]), set(schema["required"])
+            for r in rows:
+                self.assertFalse(required - set(r))
+                self.assertFalse(set(r) - props, f"unknown fields: {set(r) - props}")
+
+
 class TestSchemaConformance(unittest.TestCase):
     """Validate emitted rows against schemas/nccl_result.schema.json.
 

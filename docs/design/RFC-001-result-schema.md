@@ -96,6 +96,30 @@ must be `theoretical`.
 `network` is `none-single-node` for Phase 1 — an honest value, not a blank.
 It must only say `roce`/`infiniband` when the run genuinely used that fabric.
 
+### Multi-node (Phase 3+)
+
+Additive and optional: single-node rows carry `null` rather than invented
+values. Because they are additive optional fields, `schema_version` stays `1`.
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `hosts` | array\|null | hostnames taking part in the run |
+| `rank_to_host` | object\|null | rank index → hostname, parsed from runtime output |
+| `ranks_per_node` | int\|null | |
+| `net_interface` | string\|null | the interface NCCL was pointed at (`NCCL_SOCKET_IFNAME`) — chosen from runtime inspection, never guessed |
+| `transport` | string\|null | transport **proven** from runtime evidence: `NET/Socket`, `NET/IB`, `P2P/direct` |
+| `transport_verified` | bool\|null | whether a transport check actually passed |
+| `mpi_implementation` | string\|null | OpenMPI, MPICH, … |
+| `launcher` | string\|null | `mpirun`, or null for single-process runs |
+
+`transport_verified` is an integrity field of the same kind as `value_kind`.
+Setting `NCCL_IB_DISABLE=1` states an intent; only a check against
+`NCCL_DEBUG=INFO` output establishes the outcome. **A row with
+`transport_verified` false or null must not be used in a transport
+comparison**, and `parse_nccl_output.py --strict` fails when a multi-node row
+lacks it. Without this, a silent fallback to RDMA could be reported as a TCP
+baseline and would corrupt every later speed-up figure.
+
 ### Software versions
 
 | Field | Type |

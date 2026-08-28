@@ -120,7 +120,7 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 0 | Development platform and infrastructure automation | Complete |
 | 1 | NCCL baseline | Complete — first baseline measured 2026-08-26 |
 | 2 | Single-node multi-GPU topology and collective benchmarks | Complete — 2 vs 4 GPU scaling measured 2026-08-26 |
-| 3 | Multi-node TCP baseline | Not started |
+| 3 | Multi-node TCP baseline | Preparation complete; measurement pending |
 | 4 | RoCE experiments | Not started |
 | 5 | InfiniBand experiments | Not started |
 | 6 | Simplified Ring AllReduce | Not started |

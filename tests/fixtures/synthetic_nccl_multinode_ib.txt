@@ -1,0 +1,11 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. Represents an InfiniBand/RoCE run.
+# Used to prove the verifier REJECTS it when socket transport was requested —
+# i.e. that a silent fallback to RDMA cannot pass as a TCP baseline.
+#
+# Using devices
+#  Rank  0 Group  0 Pid   2201 on   node-a device  0 [0x03] NVIDIA H100 80GB HBM3
+#  Rank  1 Group  0 Pid   2202 on   node-b device  0 [0x03] NVIDIA H100 80GB HBM3
+node-a:2201:2210 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/RoCE [RO]; OOB eth0:10.0.0.2<0>
+node-a:2201:2220 [0] NCCL INFO Channel 00/0 : 1[0] -> 0[0] [receive] via NET/IB/0
+node-a:2201:2220 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[0] [send] via NET/IB/0
+node-a:2201:2210 [0] NCCL INFO Connected all rings
