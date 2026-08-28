@@ -53,14 +53,25 @@ def load_json(path: Path) -> dict[str, Any]:
         return {}
 
 
+CSV_HEADER_PREFIX = "impl,"
+
+
 def parse_rows(text: str) -> tuple[list[dict[str, str]], list[str]]:
-    """Split the benchmark output into its CSV table and its '#' preamble."""
-    preamble = [l for l in text.splitlines() if l.startswith("#")]
-    body = [l for l in text.splitlines() if l and not l.startswith("#")]
-    if not body:
+    """Split the benchmark output into its CSV table and its '#' preamble.
+
+    The table is located by its header line rather than by "first non-comment
+    line": NCCL_DEBUG=VERSION prints a banner to stdout that starts with
+    neither '#' nor 'impl,', and feeding that to DictReader silently makes the
+    banner the header and turns every row into garbage.
+    """
+    lines = text.splitlines()
+    preamble = [l for l in lines if l.startswith("#")]
+    start = next((i for i, l in enumerate(lines)
+                  if l.startswith(CSV_HEADER_PREFIX)), None)
+    if start is None:
         return [], preamble
-    reader = csv.DictReader(body)
-    return list(reader), preamble
+    body = [l for l in lines[start:] if l and not l.startswith("#")]
+    return list(csv.DictReader(body)), preamble
 
 
 def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:

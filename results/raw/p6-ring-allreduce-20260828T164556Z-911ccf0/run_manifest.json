@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "experiment_id": "p6-ring-allreduce-20260828T164556Z-911ccf0",
+  "phase": "phase6",
+  "created_at_utc": "2026-08-28T17:02:01Z",
+  "value_kind": "measured",
+  "benchmark_tool": "custom-ring-allreduce",
+  "git_commit": "911ccf02f2c151a2d674be3a4cb684bad993bf35",
+  "node_count": 1,
+  "gpu_count": 4,
+  "network": "none-single-node",
+  "transport": "host-staged",
+  "ring_order": "# ring order: 0 1 2 3  transport=host-staged",
+  "warmup_iterations": 5,
+  "measured_iterations": 20,
+  "command": "/root/repo/src/ring_allreduce/build/ring_allreduce -g 4 -w 5 -n 20 --allow-host-staged",
+  "exit_code": 0,
+  "rows_with_mismatches": 0,
+  "runner": "scripts/run_ring_benchmark.sh"
+}

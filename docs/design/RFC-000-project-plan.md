@@ -548,7 +548,14 @@ Implement, verify, and benchmark a simplified Ring AllReduce; compare against
 NCCL; analyze algorithm, correctness, bandwidth utilization, synchronization,
 and implementation overhead.
 
-*Status: not started.*
+*Status: complete, measured 2026-08-28 on 4 x NVIDIA L4 — see
+`docs/experiments/p6-ring-allreduce.md`. Three versions (naive, async,
+pipelined), all correct against an exact oracle; measured per-rank movement
+matches 2(N-1)/N*M exactly. Removing device barriers gave 1.48x-3.04x;
+subchunking gave 1.22x at 16 MiB and was 2x slower at 1 KiB. Direct P2P was
+functionally broken on the host, so everything ran in explicitly named
+host-staged mode, and a ~4.4 ms harness floor makes sizes below a few MiB
+unusable for ranking.*
 
 ### Phase 7 — Communication profiling
 

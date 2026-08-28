@@ -123,7 +123,7 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 3 | Multi-node TCP baseline | Preparation complete; measurement deferred on cost |
 | 4 | Single-node topology isolation | Deferred by user; design preserved |
 | 5 | NCCL algorithm and protocol characterization | Complete — measured 2026-08-28 |
-| 6 | Simplified Ring AllReduce | Not started |
+| 6 | Simplified Ring AllReduce | Complete — measured 2026-08-28 |
 | 7 | Communication profiling | Not started |
 | 8 | Communication optimization | Not started |
 | 9 | Reproducibility and final portfolio documentation | Not started |

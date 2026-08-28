@@ -115,7 +115,18 @@ struct Ring {
   size_t elems = 0;                // elements in the full tensor
   size_t chunk = 0;                // elements per chunk = elems / n
   std::vector<float*> buf;         // full tensor, one per rank
-  std::vector<float*> stage[2];    // double-buffered receive staging, one chunk each
+  // One staging buffer PER REDUCESCATTER STEP, not a parity pair.
+  //
+  // Parity double-buffering was the first design and it is WRONG: it separates
+  // adjacent steps, but steps s-1 and s+1 share a parity and therefore share a
+  // buffer. Nothing in the event graph orders rank r's copy at step s+1 against
+  // rank next(r)'s reduce at step s-1 — the dependency chain runs backwards
+  // around the ring and never reaches forward — so the copy can overwrite
+  // staging that is still being read. It showed up exactly as a race should:
+  // v1 correct, v2/v3 wrong, and the mismatch count varying run to run for the
+  // same input. Giving every step its own buffer removes the hazard
+  // structurally instead of paying for another synchronisation edge.
+  std::vector<std::vector<float*>> stage;  // [step][rank], one chunk each
   std::vector<cudaStream_t> comm;  // copy stream per rank
   std::vector<cudaStream_t> calc;  // compute stream per rank
   // One event per (rank, step). Reusing a single event per rank would alias
@@ -151,6 +162,54 @@ static std::vector<std::vector<int>> peerMatrix(const std::vector<int>& devs) {
   return can;
 }
 
+// cudaDeviceCanAccessPeer answers "is peer access permitted", NOT "does a peer
+// copy actually deliver the bytes". On at least one RunPod L4 host the query
+// returns 1 for every pair, yet an enabled peer copy silently produces NaN --
+// and enabling peer access breaks a plain cudaMemcpy D2D on the same pair too.
+// NCCL survives this because it validates P2P itself and falls back; a naive
+// implementation that trusts the capability bit produces wrong answers with no
+// error returned anywhere.
+//
+// So: functionally test the edge with a known pattern before believing it.
+static bool p2pFunctional(int src, int dst) {
+  const int n = 256;
+  const size_t bytes = n * sizeof(float);
+  float *s = nullptr, *d = nullptr;
+  std::vector<float> host(n, -1.0f), back(n, -1.0f);
+  for (int i = 0; i < n; ++i) host[i] = 1.0f + (float)i;
+
+  if (cudaSetDevice(src) != cudaSuccess) return false;
+  if (cudaMalloc(&s, bytes) != cudaSuccess) return false;
+  if (cudaMemcpy(s, host.data(), bytes, cudaMemcpyHostToDevice) != cudaSuccess) {
+    cudaFree(s); return false;
+  }
+  if (cudaSetDevice(dst) != cudaSuccess) { cudaFree(s); return false; }
+  if (cudaMalloc(&d, bytes) != cudaSuccess) { cudaFree(s); return false; }
+  cudaMemset(d, 0, bytes);
+
+  cudaError_t pe = cudaDeviceEnablePeerAccess(src, 0);
+  bool enabled = (pe == cudaSuccess || pe == cudaErrorPeerAccessAlreadyEnabled);
+  cudaGetLastError();
+
+  bool ok = false;
+  if (enabled && cudaMemcpyPeer(d, dst, s, src, bytes) == cudaSuccess &&
+      cudaDeviceSynchronize() == cudaSuccess &&
+      cudaMemcpy(back.data(), d, bytes, cudaMemcpyDeviceToHost) == cudaSuccess) {
+    ok = true;
+    for (int i = 0; i < n; ++i)
+      if (back[i] != host[i]) { ok = false; break; }
+  }
+
+  // Leave the machine as we found it: an enabled-but-broken peer mapping also
+  // corrupts ordinary device-to-device copies on the same pair.
+  if (enabled) { cudaSetDevice(dst); cudaDeviceDisablePeerAccess(src); }
+  cudaGetLastError();
+  cudaSetDevice(src); cudaFree(s);
+  cudaSetDevice(dst); cudaFree(d);
+  cudaGetLastError();
+  return ok;
+}
+
 // Find a ring permutation whose every edge supports direct peer access. The
 // identity order is tried first; otherwise permutations of the tail (rank 0 is
 // fixed, since a ring is rotation-invariant). Returns empty if none exists —
@@ -161,8 +220,11 @@ static std::vector<int> findP2PRing(const std::vector<int>& devs,
   std::vector<int> idx(n);
   std::iota(idx.begin(), idx.end(), 0);
   auto ringOk = [&](const std::vector<int>& order) {
-    for (size_t i = 0; i < n; ++i)
-      if (!can[order[i]][order[(i + 1) % n]]) return false;
+    for (size_t i = 0; i < n; ++i) {
+      int a = order[i], b = order[(i + 1) % n];
+      if (!can[a][b]) return false;                       // capability
+      if (!p2pFunctional(devs[a], devs[b])) return false; // and it actually works
+    }
     return true;
   };
   if (ringOk(idx)) {
@@ -190,8 +252,8 @@ static void ringInit(Ring& R, const std::vector<int>& devOrder, size_t elems) {
   R.elems = elems;
   R.chunk = elems / R.n;
   R.buf.resize(R.n);
-  R.stage[0].resize(R.n);
-  R.stage[1].resize(R.n);
+  const int nsteps = std::max(1, R.n - 1);
+  R.stage.assign(nsteps, std::vector<float*>(R.n, nullptr));
   R.comm.resize(R.n);
   R.calc.resize(R.n);
   const int slots = 2 * R.n + 2;
@@ -200,8 +262,8 @@ static void ringInit(Ring& R, const std::vector<int>& devOrder, size_t elems) {
   for (int i = 0; i < R.n; ++i) {
     CUDA_CHECK(cudaSetDevice(R.dev[i]));
     CUDA_CHECK(cudaMalloc(&R.buf[i], elems * sizeof(float)));
-    CUDA_CHECK(cudaMalloc(&R.stage[0][i], R.chunk * sizeof(float)));
-    CUDA_CHECK(cudaMalloc(&R.stage[1][i], R.chunk * sizeof(float)));
+    for (int st = 0; st < nsteps; ++st)
+      CUDA_CHECK(cudaMalloc(&R.stage[st][i], R.chunk * sizeof(float)));
     CUDA_CHECK(cudaStreamCreate(&R.comm[i]));
     CUDA_CHECK(cudaStreamCreate(&R.calc[i]));
     for (int k = 0; k < slots; ++k) {
@@ -215,8 +277,7 @@ static void ringFree(Ring& R) {
   for (int i = 0; i < R.n; ++i) {
     CUDA_CHECK(cudaSetDevice(R.dev[i]));
     cudaFree(R.buf[i]);
-    cudaFree(R.stage[0][i]);
-    cudaFree(R.stage[1][i]);
+    for (size_t st = 0; st < R.stage.size(); ++st) cudaFree(R.stage[st][i]);
     cudaStreamDestroy(R.comm[i]);
     cudaStreamDestroy(R.calc[i]);
     for (size_t k = 0; k < R.copyDone[i].size(); ++k) {
@@ -302,10 +363,12 @@ static void ringAllReduceV1(Ring& R) {
 //       because it consumes what that copy wrote.
 //       -> cross-device RAW dependency, expressed with copyDone[r].
 //
-//   (c) rank r's copy at step s+1 must not overwrite staging that rank r+1's
-//       reduce at step s is still reading (a WAR hazard).
-//       -> removed structurally by double-buffering the staging area on
-//          parity of s, so consecutive steps touch different buffers.
+//   (c) rank r's copy must not overwrite staging that rank next(r)'s reduce is
+//       still reading (a WAR hazard).
+//       -> removed structurally by giving every ReduceScatter step its own
+//          staging buffer. Parity double-buffering is NOT enough: steps s-1 and
+//          s+1 share a parity, and no event orders them, so that version
+//          produced nondeterministic corruption while v1 stayed correct.
 //
 // What is NOT assumed: that using async APIs produces overlap on its own. The
 // only overlap this version can express is between different ranks' copies and
@@ -315,7 +378,7 @@ static void ringAllReduceV2(Ring& R) {
   const size_t bytes = R.chunk * sizeof(float);
 
   for (int s = 0; s < R.n - 1; ++s) {
-    int cur = s & 1;
+    const int cur = s;                       // one staging buffer per step
     for (int r = 0; r < R.n; ++r) {
       int sendIdx = (r - s + R.n) % R.n;
       int nx = R.next(r);
@@ -385,7 +448,7 @@ static void ringAllReduceV3(Ring& R, int sub) {
   }
 
   for (int s = 0; s < R.n - 1; ++s) {
-    int cur = s & 1;
+    const int cur = s;                       // one staging buffer per step
     for (int k = 0; k < sub; ++k) {
       size_t off = (size_t)k * base;
       size_t len = (k == sub - 1) ? (R.chunk - off) : base;
@@ -532,11 +595,20 @@ int main(int argc, char** argv) {
     std::printf("\n");
   }
 
+  std::printf("# functional peer test on the identity ring (capability bit is not enough):\n");
+  for (int i = 0; i < ngpu; ++i) {
+    int a = i, b = (i + 1) % ngpu;
+    bool cap = can[a][b] != 0;
+    bool works = cap && p2pFunctional(devs[a], devs[b]);
+    std::printf("#   dev%d -> dev%d : canAccessPeer=%s  transfers_correct=%s\n",
+                devs[a], devs[b], cap ? "yes" : "no", works ? "yes" : "NO");
+  }
+
   std::vector<int> ring = findP2PRing(devs, can);
   const char* transport = "p2p-direct";
   if (ring.empty()) {
     // Never pretend a host-staged path is P2P. Either shrink the ring or say so.
-    std::printf("# NO ring permutation of %d GPUs has full peer access\n", ngpu);
+    std::printf("# NO ring permutation of %d GPUs has WORKING direct peer access\n", ngpu);
     if (!allowHostStaged) {
       std::printf("# refusing to run: pass --allow-host-staged to measure the\n"
                   "# host-staged transport explicitly, or use fewer GPUs.\n");
