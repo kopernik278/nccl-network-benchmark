@@ -1,0 +1,13 @@
+# SYNTHETIC FIXTURE — NOT MEASURED DATA. Hand-written overlap_bench output for
+# parser tests. No GPU produced these numbers; the parser tags rows from this
+# file value_kind="synthetic".
+# overlap benchmark: 4 GPUs
+# gemm 512x512: 20.00 us per repetition (measured)
+NCCL version 2.25.1+cuda12.8
+experiment,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+micro,1048576,0.25,5,0,0,100.000,400.000,500.000,420.000,400.000,0.8000,320.000,110.000,410.000,0
+micro,1048576,2.00,40,0,0,800.000,400.000,1200.000,850.000,800.000,0.8750,50.000,820.000,420.000,0
+micro,16777216,1.00,150,0,0,3000.000,3000.000,6000.000,6000.000,3000.000,0.0000,3000.000,3100.000,3050.000,0
+bucket,134217728,1.00,60,16777216,8,20000.000,20000.000,40000.000,26000.000,20000.000,0.7000,6000.000,20500.000,21000.000,0
+bucket,134217728,1.00,240,4194304,32,20000.000,26000.000,46000.000,34000.000,26000.000,0.6000,14000.000,20800.000,27000.000,0
+micro,1048576,1.00,20,0,0,400.000,400.000,800.000,410.000,400.000,9.7500,10.000,405.000,405.000,0

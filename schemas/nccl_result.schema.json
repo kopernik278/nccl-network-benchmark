@@ -463,6 +463,100 @@
         "null"
       ],
       "description": "Verbatim extra NCCL environment applied to this run."
+    },
+    "t_compute_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Standalone compute duration (Phase 7B)."
+    },
+    "t_comm_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Standalone communication duration (Phase 7B)."
+    },
+    "t_seq_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Fully serialised compute-then-communicate."
+    },
+    "t_overlap_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Both issued concurrently on separate streams."
+    },
+    "t_ideal_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "max(t_compute, t_comm) \u2014 perfect overlap."
+    },
+    "overlap_efficiency": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "(t_seq - t_overlap) / (t_seq - t_ideal). End-to-end; null when the denominator is too small to be meaningful."
+    },
+    "exposed_comm_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "max(0, t_overlap - t_compute). End-to-end exposure, NOT proof of the collective's own duration."
+    },
+    "compute_during_overlap_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Compute-stream duration measured by CUDA events while communication ran \u2014 for interference."
+    },
+    "comm_during_overlap_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Comm-stream duration measured by CUDA events while compute ran \u2014 for interference."
+    },
+    "bucket_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "DDP-like bucket granularity."
+    },
+    "n_buckets": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "compute_reps": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "GEMM repetitions used to hit the target compute duration."
     }
   }
 }
