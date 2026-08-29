@@ -1,0 +1,5 @@
+{"schema_version":1,"experiment_id":"p7b-overlap-20260829T040506Z-ec065cb","phase":"phase7","created_at_utc":"2026-08-29T04:06:05Z",
+ "value_kind":"measured","benchmark_tool":"overlap-bench","node_count":1,"gpu_count":4,
+ "network":"none-single-node","transport":"shm-nccl","warmup_iterations":3,"measured_iterations":10,
+ "command":"overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512","exit_code":0,
+ "git_commit":"ec065cb3654e16737ca45d7ba2b83955cc682459","runner":"phase7b"}

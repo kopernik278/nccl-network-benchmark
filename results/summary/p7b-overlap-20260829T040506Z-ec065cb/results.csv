@@ -1,0 +1,766 @@
+schema_version,experiment_id,phase,timestamp,value_kind,git_commit,provider,hostname,os,cpu_model,node_count,gpu_model,gpu_count,topology_summary,network,nvlink_present,p2p_enabled,transport,cuda_version,driver_version,nccl_version,compiler_version,benchmark_tool,config_label,collective,datatype,message_size_bytes,bucket_bytes,n_buckets,compute_reps,placement,warmup_iterations,measured_iterations,repeat_index,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,compute_during_overlap_us,comm_during_overlap_us,latency_us,correctness_ok,command,raw_output_path,notes,algorithmic_bandwidth_gbps,bandwidth_ratio_ok,bus_bandwidth_gbps,count_elements,cpu_cores,env,exit_code,git_dirty,gpus,hosts,kernel,launcher,mpi_implementation,mpi_version,nccl_algo,nccl_extra_env,nccl_proto,nccl_tests_commit,nccl_version_source,net_interface,out_of_bounds_ok,provider_instance_id,rank_to_host,ranks_per_node,redop,root,tier,topology,transport_verified,wrong_count
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,1048576,,,1,in_place,3,10,0,65.675,320.373,371.047,308.494,320.373,1.2344,242.819,126.528,297.248,308.494,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,1048576,,,1,in_place,3,10,1,64.878,285.461,352.87,310.868,285.461,0.6231,245.99,123.968,289.344,310.868,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,1048576,,,1,in_place,3,10,2,63.985,283.83,349.458,309.464,283.83,0.6094,245.479,126.496,290.72,309.464,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,1048576,,,2,in_place,3,10,0,119.344,281.903,406.235,304.994,281.903,0.8143,185.651,178.528,292.288,304.994,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,1048576,,,2,in_place,3,10,1,119.521,281.175,412.321,307.359,281.175,0.8003,187.838,187.232,295.104,307.359,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,1048576,,,2,in_place,3,10,2,118.842,286.936,404.139,308.607,286.936,0.8151,189.765,174.528,294.656,308.607,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,1048576,,,5,in_place,3,10,0,279.529,281.956,569.713,354.624,281.956,0.7475,75.096,328.0,287.68,354.624,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,1048576,,,5,in_place,3,10,1,276.589,313.927,566.176,361.858,313.927,0.81,85.269,331.168,291.392,361.858,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,1048576,,,5,in_place,3,10,2,278.365,282.922,562.067,355.867,282.922,0.7387,77.502,337.856,292.8,355.867,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,1048576,,,9,in_place,3,10,0,489.176,281.756,776.232,536.408,489.176,0.8355,47.233,512.32,347.808,536.408,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,1048576,,,9,in_place,3,10,1,488.476,284.912,769.593,528.054,488.476,0.8592,39.577,509.28,342.048,528.054,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,1048576,,,9,in_place,3,10,2,487.321,287.744,808.734,544.348,487.321,0.8226,57.026,511.68,354.976,544.348,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,16777216,,,13,in_place,3,10,0,689.979,3588.06,4130.764,3483.462,3588.06,1.1927,2793.483,1669.12,3713.28,3483.462,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,16777216,,,13,in_place,3,10,1,694.162,3540.846,4170.997,3575.948,3540.846,0.9443,2881.786,1449.952,3552.096,3575.948,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,16777216,,,13,in_place,3,10,2,704.085,3489.578,4186.122,3529.186,3489.578,0.9431,2825.101,1405.216,3393.408,3529.186,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,16777216,,,26,in_place,3,10,0,1383.155,3422.43,4823.792,3575.37,3422.43,0.8909,2192.215,2000.448,3426.272,3575.37,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,16777216,,,26,in_place,3,10,1,1374.43,3468.079,4873.666,3568.724,3468.079,0.9284,2194.293,1963.136,3430.208,3568.724,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,16777216,,,26,in_place,3,10,2,1389.197,3462.237,4793.943,3523.546,3462.237,0.954,2134.348,2019.808,3468.224,3523.546,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,16777216,,,52,in_place,3,10,0,2807.56,3501.477,6254.306,3697.658,3501.477,0.9287,890.098,3711.584,3657.248,3697.658,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,16777216,,,52,in_place,3,10,1,2793.58,3492.36,6326.149,3712.059,3492.36,0.9225,918.479,3732.224,3734.592,3712.059,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,16777216,,,52,in_place,3,10,2,2787.233,3498.74,6250.194,3700.115,3498.74,0.9268,912.882,3739.904,3714.752,3700.115,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,16777216,,,103,in_place,3,10,0,5588.231,3530.264,8951.111,5809.989,5588.231,0.9341,221.758,5747.264,3615.616,5809.989,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,16777216,,,103,in_place,3,10,1,5607.832,3486.853,8985.167,5804.76,5607.832,0.9417,196.928,5783.2,3643.552,5804.76,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,16777216,,,103,in_place,3,10,2,5627.949,3521.503,8855.11,5765.145,5627.949,0.9575,137.196,5785.632,3659.52,5765.145,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,134217728,,,102,in_place,3,10,0,5524.731,27653.086,33053.193,27959.527,27653.086,0.9433,22434.796,8388.032,28432.224,27959.527,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,134217728,,,102,in_place,3,10,1,5527.708,27961.227,33235.033,28283.767,27961.227,0.9388,22756.059,8426.592,28454.016,28283.767,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.25,all_reduce,float,134217728,,,102,in_place,3,10,2,5527.706,27559.586,33030.529,28078.162,27559.586,0.9052,22550.456,8630.88,28270.369,28078.162,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.25,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,134217728,,,204,in_place,3,10,0,11069.775,27753.901,38851.484,28285.76,27753.901,0.9521,17215.985,16195.999,28530.336,28285.76,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,134217728,,,204,in_place,3,10,1,11058.298,27744.069,38787.732,28259.938,27744.069,0.9533,17201.64,16354.208,28105.12,28259.938,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio0.5,all_reduce,float,134217728,,,204,in_place,3,10,2,11085.324,27697.574,38753.244,28220.347,27697.574,0.9527,17135.022,16472.063,28078.432,28220.347,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=0.5,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,134217728,,,408,in_place,3,10,0,22153.382,28013.766,49592.911,30442.202,28013.766,0.8875,8288.82,30301.279,28591.295,30442.202,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,134217728,,,408,in_place,3,10,1,22135.649,27775.724,49404.34,30433.663,27775.724,0.8771,8298.013,30456.097,28464.289,30433.663,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,all_reduce,float,134217728,,,408,in_place,3,10,2,22068.916,27748.079,49364.515,30440.608,27748.079,0.8754,8371.692,30392.033,28143.52,30440.608,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,134217728,,,817,in_place,3,10,0,47095.867,27917.399,75305.406,64427.847,47095.867,0.3856,17331.98,64560.799,50849.342,64427.847,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,134217728,,,817,in_place,3,10,1,47342.514,27840.088,75506.804,64469.839,47342.514,0.3919,17127.326,64710.144,51007.198,64469.839,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio2,all_reduce,float,134217728,,,817,in_place,3,10,2,47117.816,27895.043,75376.337,64524.13,47117.816,0.384,17406.314,65092.545,51386.047,64524.13,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=micro ratio_target=2.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-4MiB,all_reduce,float,134217728,4194304,32,13,in_place,3,10,0,15415.263,29689.925,44343.307,30449.783,29689.925,0.9481,15034.52,26132.383,30222.303,30449.783,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-4MiB,all_reduce,float,134217728,4194304,32,13,in_place,3,10,1,15460.988,29605.282,44528.347,30620.225,29605.282,0.932,15159.237,25319.201,30434.24,30620.225,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-4MiB,all_reduce,float,134217728,4194304,32,13,in_place,3,10,2,15485.16,29693.037,44359.861,30510.39,29693.037,0.9443,15025.231,25422.016,30132.608,30510.39,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-8MiB,all_reduce,float,134217728,8388608,16,25,in_place,3,10,0,15273.803,28897.039,43068.233,30185.54,28897.039,0.9091,14911.737,26769.632,30371.328,30185.54,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-8MiB,all_reduce,float,134217728,8388608,16,25,in_place,3,10,1,14966.613,28693.347,43097.45,30113.489,28693.347,0.9014,15146.876,26311.745,30137.024,30113.489,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-8MiB,all_reduce,float,134217728,8388608,16,25,in_place,3,10,2,15002.976,28813.852,43010.94,30106.694,28813.852,0.9089,15103.718,25837.12,29937.599,30106.694,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-16MiB,all_reduce,float,134217728,16777216,8,51,in_place,3,10,0,17782.159,27746.465,46109.13,30005.001,27746.465,0.877,12222.842,27326.08,29938.496,30005.001,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-16MiB,all_reduce,float,134217728,16777216,8,51,in_place,3,10,1,15860.627,27711.647,42521.917,30299.171,27711.647,0.8253,14438.545,26876.961,30662.56,30299.171,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-16MiB,all_reduce,float,134217728,16777216,8,51,in_place,3,10,2,15998.819,27719.434,42733.126,30203.111,27719.434,0.8346,14204.292,26745.825,30058.304,30203.111,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-32MiB,all_reduce,float,134217728,33554432,4,103,in_place,3,10,0,16886.082,27583.936,43897.269,31660.438,27583.936,0.7501,14774.356,26810.848,31794.912,31660.438,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-32MiB,all_reduce,float,134217728,33554432,4,103,in_place,3,10,1,16902.727,27790.008,43753.668,31864.828,27790.008,0.7447,14962.101,25124.384,31852.608,31864.828,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-32MiB,all_reduce,float,134217728,33554432,4,103,in_place,3,10,2,16885.098,27704.908,43931.331,31776.1,27704.908,0.7491,14891.002,25236.383,31717.632,31776.1,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-64MiB,all_reduce,float,134217728,67108864,2,201,in_place,3,10,0,18296.644,28089.38,45542.38,35143.371,28089.38,0.5958,16846.727,26392.193,35124.321,35143.371,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-64MiB,all_reduce,float,134217728,67108864,2,201,in_place,3,10,1,18259.102,27829.787,45608.169,35098.652,27829.787,0.5911,16839.549,26036.448,34881.409,35098.652,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,
+1,p7b-overlap-20260829T040506Z-ec065cb,phase7,2026-08-29T04:06:05Z,measured,ec065cb3654e16737ca45d7ba2b83955cc682459,unknown,78c52ce555ca,Ubuntu 24.04.3 LTS,AMD EPYC 7702 64-Core Processor,1,NVIDIA L4,4,SYS,none-single-node,False,False,shm-nccl,12.8,550.127.05,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,bucket-64MiB,all_reduce,float,134217728,67108864,2,201,in_place,3,10,2,18261.343,28008.416,45653.938,34981.195,28008.416,0.6048,16719.852,25565.727,35024.384,34981.195,True,overlap_bench -g 4 -w 3 -n 10 --repeats 3 --gemm 512,results/raw/p7b-overlap-20260829T040506Z-ec065cb/overlap_bench.stdout.txt,experiment=bucket ratio_target=1.0,,,,,128,"{""CUDA_HOME"":""/usr/local/cuda""}",0,False,"[{""index"":0,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:02:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:41:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:81:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":23034,""name"":""NVIDIA L4"",""pci_bus_id"":""00000000:C2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":8,""pcie_link_width_max"":16}]",,6.8.0-40-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	0-127	0		N/A
+GPU1	SYS	 X 	SYS	SYS	0-127	0		N/A
+GPU2	SYS	SYS	 X 	SYS	0-127	0		N/A
+GPU3	SYS	SYS	SYS	 X 	0-127	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks",True,

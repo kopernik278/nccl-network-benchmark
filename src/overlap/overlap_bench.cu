@@ -170,6 +170,39 @@ int main(int argc, char** argv) {
     else if (a=="--gemm") gemmN = std::stoi(nx());
     else if (a=="--only-micro") doBuckets = false;
     else if (a=="--only-buckets") doMicro = false;
+    // Observability filters: profiling the whole matrix makes an unreadable
+    // trace. These pick one case so its timeline can be inspected.
+    else if (a=="--sizes") {
+      std::string s = nx(), cur; commSizes.clear();
+      for (size_t k=0;k<=s.size();++k) {
+        if (k==s.size() || s[k]==',') {
+          if (!cur.empty()) { size_t m=1; char c2=cur.back();
+            if (c2=='K'||c2=='k') m=1u<<10; else if (c2=='M'||c2=='m') m=1u<<20;
+            if (m>1) cur.pop_back();
+            commSizes.push_back((size_t)std::stoull(cur)*m); }
+          cur.clear();
+        } else cur += s[k];
+      }
+    }
+    else if (a=="--ratios") {
+      std::string s = nx(), cur; ratios.clear();
+      for (size_t k=0;k<=s.size();++k) {
+        if (k==s.size() || s[k]==',') { if(!cur.empty()) ratios.push_back(std::stod(cur)); cur.clear(); }
+        else cur += s[k];
+      }
+    }
+    else if (a=="--buckets") {
+      std::string s = nx(), cur; bucketSizes.clear();
+      for (size_t k=0;k<=s.size();++k) {
+        if (k==s.size() || s[k]==',') {
+          if (!cur.empty()) { size_t m=1; char c2=cur.back();
+            if (c2=='K'||c2=='k') m=1u<<10; else if (c2=='M'||c2=='m') m=1u<<20;
+            if (m>1) cur.pop_back();
+            bucketSizes.push_back((size_t)std::stoull(cur)*m); }
+          cur.clear();
+        } else cur += s[k];
+      }
+    }
   }
 
   int avail=0; CK(cudaGetDeviceCount(&avail));

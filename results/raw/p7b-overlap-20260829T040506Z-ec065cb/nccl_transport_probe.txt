@@ -1,0 +1,126 @@
+# overlap benchmark: 4 GPUs
+# device 0: NVIDIA L4 sm_89
+# device 1: NVIDIA L4 sm_89
+# device 2: NVIDIA L4 sm_89
+# device 3: NVIDIA L4 sm_89
+# canAccessPeer 0->1: yes
+# canAccessPeer 0->2: yes
+# canAccessPeer 0->3: yes
+# NCCL's own transport choice is the authority here; run with
+# NCCL_DEBUG=INFO to capture it alongside these results.
+78c52ce555ca:549:549 [3] NCCL INFO cudaDriverVersion 12040
+78c52ce555ca:549:549 [0] NCCL INFO NCCL version 2.25.1+cuda12.8
+78c52ce555ca:549:557 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. Using internal network plugin.
+78c52ce555ca:549:557 [1] NCCL INFO Failed to open libibverbs.so[.1]
+78c52ce555ca:549:557 [1] NCCL INFO NET/Socket : Using [0]eth0:10.128.49.2<0>
+78c52ce555ca:549:557 [1] NCCL INFO Using network Socket
+78c52ce555ca:549:559 [3] NCCL INFO Using network Socket
+78c52ce555ca:549:558 [2] NCCL INFO Using network Socket
+78c52ce555ca:549:556 [0] NCCL INFO Using network Socket
+78c52ce555ca:549:559 [3] NCCL INFO ncclCommInitAll comm 0x565021f03760 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c2000 commId 0x8cd80134d54119bd - Init START
+78c52ce555ca:549:557 [1] NCCL INFO ncclCommInitAll comm 0x565021e01580 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 41000 commId 0x8cd80134d54119bd - Init START
+78c52ce555ca:549:558 [2] NCCL INFO ncclCommInitAll comm 0x565021e82670 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 81000 commId 0x8cd80134d54119bd - Init START
+78c52ce555ca:549:556 [0] NCCL INFO ncclCommInitAll comm 0x565021d805d0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 2000 commId 0x8cd80134d54119bd - Init START
+78c52ce555ca:549:558 [2] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+78c52ce555ca:549:559 [3] NCCL INFO Setting affinity for GPU 3 to ffffffff,ffffffff,ffffffff,ffffffff
+78c52ce555ca:549:559 [3] NCCL INFO NVLS multicast support is not available on dev 3
+78c52ce555ca:549:558 [2] NCCL INFO Setting affinity for GPU 2 to ffffffff,ffffffff,ffffffff,ffffffff
+78c52ce555ca:549:558 [2] NCCL INFO NVLS multicast support is not available on dev 2
+78c52ce555ca:549:556 [0] NCCL INFO Setting affinity for GPU 0 to ffffffff,ffffffff,ffffffff,ffffffff
+78c52ce555ca:549:556 [0] NCCL INFO NVLS multicast support is not available on dev 0
+78c52ce555ca:549:557 [1] NCCL INFO Setting affinity for GPU 1 to ffffffff,ffffffff,ffffffff,ffffffff
+78c52ce555ca:549:557 [1] NCCL INFO NVLS multicast support is not available on dev 1
+78c52ce555ca:549:559 [3] NCCL INFO comm 0x565021f03760 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+78c52ce555ca:549:556 [0] NCCL INFO comm 0x565021d805d0 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+78c52ce555ca:549:559 [3] NCCL INFO Trees [0] -1/-1/-1->3->2 [1] -1/-1/-1->3->2
+78c52ce555ca:549:559 [3] NCCL INFO P2P Chunksize set to 131072
+78c52ce555ca:549:556 [0] NCCL INFO Channel 00/02 : 0 1 2 3
+78c52ce555ca:549:558 [2] NCCL INFO comm 0x565021e82670 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+78c52ce555ca:549:556 [0] NCCL INFO Channel 01/02 : 0 1 2 3
+78c52ce555ca:549:557 [1] NCCL INFO comm 0x565021e01580 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+78c52ce555ca:549:556 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1
+78c52ce555ca:549:556 [0] NCCL INFO P2P Chunksize set to 131072
+78c52ce555ca:549:556 [0] NCCL INFO Check P2P Type intraNodeP2pSupport 0 directMode 1
+78c52ce555ca:549:558 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1
+78c52ce555ca:549:558 [2] NCCL INFO P2P Chunksize set to 131072
+78c52ce555ca:549:557 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0
+78c52ce555ca:549:557 [1] NCCL INFO P2P Chunksize set to 131072
+78c52ce555ca:549:561 [1] NCCL INFO [Proxy Service] Device 1 CPU core 121
+78c52ce555ca:549:562 [2] NCCL INFO [Proxy Service] Device 2 CPU core 115
+78c52ce555ca:549:563 [0] NCCL INFO [Proxy Service] Device 0 CPU core 91
+78c52ce555ca:549:564 [3] NCCL INFO [Proxy Service] Device 3 CPU core 41
+78c52ce555ca:549:565 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 67
+78c52ce555ca:549:566 [2] NCCL INFO [Proxy Service UDS] Device 2 CPU core 6
+78c52ce555ca:549:567 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 111
+78c52ce555ca:549:568 [3] NCCL INFO [Proxy Service UDS] Device 3 CPU core 36
+78c52ce555ca:549:559 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+78c52ce555ca:549:559 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+78c52ce555ca:549:557 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+78c52ce555ca:549:557 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+78c52ce555ca:549:556 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+78c52ce555ca:549:556 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+78c52ce555ca:549:558 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+78c52ce555ca:549:558 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+78c52ce555ca:549:556 [0] NCCL INFO CC Off, workFifoBytes 1048576
+78c52ce555ca:549:557 [1] NCCL INFO ncclCommInitAll comm 0x565021e01580 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 41000 commId 0x8cd80134d54119bd - Init COMPLETE
+78c52ce555ca:549:557 [1] NCCL INFO Init timings - ncclCommInitAll: rank 1 nranks 4 total 0.55 (kernels 0.37, alloc 0.12, bootstrap 0.00, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.01, rest 0.00)
+78c52ce555ca:549:559 [3] NCCL INFO ncclCommInitAll comm 0x565021f03760 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c2000 commId 0x8cd80134d54119bd - Init COMPLETE
+78c52ce555ca:549:559 [3] NCCL INFO Init timings - ncclCommInitAll: rank 3 nranks 4 total 0.55 (kernels 0.38, alloc 0.11, bootstrap 0.00, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.01, rest 0.00)
+78c52ce555ca:549:556 [0] NCCL INFO ncclCommInitAll comm 0x565021d805d0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 2000 commId 0x8cd80134d54119bd - Init COMPLETE
+78c52ce555ca:549:556 [0] NCCL INFO Init timings - ncclCommInitAll: rank 0 nranks 4 total 0.55 (kernels 0.39, alloc 0.11, bootstrap 0.00, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.01, rest 0.00)
+78c52ce555ca:549:558 [2] NCCL INFO ncclCommInitAll comm 0x565021e82670 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 81000 commId 0x8cd80134d54119bd - Init COMPLETE
+78c52ce555ca:549:558 [2] NCCL INFO Init timings - ncclCommInitAll: rank 2 nranks 4 total 0.55 (kernels 0.39, alloc 0.11, bootstrap 0.00, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.01, rest 0.00)
+# gemm 512x512: 67.63 us per repetition (measured)
+experiment,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+78c52ce555ca:549:569 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+78c52ce555ca:549:570 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+78c52ce555ca:549:572 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+78c52ce555ca:549:569 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+78c52ce555ca:549:571 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+78c52ce555ca:549:570 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+78c52ce555ca:549:572 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+78c52ce555ca:549:571 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+78c52ce555ca:549:571 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+78c52ce555ca:549:572 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+78c52ce555ca:549:569 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+78c52ce555ca:549:570 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+micro,1048576,0.25,1,0,0,106.833,351.627,468.219,390.080,351.627,0.6702,283.247,158.752,356.416,0
+micro,1048576,0.25,1,0,0,102.965,338.082,433.794,356.837,338.082,0.8040,253.872,149.472,323.616,1
+micro,1048576,0.25,1,0,0,113.896,331.880,433.613,375.263,331.880,0.5736,261.367,164.576,342.688,2
+micro,1048576,0.50,3,0,0,246.057,322.072,560.073,363.560,322.072,0.8257,117.503,305.952,330.720,0
+micro,1048576,0.50,3,0,0,246.678,340.636,575.022,385.642,340.636,0.8080,138.964,321.568,352.896,1
+micro,1048576,0.50,3,0,0,258.802,378.629,579.661,364.432,378.629,1.0706,105.630,312.896,330.880,2
+micro,1048576,1.00,5,0,0,387.756,346.388,716.721,471.806,387.756,0.7445,84.050,439.616,365.536,0
+micro,1048576,1.00,5,0,0,387.295,325.398,741.829,466.906,387.295,0.7754,79.611,434.496,361.440,1
+micro,1048576,1.00,5,0,0,287.325,323.384,600.840,388.437,323.384,0.7655,101.112,366.336,327.840,2
+micro,1048576,2.00,11,0,0,597.785,316.902,932.952,637.340,597.785,0.8820,39.555,615.200,415.104,0
+micro,1048576,2.00,11,0,0,597.725,320.649,933.763,639.133,597.725,0.8768,41.408,617.184,417.600,1
+micro,1048576,2.00,11,0,0,596.953,308.897,945.856,635.206,596.953,0.8904,38.253,613.472,414.176,2
+micro,16777216,0.25,14,0,0,748.601,3489.265,4290.145,3878.153,3489.265,0.5144,3129.552,1672.224,3855.008,0
+micro,16777216,0.25,14,0,0,750.145,3560.730,4180.367,3774.316,3560.730,0.6553,3024.171,1689.952,3750.208,1
+micro,16777216,0.25,14,0,0,746.226,3306.909,4173.775,3620.273,3306.909,0.6385,2874.047,1596.896,3597.024,2
+micro,16777216,0.50,28,0,0,1467.246,3595.817,5137.374,3532.246,3595.817,1.0412,2065.000,2073.568,3508.864,0
+micro,16777216,0.50,28,0,0,1476.633,3518.570,5038.927,3759.698,3518.570,0.8414,2283.065,2233.920,3736.448,1
+micro,16777216,0.50,28,0,0,1476.975,3391.008,5121.574,3735.322,3391.008,0.8010,2258.347,2232.064,3711.840,2
+micro,16777216,1.00,55,0,0,2864.819,3449.760,6616.742,3931.083,3449.760,0.8480,1066.264,3907.456,3847.520,0
+micro,16777216,1.00,55,0,0,2866.623,3501.728,6503.167,3874.446,3501.728,0.8758,1007.823,3850.528,3788.032,1
+micro,16777216,1.00,55,0,0,2861.943,3396.158,6507.686,3877.342,3396.158,0.8454,1015.399,3854.336,3771.136,2
+micro,16777216,2.00,110,0,0,5829.498,3830.502,9319.664,6165.545,5829.498,0.9037,336.047,6144.096,3863.072,0
+micro,16777216,2.00,110,0,0,5694.511,3591.669,9347.377,6022.243,5694.511,0.9103,327.732,6000.256,3692.736,1
+micro,16777216,2.00,110,0,0,5707.195,3907.138,9237.258,6102.827,5707.195,0.8879,395.632,6080.576,3710.368,2
+micro,134217728,0.25,104,0,0,5371.929,28774.049,34027.243,28658.640,28774.049,1.0220,23286.711,8665.824,28632.353,0
+micro,134217728,0.25,104,0,0,5468.933,28329.616,34233.175,28897.955,28329.616,0.9037,23429.022,8851.904,28872.192,1
+micro,134217728,0.25,104,0,0,5406.565,28779.410,33821.463,28911.030,28779.410,0.9739,23504.465,9101.184,28885.569,2
+micro,134217728,0.50,208,0,0,10844.008,28002.365,39781.498,29048.832,28002.365,0.9112,18204.824,16336.576,29023.487,0
+micro,134217728,0.50,208,0,0,10746.202,28138.173,39755.089,29120.488,28138.173,0.9154,18374.286,16988.001,29094.879,1
+micro,134217728,0.50,208,0,0,10740.692,28387.415,39935.380,28812.813,28387.415,0.9632,18072.121,16518.145,28787.008,2
+micro,134217728,1.00,417,0,0,22537.649,27913.396,51252.948,30008.143,27913.396,0.9102,7470.494,29984.800,28493.568,0
+micro,134217728,1.00,417,0,0,22624.274,28180.362,51564.008,30369.800,28180.362,0.9064,7745.526,30347.008,28840.544,1
+micro,134217728,1.00,417,0,0,22534.553,28760.785,50728.231,31244.390,28760.785,0.8869,8709.837,31221.792,29322.432,2
+micro,134217728,2.00,833,0,0,48648.804,28462.559,77614.247,67422.287,48648.804,0.3519,18773.483,67394.272,53691.071,0
+micro,134217728,2.00,833,0,0,48718.256,28511.681,76910.681,67030.042,48718.256,0.3505,18311.786,67004.128,53302.433,1
+micro,134217728,2.00,833,0,0,48667.289,29040.957,77045.638,67417.978,48667.289,0.3393,18750.689,67388.931,53678.879,2
+78c52ce555ca:549:576 [0] NCCL INFO comm 0x565021d805d0 rank 0 nranks 4 cudaDev 0 busId 2000 - Destroy COMPLETE
+78c52ce555ca:549:576 [3] NCCL INFO comm 0x565021f03760 rank 3 nranks 4 cudaDev 3 busId c2000 - Destroy COMPLETE
+78c52ce555ca:549:576 [2] NCCL INFO comm 0x565021e82670 rank 2 nranks 4 cudaDev 2 busId 81000 - Destroy COMPLETE
+78c52ce555ca:549:576 [1] NCCL INFO comm 0x565021e01580 rank 1 nranks 4 cudaDev 1 busId 41000 - Destroy COMPLETE

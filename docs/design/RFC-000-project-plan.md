@@ -562,12 +562,15 @@ unusable for ranking.*
 NCCL logs, Nsight Systems, Nsight Compute where appropriate, and topology
 tools, used to identify real bottlenecks rather than suspected ones.
 
-*Status: Phase 7A (measurement validation) complete 2026-08-29 — see
-`docs/experiments/p7a-harness-validation.md`. It found that Phase 6's
-"~4.4 ms harness floor" was a property of that host, not of the harness
-(measured at ~27 us), and the timeline confirmed that 91-93% of V1's runtime
-is synchronization barriers. Two Phase 6 performance conclusions are
-invalidated and three revised there. Phase 7B (overlap) not started.*
+*Status: complete. Phase 7A (measurement validation, 2026-08-29) found that
+Phase 6's "~4.4 ms harness floor" was a property of that host, not of the
+harness (measured at ~27 us), and confirmed from the timeline that 91-93% of
+the naive ring's runtime is synchronization barriers; two Phase 6 performance
+conclusions are invalidated and three revised there. Phase 7B (overlap,
+2026-08-29) measured that 62-95% of the theoretical overlap opportunity is
+realised, that overlap costs the compute stream 1.03x-2.09x, and that DDP-like
+bucket size has a plateau over 4-16 MiB rather than a sharp optimum. See
+`docs/experiments/p7a-harness-validation.md` and `p7b-overlap.md`.*
 
 ### Phase 8 — Communication optimization
 
