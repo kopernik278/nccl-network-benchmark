@@ -34,6 +34,28 @@ CSV_COLUMNS = [
 ]
 
 
+def csv_fieldnames(rows: list[dict]) -> list[str]:
+    """Curated order first, then anything else the rows carry.
+
+    Deriving the tail from the rows means a newly emitted field can never be
+    silently dropped from the CSV view — only pushed to the end of it. RFC-001
+    allows the CSV to be lossy about NESTED values; it should not be lossy
+    about scalar integrity fields such as transport_verified.
+    """
+    extra = sorted(set().union(*(set(r) for r in rows)) - set(CSV_COLUMNS))
+    return CSV_COLUMNS + extra
+
+
+def csv_flatten(row: dict) -> dict:
+    flat = dict(row)
+    for k in ("gpus", "env", "hosts", "rank_to_host", "topology"):
+        if isinstance(flat.get(k), (dict, list, str)) and flat.get(k) is not None:
+            import json as _json
+            flat[k] = (_json.dumps(flat[k], separators=(",", ":"), sort_keys=True)
+                       if not isinstance(flat[k], str) else flat[k])
+    return flat
+
+
 def load_json(p: Path) -> dict[str, Any]:
     if not p.is_file():
         return {}
@@ -200,9 +222,9 @@ def main() -> int:
     with (out / "results.jsonl").open("w", encoding="utf-8") as fh:
         for r in rows: fh.write(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n")
     with (out / "results.csv").open("w", encoding="utf-8", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=CSV_COLUMNS, extrasaction="ignore")
+        w = csv.DictWriter(fh, fieldnames=csv_fieldnames(rows), extrasaction="ignore")
         w.writeheader()
-        for r in rows: w.writerow(r)
+        for r in rows: w.writerow(csv_flatten(r))
     labels = sorted({r["config_label"] for r in rows})
     print(f"parsed {len(rows)} row(s) from {a.raw_dir}")
     print(f"  configurations   : {', '.join(labels)}")

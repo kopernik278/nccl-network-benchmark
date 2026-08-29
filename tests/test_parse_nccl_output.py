@@ -420,11 +420,19 @@ class TestSchemaConformance(unittest.TestCase):
                     if allowed:
                         self.assertIn(row[field], allowed)
 
-    def test_csv_columns_cover_schema_fields(self):
-        """A field in the schema but missing from CSV_COLUMNS is silently dropped."""
-        schema_fields = set(self.schema["properties"])
-        missing = schema_fields - set(P.CSV_COLUMNS)
-        self.assertFalse(missing, f"CSV view would drop: {sorted(missing)}")
+    def test_csv_columns_cover_every_field_this_parser_emits(self):
+        """A field this parser emits but omits from CSV_COLUMNS is silently dropped.
+
+        The assertion is against what THIS parser produces, not against the whole
+        schema: three parsers now share one schema (nccl-tests, custom ring,
+        overlap) and each emits a subset, so requiring one CSV view to carry
+        every schema field would fail for reasons that are not defects.
+        """
+        with tempfile.TemporaryDirectory() as td:
+            rows = self._rows(td)
+            emitted = set().union(*(set(r) for r in rows))
+            missing = emitted - set(P.CSV_COLUMNS)
+            self.assertFalse(missing, f"CSV view would drop: {sorted(missing)}")
 
 
 if __name__ == "__main__":
