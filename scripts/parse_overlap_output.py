@@ -24,7 +24,7 @@ CSV_COLUMNS = [
     "provider","hostname","os","cpu_model","node_count","gpu_model","gpu_count",
     "topology_summary","network","nvlink_present","p2p_enabled","transport",
     "cuda_version","driver_version","nccl_version","compiler_version",
-    "benchmark_tool","config_label","collective","datatype","message_size_bytes",
+    "benchmark_tool","config_label","workload_class","collective","datatype","message_size_bytes",
     "bucket_bytes","n_buckets","compute_reps","placement",
     "warmup_iterations","measured_iterations","repeat_index",
     "t_compute_us","t_comm_us","t_seq_us","t_overlap_us","t_ideal_us",
@@ -119,12 +119,18 @@ def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
             return out
 
         kind = rec.get("experiment", "")
+        wl = rec.get("workload") or None
         bucket = num("bucket_bytes", int, 0) or 0
         ratio = num("ratio_target", float)
         if kind == "bucket":
             label = f"bucket-{bucket // (1 << 20)}MiB"
         else:
             label = f"micro-ratio{ratio:g}" if ratio is not None else "micro"
+            # Phase 8 runs several workload classes at the same ratio; without
+            # the class in the label the rows would be indistinguishable by
+            # config_label alone.
+            if wl and wl != "compute-gemm":
+                label = f"{label}-{wl}"
 
         t_ov = num("t_overlap_us")
         eff = num("overlap_efficiency")
@@ -167,6 +173,7 @@ def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
             "compiler_version": env.get("compiler_version"),
             "nccl_tests_commit": None,
             "benchmark_tool": "overlap-bench",
+            "workload_class": wl,
             "config_label": label,
             "nccl_algo": None, "nccl_proto": None, "nccl_extra_env": None,
             "collective": "all_reduce", "datatype": "float", "redop": "sum", "root": None,

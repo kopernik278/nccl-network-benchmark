@@ -41,8 +41,19 @@ class TestOverlapParsing(unittest.TestCase):
         """The NCCL_DEBUG banner precedes the header; it must not become one."""
         with tempfile.TemporaryDirectory() as td:
             rows, _ = P.build_rows(make_raw(Path(td)))
-            self.assertEqual(len(rows), 6)
+            self.assertEqual(len(rows), 7)
             self.assertTrue(all(r["message_size_bytes"] > 0 for r in rows))
+
+    def test_workload_class_separates_rows_at_the_same_ratio(self):
+        """Two classes at ratio 1.0 must not collapse into one config_label."""
+        with tempfile.TemporaryDirectory() as td:
+            rows, _ = P.build_rows(make_raw(Path(td)))
+            at16 = [r for r in rows if r["message_size_bytes"] == 16777216]
+            self.assertEqual(len(at16), 2)
+            self.assertEqual(sorted(r["config_label"] for r in at16),
+                             ["micro-ratio1", "micro-ratio1-memory-triad"])
+            self.assertEqual(sorted(r["workload_class"] for r in at16),
+                             ["compute-gemm", "memory-triad"])
 
     def test_micro_and_bucket_labels(self):
         with tempfile.TemporaryDirectory() as td:

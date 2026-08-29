@@ -557,6 +557,13 @@
       ],
       "minimum": 0,
       "description": "GEMM repetitions used to hit the target compute duration."
+    },
+    "workload_class": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Phase 8 compute workload class: compute-gemm | memory-triad | mixed. Arithmetic intensity is by construction unless counter-verified."
     }
   }
 }

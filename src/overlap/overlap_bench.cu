@@ -59,6 +59,42 @@
 static int NG = 4;
 static std::vector<int> DEV;
 
+// ---------------------------------------------------------------------------
+// Phase 8: three workload classes with deliberately different resource
+// fingerprints. All three are calibrated to the SAME standalone duration for a
+// given target, so "which one degrades more under overlap" is a fair question —
+// otherwise a longer workload would appear to suffer simply by overlapping more
+// of the collective.
+//
+//   COMPUTE  cuBLAS SGEMM            high arithmetic intensity, SM/FLOP bound
+//   MEMORY   streaming triad         ~0.17 flop/byte, DRAM-bandwidth bound
+//   MIXED    triad + inner FMA loop  ~8 flop/byte, between the two
+//
+// The classification is by DESIGN (arithmetic intensity by construction). It is
+// labelled counter-verified only if Nsight Compute is actually available.
+// ---------------------------------------------------------------------------
+enum Workload { WL_COMPUTE = 0, WL_MEMORY = 1, WL_MIXED = 2 };
+static const char* WL_NAME[] = {"compute-gemm", "memory-triad", "mixed"};
+
+// d[i] = a[i] + s*b[i] : 12 bytes moved, 2 flops -> ~0.17 flop/byte
+__global__ void streamTriad(float* d, const float* a, const float* b, float s, size_t n) {
+  size_t i = blockIdx.x * (size_t)blockDim.x + threadIdx.x;
+  size_t st = (size_t)gridDim.x * blockDim.x;
+  for (; i < n; i += st) d[i] = a[i] + s * b[i];
+}
+
+// 8 bytes moved, 2*inner flops -> ~inner/4 flop/byte
+__global__ void mixedKernel(float* d, const float* a, size_t n, int inner) {
+  size_t i = blockIdx.x * (size_t)blockDim.x + threadIdx.x;
+  size_t st = (size_t)gridDim.x * blockDim.x;
+  for (; i < n; i += st) {
+    float v = a[i];
+    #pragma unroll 8
+    for (int k = 0; k < inner; ++k) v = fmaf(v, 1.0000001f, 0.0000001f);
+    d[i] = v;
+  }
+}
+
 struct Ctx {
   std::vector<cudaStream_t> sCompute, sComm;
   std::vector<cublasHandle_t> blas;
@@ -68,6 +104,10 @@ struct Ctx {
   std::vector<ncclComm_t> comm;
   int gemmN = 512;
   size_t gradElems = 0;
+  // streaming buffers for the memory-bound and mixed classes
+  std::vector<float*> mA, mB, mD;
+  size_t memElems = 0;
+  int mixedInner = 32;
 };
 
 // ---------------------------------------------------------------------------
@@ -95,14 +135,27 @@ static double medianOf(std::vector<double> v) {
 // ---------------------------------------------------------------------------
 // workloads
 // ---------------------------------------------------------------------------
-static void launchCompute(Ctx& c, int reps) {
+static void launchCompute(Ctx& c, int reps, Workload wl = WL_COMPUTE) {
   const float alpha = 1.0f, beta = 0.0f;
   const int n = c.gemmN;
   for (int i = 0; i < NG; ++i) {
     CK(cudaSetDevice(DEV[i]));
-    for (int r = 0; r < reps; ++r)
-      BK(cublasSgemm(c.blas[i], CUBLAS_OP_N, CUBLAS_OP_N, n, n, n,
-                     &alpha, c.A[i], n, c.B[i], n, &beta, c.C[i], n));
+    for (int r = 0; r < reps; ++r) {
+      switch (wl) {
+        case WL_COMPUTE:
+          BK(cublasSgemm(c.blas[i], CUBLAS_OP_N, CUBLAS_OP_N, n, n, n,
+                         &alpha, c.A[i], n, c.B[i], n, &beta, c.C[i], n));
+          break;
+        case WL_MEMORY:
+          streamTriad<<<512, 256, 0, c.sCompute[i]>>>(c.mD[i], c.mA[i], c.mB[i],
+                                                      2.0f, c.memElems);
+          break;
+        case WL_MIXED:
+          mixedKernel<<<512, 256, 0, c.sCompute[i]>>>(c.mD[i], c.mA[i],
+                                                      c.memElems, c.mixedInner);
+          break;
+      }
+    }
   }
 }
 static void launchComm(Ctx& c, size_t elems) {
@@ -153,6 +206,9 @@ static void elapsed(Ctx& c, double& compUs, double& commUs) {
 int main(int argc, char** argv) {
   int warmup = 3, iters = 10, repeats = 3, gemmN = 512;
   bool doBuckets = true, doMicro = true;
+  size_t memElems = 8u<<20;            // 32 MiB per array, ~96 MiB traffic per pass
+  int mixedInner = 32;
+  std::vector<int> workloads = {WL_COMPUTE};   // Phase 7B default
   std::vector<size_t> commSizes = {1u<<20, 16u<<20, 128u<<20};
   std::vector<double> ratios = {0.25, 0.5, 1.0, 2.0};
   std::vector<size_t> bucketSizes = {4u<<20, 8u<<20, 16u<<20, 32u<<20, 64u<<20};
@@ -168,6 +224,20 @@ int main(int argc, char** argv) {
     else if (a=="-n") iters = std::stoi(nx());
     else if (a=="--repeats") repeats = std::stoi(nx());
     else if (a=="--gemm") gemmN = std::stoi(nx());
+    else if (a=="--mem-elems") memElems = (size_t)std::stoull(nx());
+    else if (a=="--mixed-inner") mixedInner = std::stoi(nx());
+    else if (a=="--workloads") {
+      std::string s = nx(), cur; workloads.clear();
+      for (size_t k=0;k<=s.size();++k) {
+        if (k==s.size() || s[k]==',') {
+          if (cur=="compute"||cur=="gemm") workloads.push_back(WL_COMPUTE);
+          else if (cur=="memory"||cur=="mem") workloads.push_back(WL_MEMORY);
+          else if (cur=="mixed") workloads.push_back(WL_MIXED);
+          else if (!cur.empty()) { std::fprintf(stderr,"unknown workload %s\n",cur.c_str()); return 2; }
+          cur.clear();
+        } else cur += s[k];
+      }
+    }
     else if (a=="--only-micro") doBuckets = false;
     else if (a=="--only-buckets") doMicro = false;
     // Observability filters: profiling the whole matrix makes an unreadable
@@ -225,6 +295,8 @@ int main(int argc, char** argv) {
   c.A.resize(NG); c.B.resize(NG); c.C.resize(NG); c.grad.resize(NG);
   c.evCompS.resize(NG); c.evCompE.resize(NG); c.evCommS.resize(NG); c.evCommE.resize(NG);
   c.comm.resize(NG);
+  c.mA.resize(NG); c.mB.resize(NG); c.mD.resize(NG);
+  c.memElems = memElems; c.mixedInner = mixedInner;
   const size_t maxElems = totalGrad / sizeof(float);
   const size_t gn = (size_t)gemmN * gemmN;
 
@@ -241,6 +313,11 @@ int main(int argc, char** argv) {
     CK(cudaMemset(c.B[i], 1, gn*sizeof(float)));
     CK(cudaMalloc(&c.grad[i], maxElems*sizeof(float)));
     CK(cudaMemset(c.grad[i], 0, maxElems*sizeof(float)));
+    CK(cudaMalloc(&c.mA[i], c.memElems*sizeof(float)));
+    CK(cudaMalloc(&c.mB[i], c.memElems*sizeof(float)));
+    CK(cudaMalloc(&c.mD[i], c.memElems*sizeof(float)));
+    CK(cudaMemset(c.mA[i], 1, c.memElems*sizeof(float)));
+    CK(cudaMemset(c.mB[i], 1, c.memElems*sizeof(float)));
     CK(cudaEventCreate(&c.evCompS[i])); CK(cudaEventCreate(&c.evCompE[i]));
     CK(cudaEventCreate(&c.evCommS[i])); CK(cudaEventCreate(&c.evCommE[i]));
   }
@@ -249,12 +326,30 @@ int main(int argc, char** argv) {
 
   // --- calibrate the compute workload --------------------------------------
   NVTX_PUSH("calibrate");
-  double usPerRep = timeUs([&](){ launchCompute(c,1); syncStreams(c,true,false); }, 5, 20);
+  double usPerRep[3];
+  for (int w = 0; w < 3; ++w)
+    usPerRep[w] = timeUs([&](){ launchCompute(c,1,(Workload)w); syncStreams(c,true,false); }, 5, 20);
   NVTX_POP();
-  std::printf("# gemm %dx%d: %.2f us per repetition (measured)\n", gemmN, gemmN, usPerRep);
-  auto repsFor = [&](double targetUs){ int r=(int)std::lround(targetUs/std::max(usPerRep,1e-6)); return std::max(r,1); };
+  // Standalone characterisation, printed as evidence rather than assumed.
+  const double memBytesPerPass = 12.0 * (double)c.memElems;                    // triad: read a,b write d
+  const double mixBytesPerPass = 8.0  * (double)c.memElems;                    // read a, write d
+  const double gemmFlops = 2.0 * (double)gemmN * gemmN * gemmN;
+  std::printf("# workload standalone characterisation (per repetition, per GPU):\n");
+  std::printf("#   %-14s %8.2f us  gemm %dx%d  %.2f GFLOP  -> %.1f GFLOP/s  (AI ~ %.0f flop/byte, design)\n",
+              WL_NAME[WL_COMPUTE], usPerRep[WL_COMPUTE], gemmN, gemmN, gemmFlops/1e9,
+              gemmFlops/(usPerRep[WL_COMPUTE]*1e-6)/1e9, gemmFlops/(3.0*gemmN*gemmN*4.0));
+  std::printf("#   %-14s %8.2f us  %.0f MiB moved -> %.1f GB/s          (AI ~ 0.17 flop/byte, design)\n",
+              WL_NAME[WL_MEMORY], usPerRep[WL_MEMORY], memBytesPerPass/(1<<20),
+              memBytesPerPass/(usPerRep[WL_MEMORY]*1e-6)/1e9);
+  std::printf("#   %-14s %8.2f us  %.0f MiB moved -> %.1f GB/s          (AI ~ %.0f flop/byte, design)\n",
+              WL_NAME[WL_MIXED], usPerRep[WL_MIXED], mixBytesPerPass/(1<<20),
+              mixBytesPerPass/(usPerRep[WL_MIXED]*1e-6)/1e9, mixedInner/4.0);
+  std::printf("# arithmetic intensity is BY CONSTRUCTION; it is counter-verified only if\n"
+              "# Nsight Compute was available on this host (recorded separately).\n");
+  auto repsFor = [&](Workload w, double targetUs){
+    int r=(int)std::lround(targetUs/std::max(usPerRep[w],1e-6)); return std::max(r,1); };
 
-  std::printf("experiment,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,"
+  std::printf("experiment,workload,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,"
               "t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,"
               "overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat\n");
 
@@ -265,42 +360,45 @@ int main(int argc, char** argv) {
     const size_t elems = bytes/sizeof(float);
     double tComm = timeUs([&](){ launchComm(c,elems); syncStreams(c,false,true); }, warmup, iters);
 
-    for (double ratio : ratios) {
-      const int reps = repsFor(tComm*ratio);
-      for (int rep = 0; rep < repeats; ++rep) {
-        double tCompute = timeUs([&](){ launchCompute(c,reps); syncStreams(c,true,false); }, warmup, iters);
-        double tCommHere = timeUs([&](){ launchComm(c,elems); syncStreams(c,false,true); }, warmup, iters);
+    for (int wi : workloads) {
+      const Workload wl = (Workload)wi;
+      for (double ratio : ratios) {
+        // Every workload class is calibrated to the SAME target duration, so a
+        // slowdown comparison between classes is not confounded by one of them
+        // simply running longer.
+        const int reps = repsFor(wl, tComm*ratio);
+        for (int rep = 0; rep < repeats; ++rep) {
+          double tCompute = timeUs([&](){ launchCompute(c,reps,wl); syncStreams(c,true,false); }, warmup, iters);
+          double tCommHere = timeUs([&](){ launchComm(c,elems); syncStreams(c,false,true); }, warmup, iters);
 
-        // sequential: compute, wait, then communicate
-        NVTX_PUSH("sequential");
-        double tSeq = timeUs([&](){
-          launchCompute(c,reps); syncStreams(c,true,false);
-          launchComm(c,elems);   syncStreams(c,false,true);
-        }, warmup, iters);
-        NVTX_POP();
+          NVTX_PUSH("sequential");
+          double tSeq = timeUs([&](){
+            launchCompute(c,reps,wl); syncStreams(c,true,false);
+            launchComm(c,elems);      syncStreams(c,false,true);
+          }, warmup, iters);
+          NVTX_POP();
 
-        // overlapped: both submitted before either is waited on. Separate
-        // streams only create an OPPORTUNITY -- the timeline decides.
-        NVTX_PUSH("overlapped");
-        double tOv = timeUs([&](){
-          recordStart(c);
-          launchComm(c,elems);
-          launchCompute(c,reps);
-          recordEnd(c);
-          syncStreams(c,true,true);
-        }, warmup, iters);
-        NVTX_POP();
-        double cDur=0, mDur=0; elapsed(c, cDur, mDur);
+          NVTX_PUSH("overlapped");
+          double tOv = timeUs([&](){
+            recordStart(c);
+            launchComm(c,elems);
+            launchCompute(c,reps,wl);
+            recordEnd(c);
+            syncStreams(c,true,true);
+          }, warmup, iters);
+          NVTX_POP();
+          double cDur=0, mDur=0; elapsed(c, cDur, mDur);
 
-        double tIdeal = std::max(tCompute, tCommHere);
-        double denom  = tSeq - tIdeal;
-        double eff    = (denom > 1.0) ? (tSeq - tOv)/denom : NAN;
-        double exposed= std::max(0.0, tOv - tCompute);
+          double tIdeal = std::max(tCompute, tCommHere);
+          double denom  = tSeq - tIdeal;
+          double eff    = (denom > 1.0) ? (tSeq - tOv)/denom : NAN;
+          double exposed= std::max(0.0, tOv - tCompute);
 
-        std::printf("micro,%zu,%.2f,%d,0,0,%.3f,%.3f,%.3f,%.3f,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n",
-                    bytes, ratio, reps, tCompute, tCommHere, tSeq, tOv, tIdeal,
-                    eff, exposed, cDur, mDur, rep);
-        std::fflush(stdout);
+          std::printf("micro,%s,%zu,%.2f,%d,0,0,%.3f,%.3f,%.3f,%.3f,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n",
+                      WL_NAME[wl], bytes, ratio, reps, tCompute, tCommHere, tSeq, tOv, tIdeal,
+                      eff, exposed, cDur, mDur, rep);
+          std::fflush(stdout);
+        }
       }
     }
   }
@@ -322,7 +420,7 @@ int main(int argc, char** argv) {
     // gradient, so the pipeline has a realistic amount of work to hide behind
     double tCommAll = timeUs([&](){ launchComm(c, totalGrad/sizeof(float)); syncStreams(c,false,true); },
                              warmup, std::max(iters/2,3));
-    const int repsPerStage = repsFor(tCommAll / nb);
+    const int repsPerStage = repsFor(WL_COMPUTE, tCommAll / nb);
 
     for (int rep = 0; rep < repeats; ++rep) {
       // compute-only reference for the whole simulated backward pass
@@ -362,8 +460,8 @@ int main(int argc, char** argv) {
       double eff    = (denom > 1.0) ? (tSeq - tOv)/denom : NAN;
       double exposed= std::max(0.0, tOv - tCompute);
 
-      std::printf("bucket,%zu,1.00,%d,%zu,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n",
-                  totalGrad, repsPerStage, bucket, nb, tCompute, tComm, tSeq, tOv,
+      std::printf("bucket,%s,%zu,1.00,%d,%zu,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n",
+                  WL_NAME[WL_COMPUTE], totalGrad, repsPerStage, bucket, nb, tCompute, tComm, tSeq, tOv,
                   tIdeal, eff, exposed, cDur, mDur, rep);
       std::fflush(stdout);
     }
@@ -373,6 +471,7 @@ int main(int argc, char** argv) {
   for (int i=0;i<NG;++i) { CK(cudaSetDevice(DEV[i]));
     cublasDestroy(c.blas[i]);
     cudaFree(c.A[i]); cudaFree(c.B[i]); cudaFree(c.C[i]); cudaFree(c.grad[i]);
+    cudaFree(c.mA[i]); cudaFree(c.mB[i]); cudaFree(c.mD[i]);
     cudaStreamDestroy(c.sCompute[i]); cudaStreamDestroy(c.sComm[i]);
     cudaEventDestroy(c.evCompS[i]); cudaEventDestroy(c.evCompE[i]);
     cudaEventDestroy(c.evCommS[i]); cudaEventDestroy(c.evCommE[i]); }
