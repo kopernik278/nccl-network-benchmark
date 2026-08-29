@@ -1,0 +1,26 @@
+W0829 14:02:59.731000 3096 torch/distributed/run.py:774] 
+W0829 14:02:59.731000 3096 torch/distributed/run.py:774] *****************************************
+W0829 14:02:59.731000 3096 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0829 14:02:59.731000 3096 torch/distributed/run.py:774] *****************************************
+# phase9 ddp training benchmark
+# mode=ddp label=ddp-25mb world_size=4 bucket_mb=25.0
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=65536 precision=bf16 optimizer=AdamW(fused)
+# warmup=6 steps=6 repeats=1 pool=4 seed=1234 nvtx=True
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# ESTIMATED buckets = ceil(315.1 MiB / 25 MiB) ~= 13 (DDP packs by parameter order; actual count reported below)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=9
+# DDP_LOGGING {"avg_backward_comm_time": 86528919, "avg_backward_compute_comm_overlap_time": 66821224, "avg_backward_compute_time": 97135412, "avg_forward_compute_time": 87336400, "bucket_cap_bytes": 26214400, "bucket_sizes": "330405888", "num_parameter_tensors": 69, "rebuilt_bucket_sizes": "50331648, 28323840, 28323840, 28323840, 28323840, 28323840, 28323840, 28323840, 28323840, 53483520", "total_parameter_size_bytes": 330405888}
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,ddp,ddp-25mb,25,4,0,162.6342,46.6573,109.0218,6.9443,162.6755,402863.34,330405888,82601472,9.649413
+# SLOWEST_RANK_STEP_MS 162.6931
+# PEAK_MEM_GIB rank2 7.836
+# PEAK_MEM_GIB rank0 7.836
+# PEAK_MEM_GIB rank3 7.836
+# PEAK_MEM_GIB rank1 7.836
+Collecting data...
+Generating '/tmp/nsys-report-1897.qdstrm'
+[1/1] [0%                          ] ddp-25mb.nsys-rep[1/1] [0%                          ] ddp-25mb.nsys-rep[1/1] [0%                          ] ddp-25mb.nsys-rep[1/1] [=15%                        ] ddp-25mb.nsys-rep[1/1] [12%                         ] ddp-25mb.nsys-rep[1/1] [10%                         ] ddp-25mb.nsys-rep[1/1] [==20%                       ] ddp-25mb.nsys-rep[1/1] [=====31%                    ] ddp-25mb.nsys-rep[1/1] [========41%                 ] ddp-25mb.nsys-rep[1/1] [===========52%              ] ddp-25mb.nsys-rep[1/1] [==============63%           ] ddp-25mb.nsys-rep[1/1] [=================73%        ] ddp-25mb.nsys-rep[1/1] [===================79%      ] ddp-25mb.nsys-rep[1/1] [========================100%] ddp-25mb.nsys-rep[1/1] [========================100%] ddp-25mb.nsys-rep
+Generated:
+    /root/p9_out/prof/ddp-25mb.nsys-rep

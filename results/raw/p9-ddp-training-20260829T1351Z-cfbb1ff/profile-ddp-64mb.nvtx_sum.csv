@@ -1,0 +1,16 @@
+Generating SQLite file /root/p9_out/prof/ddp-64mb.sqlite from /root/p9_out/prof/ddp-64mb.nsys-rep
+Processing [/root/p9_out/prof/ddp-64mb.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+35.0,1772869945,24,73869581.0,86673025.5,26554762,107910864,35590673.9,PushPop,:backward
+23.9,1207974101,4,301993525.3,317830719.5,248586784,323725878,35951882.9,PushPop,NCCL:ncclCommInitRankConfig
+15.8,799865236,24,33327718.2,32713353.5,4916054,62614310,28673658.8,PushPop,:forward
+15.2,767314398,4,191828599.5,192591306.5,188252049,193879736,2515672.4,PushPop,NCCL:ncclCommDestroy
+6.6,333217414,4,83304353.5,82148286.5,80809453,88111388,3268362.3,PushPop,NCCL:ncclAllGather
+1.8,91601300,64,1431270.3,267652.5,112940,12277023,2832570.0,PushPop,CCCL:cub::DeviceRadixSort
+0.5,27366526,296,92454.5,26746.0,23741,5153244,529568.1,PushPop,NCCL:ncclBroadcast
+0.3,16319562,64,254993.2,29555.5,16465,4739553,955839.0,PushPop,CCCL:cub::DeviceScan::ExclusiveScan
+0.3,15172978,24,632207.4,593864.0,507157,1543646,203640.7,PushPop,:optimizer
+0.3,14226297,252,56453.6,51570.5,25259,137234,24874.5,PushPop,NCCL:ncclAllReduce
+0.2,8043553,64,125680.5,29158.5,15364,1664723,381497.5,PushPop,CCCL:cub::DeviceSelect::UniqueByKey
+0.1,7062228,4,1765557.0,1868173.0,1206498,2119384,405424.6,PushPop,NCCL:ncclCommFinalize
+

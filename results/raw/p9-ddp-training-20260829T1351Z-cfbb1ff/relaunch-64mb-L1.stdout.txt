@@ -1,0 +1,21 @@
+W0829 14:07:11.207000 5858 torch/distributed/run.py:774] 
+W0829 14:07:11.207000 5858 torch/distributed/run.py:774] *****************************************
+W0829 14:07:11.207000 5858 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0829 14:07:11.207000 5858 torch/distributed/run.py:774] *****************************************
+# phase9 ddp training benchmark
+# mode=ddp label=relaunch-64mb-L1 world_size=4 bucket_mb=64.0
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=65536 precision=bf16 optimizer=AdamW(fused)
+# warmup=12 steps=30 repeats=1 pool=4 seed=1234 nvtx=False
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# ESTIMATED buckets = ceil(315.1 MiB / 64 MiB) ~= 5 (DDP packs by parameter order; actual count reported below)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 88448242, "avg_backward_compute_comm_overlap_time": 61496711, "avg_backward_compute_time": 93230830, "avg_forward_compute_time": 75274654, "bucket_cap_bytes": 67108864, "bucket_sizes": "330405888", "num_parameter_tensors": 69, "rebuilt_bucket_sizes": "69212160, 75534336, 68450304, 117209088", "total_parameter_size_bytes": 330405888}
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,ddp,relaunch-64mb-L1,64,4,0,166.6183,46.3400,113.3761,6.8700,166.6541,393245.68,330405888,82601472,8.319796
+# PEAK_MEM_GIB rank2 7.834
+# PEAK_MEM_GIB rank3 8.143
+# SLOWEST_RANK_STEP_MS 166.6183
+# PEAK_MEM_GIB rank0 7.834
+# PEAK_MEM_GIB rank1 8.143

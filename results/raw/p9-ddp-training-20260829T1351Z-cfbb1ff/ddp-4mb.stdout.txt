@@ -1,0 +1,25 @@
+W0829 13:59:44.482000 1981 torch/distributed/run.py:774] 
+W0829 13:59:44.482000 1981 torch/distributed/run.py:774] *****************************************
+W0829 13:59:44.482000 1981 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0829 13:59:44.482000 1981 torch/distributed/run.py:774] *****************************************
+# phase9 ddp training benchmark
+# mode=ddp label=ddp-4mb world_size=4 bucket_mb=4.0
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=65536 precision=bf16 optimizer=AdamW(fused)
+# warmup=12 steps=30 repeats=3 pool=4 seed=1234 nvtx=False
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# ESTIMATED buckets = ceil(315.1 MiB / 4 MiB) ~= 79 (DDP packs by parameter order; actual count reported below)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 82320711, "avg_backward_compute_comm_overlap_time": 66360583, "avg_backward_compute_time": 94177047, "avg_forward_compute_time": 71443009, "bucket_cap_bytes": 4194304, "bucket_sizes": "330405888", "num_parameter_tensors": 69, "rebuilt_bucket_sizes": "50331648, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 9443328, 9437184, 9443328, 53483520", "total_parameter_size_bytes": 330405888}
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,ddp,ddp-4mb,4,4,0,157.2197,46.4046,103.8664,6.9962,157.3531,416490.09,330405888,82601472,8.320354
+train,ddp,ddp-4mb,4,4,1,157.2855,46.3505,103.9633,6.9359,157.3817,416414.44,330405888,82601472,6.890483
+train,ddp,ddp-4mb,4,4,2,157.2595,46.3568,103.9255,6.9896,157.9245,414983.23,330405888,82601472,5.379409
+train,nosync,ddp-4mb-nosync,4,4,0,141.1825,46.6793,87.2987,7.1263,141.2042,464122.18,330405888,82601472,
+# NOSYNC_PROBE done; params re-broadcast from rank 0
+# PEAK_MEM_GIB rank1 7.835
+# SLOWEST_RANK_STEP_MS 157.3124
+# PEAK_MEM_GIB rank2 7.835
+# PEAK_MEM_GIB rank0 8.143
+# PEAK_MEM_GIB rank3 7.835

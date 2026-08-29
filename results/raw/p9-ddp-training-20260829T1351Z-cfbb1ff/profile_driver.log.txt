@@ -1,0 +1,77 @@
+nsys=/opt/nvidia/nsight-systems/2024.6.2/target-linux-x64/nsys
+single-gpu rc=0
+### single-gpu / nvtx_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+66.6,390700606,6,65116767.7,79294787.0,11775468,103538062,44813736.8,PushPop,:backward
+20.1,117643323,6,19607220.5,19735358.0,4277622,34753151,16526068.9,PushPop,:forward
+10.6,61978133,16,3873633.3,6130153.0,110306,11826840,3671429.6,PushPop,CCCL:cub::DeviceRadixSort
+1.4,8347798,6,1391299.7,1711127.5,646614,1836490,568810.5,PushPop,:optimizer
+0.8,4688775,16,293048.4,434092.0,18635,1006800,282981.2,PushPop,CCCL:cub::DeviceScan::ExclusiveScan
+0.5,2897625,16,181101.6,141277.5,18334,1588906,380310.1,PushPop,CCCL:cub::DeviceSelect::UniqueByKey
+### single-gpu / cuda_gpu_kern_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+10.2,229195101,384,596862.2,652163.5,444482,695652,100045.8,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nt_align8>(T1::Params)
+8.2,184942756,256,722432.6,723892.0,690532,756228,20309.2,ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn
+6.8,151731877,256,592702.6,589779.0,501891,681827,79173.5,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(T1::Params)
+5.7,129135945,1072,120462.6,133473.0,7616,2852944,339978.3,"void at::native::vectorized_elementwise_kernel<(int)4, at::native::bfloat16_copy_kernel_cuda(at::TensorIt
+5.1,115529697,16,7220606.1,7220104.0,7215784,7224840,2907.5,"void at::native::<unnamed>::cunn_SoftMaxBackward<(int)4, float, float, float, at::native::<unnamed>::Log
+4.8,107239250,272,394261.9,395266.0,380226,406946,5809.2,"void at::native::<unnamed>::layer_norm_grad_input_kernel_vectorized<float, float>(const T1 *, const T1 *, c
+4.7,106524046,75,1420320.6,1674505.0,398018,1690793,504224.7,"void at::native::<unnamed>::multi_tensor_apply_kernel<at::native::<unnamed>::FusedOptimizerTensorListMe
+ddp-25mb rc=0
+### ddp-25mb / nvtx_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+33.7,1676024727,24,69834363.6,77908519.5,31735733,99414668,30229684.9,PushPop,:backward
+23.1,1145316552,4,286329138.0,287213009.0,281920096,288970438,3054756.7,PushPop,NCCL:ncclCommDestroy
+19.1,950625370,4,237656342.5,237491403.5,237414159,238228404,384515.7,PushPop,NCCL:ncclCommInitRankConfig
+9.9,489489261,24,20395385.9,20592243.5,4966295,35490651,15323401.3,PushPop,:forward
+5.7,280813595,4,70203398.8,70132675.0,69618116,70930129,645255.3,PushPop,NCCL:ncclAllGather
+5.5,272151884,24,11339661.8,16138134.0,509676,17591457,7754676.7,PushPop,:optimizer
+1.2,61335427,64,958366.0,252449.5,107853,11752589,2779800.0,PushPop,CCCL:cub::DeviceRadixSort
+### ddp-25mb / cuda_gpu_kern_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+34.6,5054592982,612,8259138.9,7168556.5,17312,85612671,5818938.6,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+6.4,928927930,1536,604770.8,652835.5,440866,939045,109072.5,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nt_align8>(T1::Params)
+5.0,730059672,1024,712948.9,716612.0,679460,746756,20607.3,ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn
+4.4,638148226,1024,623191.6,658229.0,501123,905446,109980.3,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(T1::Params)
+3.6,524503762,4288,122319.0,133761.0,7616,2874234,341523.2,"void at::native::vectorized_elementwise_kernel<(int)4, at::native::bfloat16_copy_kernel_cuda(at::TensorIt
+3.2,464319189,64,7254987.3,7255749.5,7215401,7282276,11835.0,"void at::native::<unnamed>::cunn_SoftMaxBackward<(int)4, float, float, float, at::native::<unnamed>::Lo
+3.0,441724639,1088,405996.9,402465.0,376065,512387,15171.8,"void at::native::<unnamed>::layer_norm_grad_input_kernel_vectorized<float, float>(const T1 *, const T1 *,
+ddp-4mb rc=0
+### ddp-4mb / nvtx_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+30.7,1719649830,24,71652076.3,87922289.5,30735240,95795602,27705579.2,PushPop,:backward
+22.9,1279871719,4,319967929.8,320495895.5,317434203,321445725,1845682.9,PushPop,NCCL:ncclCommDestroy
+16.7,932553234,4,233138308.5,232902563.5,218140600,248607507,17310895.8,PushPop,NCCL:ncclCommInitRankConfig
+14.9,830922499,24,34621770.8,34588829.0,5021503,64194468,29894693.5,PushPop,:forward
+6.5,365131653,64,5705182.1,257002.0,113724,21029086,8400655.0,PushPop,CCCL:cub::DeviceRadixSort
+5.3,295350948,4,73837737.0,74092869.5,71513938,75651271,2050607.1,PushPop,NCCL:ncclAllGather
+1.3,74477085,1572,47377.3,44983.0,23678,183897,19306.5,PushPop,NCCL:ncclAllReduce
+### ddp-4mb / cuda_gpu_kern_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+35.4,5287999254,1572,3363867.2,2510353.0,19776,83392615,4407860.5,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+6.4,950633430,1536,618902.0,659620.0,440227,825471,105805.0,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nt_align8>(T1::Params)
+4.9,730933758,1024,713802.5,717540.0,679716,746821,20253.3,ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn
+4.2,628762628,1024,614026.0,656132.0,501570,904869,86902.1,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(T1::Params)
+3.5,526328606,4288,122744.5,133729.0,7616,2875215,341643.0,"void at::native::vectorized_elementwise_kernel<(int)4, at::native::bfloat16_copy_kernel_cuda(at::TensorIt
+3.1,464423155,64,7256611.8,7255399.5,7223751,7288466,14064.3,"void at::native::<unnamed>::cunn_SoftMaxBackward<(int)4, float, float, float, at::native::<unnamed>::Lo
+2.9,440009663,1088,404420.6,402927.0,379779,466239,10923.6,"void at::native::<unnamed>::layer_norm_grad_input_kernel_vectorized<float, float>(const T1 *, const T1 *,
+ddp-64mb rc=0
+### ddp-64mb / nvtx_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+35.0,1772869945,24,73869581.0,86673025.5,26554762,107910864,35590673.9,PushPop,:backward
+23.9,1207974101,4,301993525.3,317830719.5,248586784,323725878,35951882.9,PushPop,NCCL:ncclCommInitRankConfig
+15.8,799865236,24,33327718.2,32713353.5,4916054,62614310,28673658.8,PushPop,:forward
+15.2,767314398,4,191828599.5,192591306.5,188252049,193879736,2515672.4,PushPop,NCCL:ncclCommDestroy
+6.6,333217414,4,83304353.5,82148286.5,80809453,88111388,3268362.3,PushPop,NCCL:ncclAllGather
+1.8,91601300,64,1431270.3,267652.5,112940,12277023,2832570.0,PushPop,CCCL:cub::DeviceRadixSort
+0.5,27366526,296,92454.5,26746.0,23741,5153244,529568.1,PushPop,NCCL:ncclBroadcast
+### ddp-64mb / cuda_gpu_kern_sum ###
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+33.7,4823764453,252,19141922.4,17611688.0,19009,105505825,9141761.8,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+6.5,936294360,1536,609566.6,654366.5,441219,852703,105039.6,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nt_align8>(T1::Params)
+5.1,729993520,1024,712884.3,717171.0,680227,747902,20368.9,ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn
+4.4,623088367,1024,608484.7,659284.5,500771,901477,89962.6,void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(T1::Params)
+3.7,522962856,4288,121959.6,133537.0,7552,2868410,341327.0,"void at::native::vectorized_elementwise_kernel<(int)4, at::native::bfloat16_copy_kernel_cuda(at::TensorIt
+3.2,464224266,64,7253504.2,7255921.0,7219783,7271780,10149.9,"void at::native::<unnamed>::cunn_SoftMaxBackward<(int)4, float, float, float, at::native::<unnamed>::Lo
+3.0,435671985,1088,400433.8,397938.5,374306,481730,12799.2,"void at::native::<unnamed>::layer_norm_grad_input_kernel_vectorized<float, float>(const T1 *, const T1 *,
+===== PROF DONE =====

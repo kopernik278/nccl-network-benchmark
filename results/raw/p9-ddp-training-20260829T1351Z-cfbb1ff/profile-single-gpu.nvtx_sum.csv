@@ -1,0 +1,10 @@
+Generating SQLite file /root/p9_out/prof/single-gpu.sqlite from /root/p9_out/prof/single-gpu.nsys-rep
+Processing [/root/p9_out/prof/single-gpu.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+66.6,390700606,6,65116767.7,79294787.0,11775468,103538062,44813736.8,PushPop,:backward
+20.1,117643323,6,19607220.5,19735358.0,4277622,34753151,16526068.9,PushPop,:forward
+10.6,61978133,16,3873633.3,6130153.0,110306,11826840,3671429.6,PushPop,CCCL:cub::DeviceRadixSort
+1.4,8347798,6,1391299.7,1711127.5,646614,1836490,568810.5,PushPop,:optimizer
+0.8,4688775,16,293048.4,434092.0,18635,1006800,282981.2,PushPop,CCCL:cub::DeviceScan::ExclusiveScan
+0.5,2897625,16,181101.6,141277.5,18334,1588906,380310.1,PushPop,CCCL:cub::DeviceSelect::UniqueByKey
+

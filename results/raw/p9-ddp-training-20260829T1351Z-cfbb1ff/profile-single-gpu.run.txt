@@ -1,0 +1,16 @@
+# phase9 ddp training benchmark
+# mode=single label=single world_size=1 bucket_mb=None
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=16384 precision=bf16 optimizer=AdamW(fused)
+# warmup=6 steps=6 repeats=1 pool=4 seed=1234 nvtx=True
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=9
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,single,single,,1,0,141.3457,46.7179,87.4702,7.1321,141.3177,115937.39,330405888,82601472,9.238638
+# PEAK_MEM_GIB rank0 7.526
+Collecting data...
+Generating '/tmp/nsys-report-e342.qdstrm'
+[1/1] [0%                          ] single-gpu.nsys-rep[1/1] [0%                          ] single-gpu.nsys-rep[1/1] [===============65%          ] single-gpu.nsys-rep[1/1] [=================74%        ] single-gpu.nsys-rep[1/1] [========================100%] single-gpu.nsys-rep[1/1] [========================100%] single-gpu.nsys-rep
+Generated:
+    /root/p9_out/prof/single-gpu.nsys-rep

@@ -1,0 +1,62 @@
+===== A1. environment =====
+	[4mGPU0	GPU1	GPU2	GPU3	NIC0	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	PIX	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	PIX	 X 	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU2	SYS	SYS	 X 	PIX	NODE	24-47,72-95	1		N/A
+GPU3	SYS	SYS	PIX	 X 	NODE	24-47,72-95	1		N/A
+NIC0	SYS	SYS	NODE	NODE	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: rocep177s0f0
+
+torch 2.8.0+cu128 cuda 12.8 nccl (2, 27, 3) bf16 True
+
+===== A2. NCCL transport, P2P LEFT ENABLED (bounded) =====
+p2p-on rc=124
+Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM
+Channel 00/0 : 2[2] -> 3[3] via P2P/CUMEM
+Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM
+Channel 01/0 : 2[2] -> 3[3] via P2P/CUMEM
+(no correctness line -> did not complete)
+
+===== A3. NCCL transport, P2P DISABLED (fallback) =====
+p2p-off rc=0
+Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=6
+
+===== A4. model calibration (single GPU, bf16) =====
+--- layers=8 heads=12 embd=768 vocab=16384 seq=1024 batch=16 ---
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# CALIBRATION step=140.75 ms fwd=46.64 bwd=86.97 opt=7.13 wall=140.83 ms tok/s=116,339 mem=7.53 GiB
+--- layers=8 heads=12 embd=768 vocab=16384 seq=1024 batch=24 ---
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# ESTIMATED fwd+bwd flops per GPU per step = 19.48 TFLOP (analytic, not measured)
+# CALIBRATION step=203.69 ms fwd=67.84 bwd=128.77 opt=7.19 wall=203.80 ms tok/s=120,589 mem=10.76 GiB
+--- layers=12 heads=12 embd=768 vocab=16384 seq=1024 batch=16 ---
+# params=110925312 grad_bytes=443701248 (423.1 MiB, dtype=float32)
+# ESTIMATED fwd+bwd flops per GPU per step = 19.48 TFLOP (analytic, not measured)
+# CALIBRATION step=194.29 ms fwd=63.85 bwd=121.12 opt=9.31 wall=194.42 ms tok/s=84,270 mem=9.59 GiB
+===== PROBE DONE =====

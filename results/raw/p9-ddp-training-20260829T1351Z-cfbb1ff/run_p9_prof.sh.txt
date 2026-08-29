@@ -1,0 +1,33 @@
+#!/bin/bash
+# Phase 9 stage C: Nsight Systems traces. Profiled runs are never benchmark
+# samples; only their timeline summaries are used.
+#   usage: p9_prof.sh "<model args>" "<extra nccl env, or empty>"
+set -u
+cd /root/repo
+OUT=/root/p9_out/prof; mkdir -p "$OUT"
+T=src/ddp/train_ddp.py
+MODEL="$1"; EXTRA="${2:-}"
+export ${EXTRA:-DUMMY_UNUSED=1}
+NS=$(ls /opt/nvidia/nsight-systems/*/target-linux-x64/nsys 2>/dev/null | head -1)
+echo "nsys=$NS"
+
+prof() {  # prof <tag> <launcher...>
+  local tag=$1; shift
+  timeout -k 20 900 "$NS" profile -t cuda,nvtx --force-overwrite true \
+    --cuda-memory-usage=false -o "$OUT/$tag" "$@" > "$OUT/$tag.run.txt" 2>&1
+  echo "$tag rc=$?"
+  for rpt in nvtx_sum cuda_gpu_kern_sum; do
+    "$NS" stats --force-export=true --report $rpt --format csv \
+      "$OUT/$tag.nsys-rep" 2>/dev/null > "$OUT/$tag.$rpt.csv"
+    echo "### $tag / $rpt ###"
+    grep -v '^Processing\|^Generating\|^$' "$OUT/$tag.$rpt.csv" | head -8 | cut -c1-165
+  done
+}
+
+# A: single-GPU reference    B: default-style bucket    C: smallest    D: largest
+prof single-gpu python3 $T --mode single --warmup 6 --steps 6 --repeats 1 --nvtx $MODEL
+for MB in 25 4 64; do
+  prof ddp-${MB}mb torchrun --nproc_per_node=4 --master_port=2957$((MB%10)) $T \
+    --mode ddp --bucket-mb $MB --warmup 6 --steps 6 --repeats 1 --nvtx $MODEL
+done
+echo "===== PROF DONE ====="

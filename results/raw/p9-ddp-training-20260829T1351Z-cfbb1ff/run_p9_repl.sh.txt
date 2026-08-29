@@ -1,0 +1,20 @@
+#!/bin/bash
+# Phase 9 stage D: across-launch replication.
+# The three repeats inside one process share a warm NCCL communicator, a warm
+# allocator and one memory layout, so their spread UNDERSTATES run-to-run
+# noise. The plateau question needs independent launches to answer honestly.
+set -u
+cd /root/repo
+OUT=/root/p9_out; mkdir -p "$OUT"
+T=src/ddp/train_ddp.py
+MODEL="$1"; export ${2:-DUMMY_UNUSED=1}
+for MB in 4 25 64; do
+  for L in 0 1 2; do
+    timeout -k 20 600 torchrun --nproc_per_node=4 --master_port=$((29600 + MB * 10 + L)) $T \
+      --mode ddp --bucket-mb $MB --warmup 12 --steps 30 --repeats 1 \
+      --label "relaunch-${MB}mb-L${L}" $MODEL \
+      > "$OUT/relaunch-${MB}mb-L${L}.stdout.txt" 2>&1
+    echo "relaunch-${MB}mb-L${L} rc=$? $(grep -h '^train' "$OUT/relaunch-${MB}mb-L${L}.stdout.txt" | cut -d, -f7)"
+  done
+done
+echo "===== REPL DONE ====="

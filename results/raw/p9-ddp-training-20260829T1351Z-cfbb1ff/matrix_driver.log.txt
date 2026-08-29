@@ -1,0 +1,34 @@
+# model args: --layers 8 --heads 12 --embd 768 --vocab 16384 --seq 1024 --batch 16 --pool 4 --precision bf16
+# nccl extra env: NCCL_P2P_DISABLE=1
+===== B1. single-GPU reference =====
+single rc=0  rows=3
+===== B2. DDP bucket matrix =====
+ddp-4mb rc=0  rows=4
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 82320711, "avg_backward_compute_comm_overlap_time": 66360583, "avg_backward_compute_time": 94177047, "avg_forward_compute_time": 71443009, "bucket_cap_bytes": 4194304, "bucket_siz
+# SLOWEST_RANK_STEP_MS 157.3124
+ddp-16mb rc=0  rows=4
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 86115041, "avg_backward_compute_comm_overlap_time": 66195486, "avg_backward_compute_time": 94183825, "avg_forward_compute_time": 76251630, "bucket_cap_bytes": 16777216, "bucket_si
+# SLOWEST_RANK_STEP_MS 158.8854
+ddp-25mb rc=0  rows=4
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 94551060, "avg_backward_compute_comm_overlap_time": 65665557, "avg_backward_compute_time": 93578868, "avg_forward_compute_time": 69600871, "bucket_cap_bytes": 26214400, "bucket_si
+# SLOWEST_RANK_STEP_MS 159.8735
+ddp-64mb rc=0  rows=4
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+# DDP_LOGGING {"avg_backward_comm_time": 87715565, "avg_backward_compute_comm_overlap_time": 60858858, "avg_backward_compute_time": 92633659, "avg_forward_compute_time": 78763743, "bucket_cap_bytes": 67108864, "bucket_si
+# SLOWEST_RANK_STEP_MS 166.9686
+===== B3. serialised reduction (no overlap) =====
+serial rc=0  rows=3
+===== B4. transport evidence for the measured configuration =====
+transport rc=0
+Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+===== MATRIX DONE =====

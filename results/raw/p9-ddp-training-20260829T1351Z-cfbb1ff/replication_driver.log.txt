@@ -1,0 +1,10 @@
+relaunch-4mb-L0 rc=0 156.8569
+relaunch-4mb-L1 rc=0 157.0578
+relaunch-4mb-L2 rc=0 157.2515
+relaunch-25mb-L0 rc=0 159.5345
+relaunch-25mb-L1 rc=0 159.6474
+relaunch-25mb-L2 rc=0 159.5380
+relaunch-64mb-L0 rc=0 166.4037
+relaunch-64mb-L1 rc=0 166.6183
+relaunch-64mb-L2 rc=0 166.4752
+===== REPL DONE =====

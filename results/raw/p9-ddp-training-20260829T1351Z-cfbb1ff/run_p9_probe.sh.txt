@@ -1,0 +1,44 @@
+#!/bin/bash
+# Phase 9 stage A: environment, topology, functional transport validation,
+# and model calibration. Everything here must pass before the matrix runs.
+set -u
+cd /root/repo
+OUT=/root/p9_out; mkdir -p "$OUT"
+T=src/ddp/train_ddp.py
+TINY="--layers 2 --heads 2 --embd 128 --vocab 1024 --seq 128 --batch 2 --pool 2"
+
+echo "===== A1. environment ====="
+bash scripts/collect_env.sh >/dev/null 2>&1 && cp env.json env.txt "$OUT/"
+nvidia-smi topo -m > "$OUT/topology.txt" 2>&1; cat "$OUT/topology.txt"
+python3 -c "import torch;print('torch',torch.__version__,'cuda',torch.version.cuda,
+'nccl',torch.cuda.nccl.version(),'bf16',torch.cuda.is_bf16_supported())" 2>&1 \
+  | tr -d '\n' | tee "$OUT/torch_versions.txt"; echo
+
+echo; echo "===== A2. NCCL transport, P2P LEFT ENABLED (bounded) ====="
+# Phases 6 and 8 both found the P2P capability bit lying. This is a FUNCTIONAL
+# test: a real DDP run whose param-sync check would catch silent corruption,
+# under a timeout that would catch a deadlock.
+NCCL_DEBUG=INFO timeout -k 15 180 torchrun --nproc_per_node=4 --master_port=29531 \
+  $T --mode ddp --bucket-mb 25 --warmup 3 --steps 3 --repeats 1 --precision fp32 \
+  $TINY > "$OUT/transport_p2p_on.txt" 2>&1
+echo "p2p-on rc=$?"
+grep -E 'via P2P|via SHM|via NET' "$OUT/transport_p2p_on.txt" | sed 's/.*NCCL INFO //' | sort -u
+grep -E '^# CORRECTNESS' "$OUT/transport_p2p_on.txt" || echo "(no correctness line -> did not complete)"
+
+echo; echo "===== A3. NCCL transport, P2P DISABLED (fallback) ====="
+NCCL_P2P_DISABLE=1 NCCL_DEBUG=INFO timeout -k 15 180 torchrun --nproc_per_node=4 \
+  --master_port=29532 $T --mode ddp --bucket-mb 25 --warmup 3 --steps 3 --repeats 1 \
+  --precision fp32 $TINY > "$OUT/transport_p2p_off.txt" 2>&1
+echo "p2p-off rc=$?"
+grep -E 'via P2P|via SHM|via NET' "$OUT/transport_p2p_off.txt" | sed 's/.*NCCL INFO //' | sort -u
+grep -E '^# CORRECTNESS' "$OUT/transport_p2p_off.txt" || echo "(no correctness line)"
+
+echo; echo "===== A4. model calibration (single GPU, bf16) ====="
+for CFG in "8 12 768 16384 1024 16" "8 12 768 16384 1024 24" "12 12 768 16384 1024 16"; do
+  set -- $CFG
+  echo "--- layers=$1 heads=$2 embd=$3 vocab=$4 seq=$5 batch=$6 ---"
+  timeout -k 15 300 python3 $T --mode single --calibrate --warmup 5 --steps 12 \
+    --layers $1 --heads $2 --embd $3 --vocab $4 --seq $5 --batch $6 --pool 2 \
+    2>&1 | grep -E '^# (params|CALIB|ESTIMATED fwd)'
+done
+echo "===== PROBE DONE ====="

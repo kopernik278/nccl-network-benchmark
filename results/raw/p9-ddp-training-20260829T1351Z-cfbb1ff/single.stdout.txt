@@ -1,0 +1,13 @@
+# phase9 ddp training benchmark
+# mode=single label=single world_size=1 bucket_mb=None
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=16384 precision=bf16 optimizer=AdamW(fused)
+# warmup=12 steps=30 repeats=3 pool=4 seed=1234 nvtx=False
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=15
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,single,single,,1,0,140.7104,46.5634,87.0653,7.1258,140.7539,116401.79,330405888,82601472,7.543674
+train,single,single,,1,1,141.1180,46.6460,87.3546,7.1264,141.1597,116067.13,330405888,82601472,5.524817
+train,single,single,,1,2,141.4172,46.6955,87.5221,7.1928,141.4026,115867.78,330405888,82601472,3.595633
+# PEAK_MEM_GIB rank0 7.526

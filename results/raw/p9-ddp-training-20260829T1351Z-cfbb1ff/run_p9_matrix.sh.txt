@@ -1,0 +1,44 @@
+#!/bin/bash
+# Phase 9 stage B: single-GPU reference, DDP bucket matrix, serialised
+# comparison. Model shape and transport come from stage A and are passed in.
+#   usage: p9_matrix.sh "<model args>" "<extra nccl env, or empty>"
+set -u
+cd /root/repo
+OUT=/root/p9_out; mkdir -p "$OUT"
+T=src/ddp/train_ddp.py
+MODEL="$1"
+EXTRA="${2:-}"
+WARMUP=12; STEPS=30; REPEATS=3
+export ${EXTRA:-DUMMY_UNUSED=1}
+
+echo "# model args: $MODEL"
+echo "# nccl extra env: ${EXTRA:-<none>}"
+
+echo "===== B1. single-GPU reference ====="
+timeout -k 20 900 python3 $T --mode single --warmup $WARMUP --steps $STEPS \
+  --repeats $REPEATS $MODEL > "$OUT/single.stdout.txt" 2>&1
+echo "single rc=$?  rows=$(grep -c '^train' "$OUT/single.stdout.txt" || true)"
+
+echo "===== B2. DDP bucket matrix ====="
+for MB in 4 16 25 64; do
+  timeout -k 20 1200 torchrun --nproc_per_node=4 --master_port=295$((40+MB%10)) $T \
+    --mode ddp --bucket-mb $MB --warmup $WARMUP --steps $STEPS --repeats $REPEATS \
+    --nosync-probe $MODEL > "$OUT/ddp-${MB}mb.stdout.txt" 2>&1
+  echo "ddp-${MB}mb rc=$?  rows=$(grep -c '^train' "$OUT/ddp-${MB}mb.stdout.txt" || true)"
+  grep -E '^# (CORRECTNESS|DDP_LOGGING|SLOWEST)' "$OUT/ddp-${MB}mb.stdout.txt" | cut -c1-220
+done
+
+echo "===== B3. serialised reduction (no overlap) ====="
+timeout -k 20 1200 torchrun --nproc_per_node=4 --master_port=29559 $T \
+  --mode serial --warmup $WARMUP --steps $STEPS --repeats $REPEATS \
+  $MODEL > "$OUT/serial.stdout.txt" 2>&1
+echo "serial rc=$?  rows=$(grep -c '^train' "$OUT/serial.stdout.txt" || true)"
+
+echo "===== B4. transport evidence for the measured configuration ====="
+NCCL_DEBUG=INFO timeout -k 20 600 torchrun --nproc_per_node=4 --master_port=29560 $T \
+  --mode ddp --bucket-mb 25 --warmup 3 --steps 3 --repeats 1 \
+  $MODEL > "$OUT/transport_measured.txt" 2>&1
+echo "transport rc=$?"
+grep -E 'via P2P|via SHM|via NET' "$OUT/transport_measured.txt" | sed 's/.*NCCL INFO //' | sort -u
+
+echo "===== MATRIX DONE ====="

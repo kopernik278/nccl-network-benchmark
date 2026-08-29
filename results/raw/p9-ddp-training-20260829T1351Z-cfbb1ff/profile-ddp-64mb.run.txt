@@ -1,0 +1,26 @@
+W0829 14:03:33.944000 3766 torch/distributed/run.py:774] 
+W0829 14:03:33.944000 3766 torch/distributed/run.py:774] *****************************************
+W0829 14:03:33.944000 3766 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0829 14:03:33.944000 3766 torch/distributed/run.py:774] *****************************************
+# phase9 ddp training benchmark
+# mode=ddp label=ddp-64mb world_size=4 bucket_mb=64.0
+# model: layers=8 heads=12 embd=768 vocab=16384 seq=1024 tie=False
+# params=82601472 grad_bytes=330405888 (315.1 MiB, dtype=float32)
+# batch_per_gpu=16 tokens_per_step=65536 precision=bf16 optimizer=AdamW(fused)
+# warmup=6 steps=6 repeats=1 pool=4 seed=1234 nvtx=True
+# ESTIMATED fwd+bwd flops per GPU per step = 12.99 TFLOP (analytic, not measured)
+# ESTIMATED buckets = ceil(315.1 MiB / 64 MiB) ~= 5 (DDP packs by parameter order; actual count reported below)
+# CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=9
+# DDP_LOGGING {"avg_backward_comm_time": 91009524, "avg_backward_compute_comm_overlap_time": 61683280, "avg_backward_compute_time": 96252449, "avg_forward_compute_time": 83499707, "bucket_cap_bytes": 67108864, "bucket_sizes": "330405888", "num_parameter_tensors": 69, "rebuilt_bucket_sizes": "69212160, 75534336, 68450304, 117209088", "total_parameter_size_bytes": 330405888}
+experiment,mode,label,bucket_mb,world_size,repeat,step_ms,fwd_ms,bwd_ms,opt_ms,step_wall_ms,tokens_per_s,grad_bytes,param_count,loss
+train,ddp,ddp-64mb,64,4,0,169.7885,46.5802,116.2237,6.8631,169.7580,386055.37,330405888,82601472,9.649863
+# PEAK_MEM_GIB rank1 7.834
+# SLOWEST_RANK_STEP_MS 169.8274
+# PEAK_MEM_GIB rank2 7.834
+# PEAK_MEM_GIB rank0 7.834# PEAK_MEM_GIB rank3 7.834
+
+Collecting data...
+Generating '/tmp/nsys-report-adea.qdstrm'
+[1/1] [0%                          ] ddp-64mb.nsys-rep[1/1] [0%                          ] ddp-64mb.nsys-rep[1/1] [0%                          ] ddp-64mb.nsys-rep[1/1] [=15%                        ] ddp-64mb.nsys-rep[1/1] [13%                         ] ddp-64mb.nsys-rep[1/1] [11%                         ] ddp-64mb.nsys-rep[1/1] [===23%                      ] ddp-64mb.nsys-rep[1/1] [======35%                   ] ddp-64mb.nsys-rep[1/1] [=========46%                ] ddp-64mb.nsys-rep[1/1] [=============58%            ] ddp-64mb.nsys-rep[1/1] [================70%         ] ddp-64mb.nsys-rep[1/1] [==================78%       ] ddp-64mb.nsys-rep[1/1] [========================100%] ddp-64mb.nsys-rep[1/1] [========================100%] ddp-64mb.nsys-rep
+Generated:
+    /root/p9_out/prof/ddp-64mb.nsys-rep
