@@ -44,6 +44,24 @@
 #include <cuda_runtime.h>
 #include <nccl.h>
 
+// NVTX ranges for Nsight Systems. Compiled in only with -DUSE_NVTX=1 so the
+// timed binary and the profiled binary differ by exactly one flag, and the
+// numbers in the results file are never taken from an instrumented run.
+#if defined(USE_NVTX)
+#include <nvtx3/nvToolsExt.h>
+#define NVTX_PUSH(name) nvtxRangePushA(name)
+#define NVTX_POP() nvtxRangePop()
+struct NvtxScope {
+  explicit NvtxScope(const char* n) { nvtxRangePushA(n); }
+  ~NvtxScope() { nvtxRangePop(); }
+};
+#define NVTX_SCOPE(name) NvtxScope nvtx_scope_##__LINE__(name)
+#else
+#define NVTX_PUSH(name) ((void)0)
+#define NVTX_POP() ((void)0)
+#define NVTX_SCOPE(name) ((void)0)
+#endif
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -315,8 +333,10 @@ static void syncAll(const Ring& R) {
 // ---------------------------------------------------------------------------
 static void ringAllReduceV1(Ring& R) {
   const size_t bytes = R.chunk * sizeof(float);
+  NVTX_SCOPE("v1-allreduce");
 
   // --- ReduceScatter: N-1 steps -------------------------------------------
+  NVTX_PUSH("v1-reducescatter");
   for (int s = 0; s < R.n - 1; ++s) {
     for (int r = 0; r < R.n; ++r) {
       int sendIdx = (r - s + R.n) % R.n;
@@ -325,19 +345,23 @@ static void ringAllReduceV1(Ring& R) {
                                 R.chunkPtr(r, sendIdx), R.dev[r], bytes));
       g_bytesMoved[r] += bytes;
     }
-    syncAll(R);
+    NVTX_PUSH("v1-sync"); syncAll(R); NVTX_POP();
+    NVTX_PUSH("v1-reduce");
     for (int r = 0; r < R.n; ++r) {
       // The chunk this rank just received is the one its predecessor sent.
       int recvIdx = (r - s - 1 + R.n) % R.n;
       CUDA_CHECK(cudaSetDevice(R.dev[r]));
       launchAdd(R.chunkPtr(r, recvIdx), R.stage[0][r], R.chunk, 0);
     }
-    syncAll(R);
+    NVTX_POP();
+    NVTX_PUSH("v1-sync"); syncAll(R); NVTX_POP();
   }
+  NVTX_POP();
 
   // --- AllGather: N-1 steps ------------------------------------------------
   // No reduction and no staging: the finished chunk is written straight into
   // the destination's slot, because sender and receiver agree on the index.
+  NVTX_PUSH("v1-allgather");
   for (int s = 0; s < R.n - 1; ++s) {
     for (int r = 0; r < R.n; ++r) {
       int sendIdx = (r - s + 1 + R.n) % R.n;
@@ -346,8 +370,9 @@ static void ringAllReduceV1(Ring& R) {
                                 R.chunkPtr(r, sendIdx), R.dev[r], bytes));
       g_bytesMoved[r] += bytes;
     }
-    syncAll(R);
+    NVTX_PUSH("v1-sync"); syncAll(R); NVTX_POP();
   }
+  NVTX_POP();
 }
 
 // ---------------------------------------------------------------------------
@@ -376,7 +401,9 @@ static void ringAllReduceV1(Ring& R) {
 // ---------------------------------------------------------------------------
 static void ringAllReduceV2(Ring& R) {
   const size_t bytes = R.chunk * sizeof(float);
+  NVTX_SCOPE("v2-allreduce");
 
+  NVTX_PUSH("v2-reducescatter");
   for (int s = 0; s < R.n - 1; ++s) {
     const int cur = s;                       // one staging buffer per step
     for (int r = 0; r < R.n; ++r) {
@@ -404,6 +431,8 @@ static void ringAllReduceV2(Ring& R) {
   // AllGather writes straight into the peer's slot; the only ordering needed is
   // that a rank forwards a chunk after it has actually received it. Event slots
   // continue past the ReduceScatter steps so no index is reused.
+  NVTX_POP();
+  NVTX_PUSH("v2-allgather");
   const int agBase = R.n;
   for (int s = 0; s < R.n - 1; ++s) {
     for (int r = 0; r < R.n; ++r) {
@@ -421,7 +450,8 @@ static void ringAllReduceV2(Ring& R) {
       g_bytesMoved[r] += bytes;
     }
   }
-  syncAll(R);
+  NVTX_POP();
+  NVTX_PUSH("v2-final-sync"); syncAll(R); NVTX_POP();
 }
 
 // ---------------------------------------------------------------------------
@@ -447,6 +477,8 @@ static void ringAllReduceV3(Ring& R, int sub) {
     CUDA_CHECK(cudaEventCreateWithFlags(&subCopy[r], cudaEventDisableTiming));
   }
 
+  NVTX_SCOPE("v3-allreduce");
+  NVTX_PUSH("v3-reducescatter");
   for (int s = 0; s < R.n - 1; ++s) {
     const int cur = s;                       // one staging buffer per step
     for (int k = 0; k < sub; ++k) {
@@ -476,6 +508,8 @@ static void ringAllReduceV3(Ring& R, int sub) {
     }
   }
 
+  NVTX_POP();
+  NVTX_PUSH("v3-allgather");
   for (int s = 0; s < R.n - 1; ++s) {
     for (int r = 0; r < R.n; ++r) {
       int sendIdx = (r - s + 1 + R.n) % R.n;
@@ -490,7 +524,8 @@ static void ringAllReduceV3(Ring& R, int sub) {
       g_bytesMoved[r] += R.chunk * sizeof(float);
     }
   }
-  syncAll(R);
+  NVTX_POP();
+  NVTX_PUSH("v3-final-sync"); syncAll(R); NVTX_POP();
   for (int r = 0; r < R.n; ++r) {
     CUDA_CHECK(cudaSetDevice(R.dev[r]));
     cudaEventDestroy(subCopy[r]);
@@ -535,11 +570,15 @@ static Verdict verify(const Ring& R) {
 // ---------------------------------------------------------------------------
 template <typename F>
 static double timeUs(Ring& R, F&& body, int warmup, int iters) {
+  NVTX_PUSH("warmup");
   for (int i = 0; i < warmup; ++i) body();
   syncAll(R);
+  NVTX_POP();
+  NVTX_PUSH("timed-region");
   auto t0 = std::chrono::steady_clock::now();
   for (int i = 0; i < iters; ++i) body();
   syncAll(R);
+  NVTX_POP();
   auto t1 = std::chrono::steady_clock::now();
   return std::chrono::duration<double, std::micro>(t1 - t0).count() / iters;
 }
@@ -649,7 +688,7 @@ int main(int argc, char** argv) {
     size_t realBytes = elems * sizeof(float);
 
     Ring R;
-    ringInit(R, ring, elems);
+    NVTX_PUSH("alloc"); ringInit(R, ring, elems); NVTX_POP();
 
     // theoretical per-rank movement for the whole AllReduce: 2(N-1)/N * M
     const double expectBytes = 2.0 * (ngpu - 1) / ngpu * (double)realBytes;
@@ -665,6 +704,7 @@ int main(int argc, char** argv) {
         else if (c.name == "v2-async") ringAllReduceV2(R);
         else if (c.name == "v3-pipelined") ringAllReduceV3(R, c.sub);
         else {
+          NVTX_SCOPE("nccl-allreduce");
           NCCL_CHECK(ncclGroupStart());
           for (int r = 0; r < ngpu; ++r) {
             CUDA_CHECK(cudaSetDevice(R.dev[r]));
@@ -680,11 +720,13 @@ int main(int argc, char** argv) {
       };
 
       // correctness first, on a freshly initialised buffer, always
-      ringReset(R);
+      NVTX_PUSH("reset"); ringReset(R); NVTX_POP();
       resetByteCounter(ngpu);
-      run();
+      NVTX_PUSH("correctness-run"); run(); NVTX_POP();
       syncAll(R);
+      NVTX_PUSH("validate");
       Verdict v = verify(R);
+      NVTX_POP();
       size_t moved = g_bytesMoved[0];
 
       double us = -1.0, algbw = 0.0, busbw = 0.0;

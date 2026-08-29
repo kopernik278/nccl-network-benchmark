@@ -25,9 +25,21 @@ ifneq ($(SM),)
   GENCODE = -gencode=arch=compute_$(SM),code=sm_$(SM)
 endif
 
-all: $(BUILD)/ring_allreduce
+# NVTX is header-only in CUDA 12 (nvtx3). Instrumentation is compiled in only
+# when USE_NVTX=1 so the measured binary and the profiled binary can differ by
+# exactly one flag.
+ifeq ($(USE_NVTX),1)
+  CXXFLAGS += -DUSE_NVTX=1
+endif
+
+all: $(BUILD)/ring_allreduce $(BUILD)/harness_calibration
+
+calibration: $(BUILD)/harness_calibration
 
 $(BUILD)/ring_allreduce: ring_allreduce.cu | $(BUILD)
+	$(NVCC) $(CXXFLAGS) $(GENCODE) $(INCLUDES) $< -o $@ $(LDFLAGS)
+
+$(BUILD)/harness_calibration: harness_calibration.cu | $(BUILD)
 	$(NVCC) $(CXXFLAGS) $(GENCODE) $(INCLUDES) $< -o $@ $(LDFLAGS)
 
 $(BUILD):
@@ -36,4 +48,4 @@ $(BUILD):
 clean:
 	rm -rf $(BUILD)
 
-.PHONY: all clean
+.PHONY: all clean calibration
