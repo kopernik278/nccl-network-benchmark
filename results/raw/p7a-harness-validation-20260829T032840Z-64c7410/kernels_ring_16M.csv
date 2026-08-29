@@ -1,0 +1,7 @@
+
+
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+96.0,170115730,32,5316116.6,3659089.0,3305382,27853915,5185457.7,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+3.8,6657143,3072,2167.0,1728.0,1439,6560,1144.0,"addInto(float *, const float *, unsigned long)"
+0.2,411998,28,14714.2,14688.0,14336,15552,247.0,"fillDeterministic(float *, unsigned long, int)"
+

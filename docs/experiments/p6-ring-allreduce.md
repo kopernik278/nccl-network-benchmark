@@ -5,6 +5,14 @@ Experiment ID: `p6-ring-allreduce-20260828T164556Z-911ccf0`
 Date (UTC): 2026-08-28 · Repo commit: `911ccf0`
 Implementation: [`src/ring_allreduce/ring_allreduce.cu`](../../src/ring_allreduce/ring_allreduce.cu)
 
+> **Superseded in part.** [Phase 7A](p7a-harness-validation.md) profiled this
+> experiment and found that the "~4.4 ms harness floor" claimed in section 7 was
+> a property of the Phase 6 *host*, not of the harness, which costs ~27 us.
+> Section 7, the small-message rankings, the V2->V3 16 MiB gain and the
+> magnitude of the NCCL comparison are corrected there. This report is preserved
+> unedited as the record of what was measured and concluded at the time; read it
+> together with the Phase 7A reconciliation table.
+
 > All numbers are **measured**. Every configuration passed a correctness check
 > against an independently computed oracle **before** it was timed; nothing that
 > failed was timed at all. Two findings in this report are negative and are

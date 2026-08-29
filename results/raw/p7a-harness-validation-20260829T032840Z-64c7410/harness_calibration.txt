@@ -1,0 +1,24 @@
+# harness calibration: 4 GPUs, 200 iterations per case
+# every case uses the Phase 6 timing scheme (host clock + full device barrier)
+case                                                   per iteration   note
+------------------------------------------------------------------------------------------------
+A. empty host body (chrono + loop overhead)                 0.000 us   lower bound of the method
+C1. cudaSetDevice x1 (same device, no switch)               0.195 us   
+C2. cudaSetDevice cycling over all GPUs                     0.761 us   the pattern syncAll() uses
+D1. cudaDeviceSynchronize x1 (device idle)                  0.764 us   
+D2. syncAll() — setDevice+deviceSync over all GPUs        3.022 us   Phase 6 calls this per ring step in V1
+D3. cudaStreamSynchronize over all GPUs (idle)              2.418 us   the pattern the NCCL body uses
+E1. empty kernel launch x1 (async, no sync)                 2.651 us   
+E2. empty kernel launch on all GPUs, then syncAll          18.198 us   
+F1. event record + cross-device stream wait, all GPUs        4.556 us   
+G1. one cudaMemcpyPeer, 16MiB/N chunk, blocking           441.339 us   
+G2. one cudaMemcpyPeerAsync + streamSync, same size       433.854 us   
+G3. reduce kernel over the same chunk + sync               11.789 us   
+H1. NCCL AllReduce 1024B — Phase 6 body verbatim         65.918 us   8x setDevice + 4x streamSync per iter
+H2. NCCL AllReduce 1024B — no per-rank setDevice         63.381 us   isolates the setDevice cost
+H3. NCCL AllReduce 1024B — 20 enqueued, 1 sync           38.188 us   per collective; the nccl-tests pattern
+H1. NCCL AllReduce 16777216B — Phase 6 body verbatim     3602.064 us   8x setDevice + 4x streamSync per iter
+H2. NCCL AllReduce 16777216B — no per-rank setDevice     3602.402 us   isolates the setDevice cost
+H3. NCCL AllReduce 16777216B — 20 enqueued, 1 sync     3560.850 us   per collective; the nccl-tests pattern
+
+# H1 vs H2 isolates cudaSetDevice; H1 vs H3 isolates per-iteration synchronisation.

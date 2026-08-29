@@ -35,6 +35,7 @@ results/raw/*
 results/raw/*/*
 !results/raw/*/*.txt
 !results/raw/*/*.json
+!results/raw/*/*.csv
 
 profiles/raw/*
 !profiles/raw/.gitkeep

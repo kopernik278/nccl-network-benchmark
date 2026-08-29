@@ -185,7 +185,7 @@ def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
             "placement": "in_place",
             "warmup_iterations": num("warmup", int, 0) or 0,
             "measured_iterations": num("iters", int, 1) or 1,
-            "repeat_index": 0,
+            "repeat_index": num("repeat", int, 0) or 0,
             "tier": "full",
 
             "latency_us": latency,

@@ -1,0 +1,5 @@
+{"schema_version":1,"experiment_id":"p7a-harness-validation-20260829T032840Z-64c7410","phase":"phase7","created_at_utc":"2026-08-29T03:29:39Z",
+ "value_kind":"measured","benchmark_tool":"custom-ring-allreduce","node_count":1,"gpu_count":4,
+ "network":"none-single-node","transport":"host-staged","warmup_iterations":5,"measured_iterations":20,
+ "command":"ring_allreduce -g 4 -w 5 -n 20 --repeats 3 --allow-host-staged","exit_code":0,
+ "git_commit":"64c741084b837f1eb163ee4dda0f0115f284492c","runner":"phase7a"}

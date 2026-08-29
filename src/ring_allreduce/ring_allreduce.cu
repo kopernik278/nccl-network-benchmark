@@ -591,6 +591,11 @@ int main(int argc, char** argv) {
   std::vector<size_t> sizesBytes = {1 << 10, 1 << 15, 1 << 20, 1 << 24, 1 << 27};
   std::vector<int> subchunks = {2, 4, 8, 16};
   bool allowHostStaged = false;
+  // Observability filters. Profiling the whole matrix produces a trace too
+  // large to read; these let one implementation at one size be captured.
+  std::string onlyImpl;              // substring match on the case name
+  std::vector<size_t> onlySizes;     // empty = all
+  int repeats = 1;                   // whole-matrix repeats, for variance
 
   for (int i = 1; i < argc; ++i) {
     std::string a = argv[i];
@@ -602,6 +607,24 @@ int main(int argc, char** argv) {
     else if (a == "-w") warmup = std::stoi(next());
     else if (a == "-n") iters = std::stoi(next());
     else if (a == "--allow-host-staged") allowHostStaged = true;
+    else if (a == "--only-impl") onlyImpl = next();
+    else if (a == "--repeats") repeats = std::stoi(next());
+    else if (a == "--sizes") {
+      std::string spec = next(), cur;
+      for (size_t k = 0; k <= spec.size(); ++k) {
+        if (k == spec.size() || spec[k] == ',') {
+          if (!cur.empty()) {
+            size_t mult = 1;
+            char suf = cur.back();
+            if (suf == 'K' || suf == 'k') mult = 1u << 10;
+            else if (suf == 'M' || suf == 'm') mult = 1u << 20;
+            if (mult > 1) cur.pop_back();
+            onlySizes.push_back((size_t)std::stoull(cur) * mult);
+          }
+          cur.clear();
+        } else cur += spec[k];
+      }
+    }
     else if (a == "-h") {
       std::printf("usage: %s [-g ngpus] [-w warmup] [-n iters] [--allow-host-staged]\n", argv[0]);
       return 0;
@@ -679,8 +702,11 @@ int main(int argc, char** argv) {
 
   std::printf("impl,subchunks,transport,ranks,size_bytes,elements,warmup,iters,"
               "latency_us,algbw_gbps,busbw_gbps,bytes_moved_per_rank,"
-              "bytes_expected_per_rank,max_abs_err,mismatches\n");
+              "bytes_expected_per_rank,max_abs_err,mismatches,repeat\n");
 
+  if (!onlySizes.empty()) sizesBytes = onlySizes;
+
+  for (int rep = 0; rep < repeats; ++rep)
   for (size_t bytes : sizesBytes) {
     size_t elems = bytes / sizeof(float);
     if (elems % (size_t)ngpu != 0) elems -= elems % ngpu;   // chunk divisibility
@@ -699,6 +725,7 @@ int main(int argc, char** argv) {
     cases.push_back({"nccl-reference", 0});
 
     for (const Case& c : cases) {
+      if (!onlyImpl.empty() && c.name.find(onlyImpl) == std::string::npos) continue;
       auto run = [&]() {
         if (c.name == "v1-naive") ringAllReduceV1(R);
         else if (c.name == "v2-async") ringAllReduceV2(R);
@@ -744,11 +771,11 @@ int main(int argc, char** argv) {
         }
       }
 
-      std::printf("%s,%d,%s,%d,%zu,%zu,%d,%d,%.3f,%.4f,%.4f,%zu,%.0f,%.6f,%lld\n",
+      std::printf("%s,%d,%s,%d,%zu,%zu,%d,%d,%.3f,%.4f,%.4f,%zu,%.0f,%.6f,%lld,%d\n",
                   c.name.c_str(), c.sub, transport, ngpu, realBytes, elems,
                   warmup, iters, us, algbw, busbw,
                   (c.name == "nccl-reference" ? (size_t)0 : moved), expectBytes,
-                  v.maxAbsErr, v.mismatches);
+                  v.maxAbsErr, v.mismatches, rep);
       std::fflush(stdout);
     }
     ringFree(R);

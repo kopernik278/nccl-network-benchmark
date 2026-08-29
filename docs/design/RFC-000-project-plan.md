@@ -562,7 +562,12 @@ unusable for ranking.*
 NCCL logs, Nsight Systems, Nsight Compute where appropriate, and topology
 tools, used to identify real bottlenecks rather than suspected ones.
 
-*Status: not started.*
+*Status: Phase 7A (measurement validation) complete 2026-08-29 — see
+`docs/experiments/p7a-harness-validation.md`. It found that Phase 6's
+"~4.4 ms harness floor" was a property of that host, not of the harness
+(measured at ~27 us), and the timeline confirmed that 91-93% of V1's runtime
+is synchronization barriers. Two Phase 6 performance conclusions are
+invalidated and three revised there. Phase 7B (overlap) not started.*
 
 ### Phase 8 — Communication optimization
 

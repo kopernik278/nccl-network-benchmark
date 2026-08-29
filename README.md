@@ -124,7 +124,7 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 4 | Single-node topology isolation | Deferred by user; design preserved |
 | 5 | NCCL algorithm and protocol characterization | Complete — measured 2026-08-28 |
 | 6 | Simplified Ring AllReduce | Complete — measured 2026-08-28 |
-| 7 | Communication profiling | Not started |
+| 7 | Communication profiling | 7A complete — harness validated 2026-08-29; 7B not started |
 | 8 | Communication optimization | Not started |
 | 9 | Reproducibility and final portfolio documentation | Not started |
 
