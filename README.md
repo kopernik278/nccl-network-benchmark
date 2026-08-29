@@ -84,18 +84,27 @@ InfiniBand
 
 ## Project Status
 
-**Current phase: Phase 1 — NCCL baseline (preparation).**
+**Current phase: Phase 8 — communication/compute resource contention (complete).**
 
-Phases 1 and 2 have been **measured on real hardware** — 1404 result rows across
-three configurations, every one with zero validation errors:
+Phases 1, 2, 5, 6, 7 and 8 have been **measured on real hardware**:
 
 - [Phase 1B](docs/experiments/p1b-first-2gpu-nccl-baseline.md) — first baseline,
   2 × NVIDIA L4, single node.
 - [Phase 2](docs/experiments/p2-multigpu-scaling.md) — 2 vs 4 GPU scaling,
   4 × RTX PRO 4500 Blackwell, single node.
+- [Phase 5](docs/experiments/p5-nccl-algo-protocol.md) — NCCL algorithm and
+  protocol characterization.
+- [Phase 6](docs/experiments/p6-ring-allreduce.md) — a Ring AllReduce written
+  from scratch, checked against NCCL.
+- [Phase 7A](docs/experiments/p7a-harness-validation.md) /
+  [7B](docs/experiments/p7b-overlap.md) — harness validation, then
+  communication/compute overlap.
+- [Phase 8](docs/experiments/p8-contention.md) — which resource the two sides
+  actually contend for, 4 × NVIDIA A40.
 
-No later phase has been executed. Nothing has been measured on NVLink,
-multi-node, RoCE, or InfiniBand hardware.
+Everything measured so far has run **single-node** on the `SHM/direct` or
+`P2P/direct` transport. Nothing has been measured on NVLink, multi-node, RoCE,
+or InfiniBand hardware, and no such result is claimed.
 
 ### Headline result: collective scaling is governed by topology, not rank count
 
@@ -125,7 +134,7 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 5 | NCCL algorithm and protocol characterization | Complete — measured 2026-08-28 |
 | 6 | Simplified Ring AllReduce | Complete — measured 2026-08-28 |
 | 7 | Communication profiling | Complete — 7A harness validation + 7B overlap, 2026-08-29 |
-| 8 | Communication optimization | Not started |
+| 8 | Communication/compute resource contention | Complete — measured 2026-08-29 |
 | 9 | Reproducibility and final portfolio documentation | Not started |
 
 RoCE and InfiniBand were originally Phases 4 and 5. Both have moved to future

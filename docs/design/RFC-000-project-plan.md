@@ -572,13 +572,28 @@ realised, that overlap costs the compute stream 1.03x-2.09x, and that DDP-like
 bucket size has a plateau over 4-16 MiB rather than a sharp optimum. See
 `docs/experiments/p7a-harness-validation.md` and `p7b-overlap.md`.*
 
-### Phase 8 — Communication optimization
+### Phase 8 — Communication/compute resource contention
 
-Communication/computation overlap, message and bucket tuning, collective
-selection, NCCL configuration, topology-aware configuration, and algorithm or
-protocol tuning where supported — each measured before and after.
+Which resource concurrent communication and computation actually fight over.
+Three compute workload classes at fixed arithmetic intensity by construction
+(compute-heavy SGEMM, memory-heavy triad, mixed), driven to a common duration
+and run against the same collective, so the interference can be attributed to
+a workload property rather than to the message size.
 
-*Status: not started.*
+*Status: complete (2026-08-29). Measured on 4 x NVIDIA A40, `SHM/direct`
+transport. The compute stream is slowed in every cell (1.07x-2.00x) and the
+slowdown tracks the workload class, not the message size: the compute-heavy
+class loses the most and the memory-heavy class the least. **DRAM bandwidth is
+ruled out** as the mechanism — the collective's own device-memory traffic is
+bounded at ~2% of achievable bandwidth, and the workload consuming ~460 GB/s
+disturbs the collective less (1.07x) than the workload consuming almost none
+(1.42x). Phase 7B's 128 MiB overlap collapse reproduced on different silicon
+and proved to be specific to the compute-heavy class. Nsight Compute was
+unavailable (`ERR_NVGPUCTRPERM`), so no counter-verified intensity exists;
+kernel granularity and arithmetic intensity remain confounded. NCCL's P2P
+transport deadlocks on this host despite `cudaDeviceCanAccessPeer` returning
+true — the Phase 6 lesson in a new form. See
+`docs/experiments/p8-contention.md`.*
 
 ### Phase 9 — Reproducibility and final portfolio documentation
 
