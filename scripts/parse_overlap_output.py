@@ -81,7 +81,7 @@ def parse_table(text: str) -> list[dict[str, str]]:
     return list(csv.DictReader(body))
 
 
-def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
+def build_rows(raw_dir: Path, phase: str = "phase7") -> tuple[list[dict[str, Any]], list[str]]:
     env = load_json(raw_dir / "env.json")
     man = load_json(raw_dir / "run_manifest.json")
     problems: list[str] = []
@@ -143,12 +143,12 @@ def build_rows(raw_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
         rows.append({
             "schema_version": SCHEMA_VERSION,
             "experiment_id": man.get("experiment_id") or raw_dir.name,
-            "phase": "phase7",
+            "phase": phase,
             "timestamp": man.get("created_at_utc") or env.get("captured_at_utc"),
             "value_kind": value_kind,
             "git_commit": man.get("git_commit") or env.get("git_commit"),
             "git_dirty": env.get("git_dirty"),
-            "provider": env.get("provider"),
+            "provider": man.get("provider") or env.get("provider"),
             "provider_instance_id": env.get("provider_instance_id"),
             "hostname": env.get("hostname"), "os": env.get("os"),
             "kernel": env.get("kernel"), "cpu_model": env.get("cpu_model"),
@@ -216,10 +216,14 @@ def main() -> int:
     ap.add_argument("--raw-dir", required=True, type=Path)
     ap.add_argument("--out-dir", type=Path, default=None)
     ap.add_argument("--strict", action="store_true")
+    # Phase 8 reuses this benchmark for contention work; the schema records
+    # which phase produced a row, so it must be selectable.
+    ap.add_argument("--phase", default="phase7",
+                    help="value for the schema 'phase' field (default: phase7)")
     a = ap.parse_args()
     if not a.raw_dir.is_dir():
         print(f"error: no such directory: {a.raw_dir}", file=sys.stderr); return 2
-    rows, problems = build_rows(a.raw_dir)
+    rows, problems = build_rows(a.raw_dir, a.phase)
     if not rows:
         print("error: no rows parsed", file=sys.stderr)
         for p in problems: print(f"  - {p}", file=sys.stderr)

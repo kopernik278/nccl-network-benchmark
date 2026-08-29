@@ -112,6 +112,15 @@ class TestOverlapParsing(unittest.TestCase):
             self.assertEqual(r["n_buckets"], 32)
             self.assertEqual(r["compute_reps"], 240)
 
+    def test_phase_defaults_to_7_and_is_selectable(self):
+        # Phase 8 reuses this benchmark, so a row must be able to say which
+        # phase produced it; the schema pattern only accepts phase0-phase9.
+        with tempfile.TemporaryDirectory() as td:
+            raw = make_raw(Path(td))
+            self.assertTrue(all(r["phase"] == "phase7" for r in P.build_rows(raw)[0]))
+            self.assertTrue(all(r["phase"] == "phase8"
+                                for r in P.build_rows(raw, "phase8")[0]))
+
     def test_synthetic_marker_downgrades_value_kind(self):
         with tempfile.TemporaryDirectory() as td:
             rows, problems = P.build_rows(make_raw(Path(td)))
