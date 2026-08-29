@@ -84,9 +84,9 @@ InfiniBand
 
 ## Project Status
 
-**Current phase: Phase 8 — communication/compute resource contention (complete).**
+**Current phase: Phase 9 — real DDP training workload validation (complete).**
 
-Phases 1, 2, 5, 6, 7 and 8 have been **measured on real hardware**:
+Phases 1, 2, 5, 6, 7, 8 and 9 have been **measured on real hardware**:
 
 - [Phase 1B](docs/experiments/p1b-first-2gpu-nccl-baseline.md) — first baseline,
   2 × NVIDIA L4, single node.
@@ -101,6 +101,8 @@ Phases 1, 2, 5, 6, 7 and 8 have been **measured on real hardware**:
   communication/compute overlap.
 - [Phase 8](docs/experiments/p8-contention.md) — which resource the two sides
   actually contend for, 4 × NVIDIA A40.
+- [Phase 9](docs/experiments/p9-ddp-training.md) — the microbenchmark
+  conclusions re-tested inside a real PyTorch DDP training step.
 
 Everything measured so far has run **single-node** on the `SHM/direct` or
 `P2P/direct` transport. Nothing has been measured on NVLink, multi-node, RoCE,
@@ -135,7 +137,8 @@ because the 4-GPU ring is forced across a PCIe host-bridge boundary twice
 | 6 | Simplified Ring AllReduce | Complete — measured 2026-08-28 |
 | 7 | Communication profiling | Complete — 7A harness validation + 7B overlap, 2026-08-29 |
 | 8 | Communication/compute resource contention | Complete — measured 2026-08-29 |
-| 9 | Reproducibility and final portfolio documentation | Not started |
+| 9 | Real DDP training workload validation | Complete — measured 2026-08-29 |
+| 10 | Reproducibility and final portfolio documentation | Not started |
 
 RoCE and InfiniBand were originally Phases 4 and 5. Both have moved to future
 work: Phase 3 established that the cheapest schedulable multi-node cluster
@@ -188,6 +191,8 @@ src/
   collectives/     collective communication code
   p2p/             point-to-point code
   ring_allreduce/  simplified Ring AllReduce implementation
+  overlap/         communication/compute overlap and contention benchmark
+  ddp/             compact GPT + PyTorch DDP training benchmark
 benchmarks/        per-transport benchmark configurations
 tests/             local tests (no GPU required)
 results/

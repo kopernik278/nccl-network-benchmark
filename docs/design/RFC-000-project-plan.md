@@ -595,7 +595,27 @@ transport deadlocks on this host despite `cudaDeviceCanAccessPeer` returning
 true — the Phase 6 lesson in a new form. See
 `docs/experiments/p8-contention.md`.*
 
-### Phase 9 — Reproducibility and final portfolio documentation
+### Phase 9 — Real DDP training workload validation
+
+The microbenchmark conclusions of Phases 7B and 8 re-tested inside a real
+PyTorch DistributedDataParallel training step: a compact GPT trained with a real
+autograd backward and DDP's own reducer, swept over `bucket_cap_mb`.
+
+*Status: complete (2026-08-29). Measured on 4 x NVIDIA A40, `SHM/direct`,
+82.6M parameters, 315 MiB of gradients per step. DDP does overlap: a collective
+is resident for 50-83% of backward, and overlap is worth **30.4%** of step time
+against an otherwise identical serialised reduction. Step time rises
+monotonically with bucket capacity (157.3 -> 166.8 ms for 4 -> 64 MiB); every
+gap is resolvable above a 0.39 ms across-launch noise floor, so there is no flat
+plateau, but 4/16/25 MiB span only 1.5% while 64 MiB is 6.1% worse. **The
+requested bucket capacity is not the collective size**: a single 50 MiB output
+projection sets a floor no cap below 48 MiB can cross, which blunts the lever on
+large-vocabulary models. Five of six microbenchmark predictions are supported
+outright and Phase 8's collective timing predicted the real AllReduce within
+7.8%. NCCL's P2P transport deadlocked on a **third** distinct host. See
+`docs/experiments/p9-ddp-training.md`.*
+
+### Phase 10 — Reproducibility and final portfolio documentation
 
 Reproducible experiments, final benchmark tables, plots, architecture
 documentation, bottleneck analysis, before/after optimization comparison,

@@ -408,10 +408,14 @@ large profiling artifacts.
 
 Cost: pod `8k78uif3jx90kc` ran from 04:48:40Z until just before 05:26:49Z (≈ 38 min)
 and pod `1urcvdqtp3p4yw` from 05:26:49Z for ≈ 18 min, at $1.76/hour — **≈ $1.65**.
-This is **computed from pod lifetime × the posted rate, not a billed figure**: the
-RunPod billing API had not yet posted the 05:00–06:00 UTC bucket when this report
-was written. One 4-GPU pod ran at a time, so the configuration stayed inside the
-$3.00/hour autonomous threshold throughout.
+One 4-GPU pod ran at a time, so the configuration stayed inside the $3.00/hour
+autonomous threshold throughout.
+
+**Updated 2026-08-29 (during Phase 9):** the figure above was computed from pod
+lifetime × the posted rate, because the billing API had not yet posted these
+hours when this report was written. Billing has since posted **$1.23** —
+`8k78uif3jx90kc` $1.03 and `1urcvdqtp3p4yw` $0.20 — so the lifetime-based
+computation was **high by about 26 %**. The billed number is the correct one.
 
 **Process note.** The collapse point was missed on the first pod because the
 sweep stopped at ratio 1.0 while Phase 7B's collapse sat at ratio 2.0, so a
