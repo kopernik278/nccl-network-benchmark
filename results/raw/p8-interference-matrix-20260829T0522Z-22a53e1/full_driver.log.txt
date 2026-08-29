@@ -1,0 +1,15 @@
+--- matrix : -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed ---
+matrix rc=0  rows=27
+--- sweep : -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 128M --ratios 0.25,0.5,0.75,1.0 --workloads compute,memory,mixed ---
+sweep rc=0  rows=36
+--- transport evidence ---
+transport rc=0
+5ba9b255293f:1693:1713 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:1693:1713 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:1693:1714 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:1693:1714 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:1693:1715 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:1693:1715 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:1693:1716 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+5ba9b255293f:1693:1716 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+===== FULL DONE =====

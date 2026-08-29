@@ -1,0 +1,23 @@
+# overlap benchmark: 4 GPUs
+# device 0: NVIDIA A40 sm_86
+# device 1: NVIDIA A40 sm_86
+# device 2: NVIDIA A40 sm_86
+# device 3: NVIDIA A40 sm_86
+# canAccessPeer 0->1: yes
+# canAccessPeer 0->2: yes
+# canAccessPeer 0->3: yes
+# NCCL's own transport choice is the authority here; run with
+# NCCL_DEBUG=INFO to capture it alongside these results.
+# workload standalone characterisation (per repetition, per GPU):
+#   compute-gemm      59.38 us  gemm 512x512  0.27 GFLOP  -> 4520.9 GFLOP/s  (AI ~ 85 flop/byte, design)
+#   memory-triad     224.20 us  96 MiB moved -> 449.0 GB/s          (AI ~ 0.17 flop/byte, design)
+#   mixed            171.34 us  64 MiB moved -> 391.7 GB/s          (AI ~ 8 flop/byte, design)
+# arithmetic intensity is BY CONSTRUCTION; it is counter-verified only if
+# Nsight Compute was available on this host (recorded separately).
+experiment,workload,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+micro,memory-triad,134217728,2.00,329,0,0,69921.016,36944.634,106962.074,76768.971,69921.016,0.8151,6847.955,76717.377,41303.936,0
+Collecting data...
+Generating '/tmp/nsys-report-de13.qdstrm'
+[1/1] [0%                          ] collapse-memory.nsys-rep[1/1] [0%                          ] collapse-memory.nsys-rep[1/1] [=====30%                    ] collapse-memory.nsys-rep[1/1] [=============59%            ] collapse-memory.nsys-rep[1/1] [==================76%       ] collapse-memory.nsys-rep[1/1] [========================100%] collapse-memory.nsys-rep[1/1] [========================100%] collapse-memory.nsys-rep
+Generated:
+    /root/p8c_out/collapse-memory.nsys-rep

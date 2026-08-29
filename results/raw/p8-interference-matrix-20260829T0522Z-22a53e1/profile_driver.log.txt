@@ -1,0 +1,75 @@
+profiled binary: 122696 bytes
+--- nsys low-contention : 1M compute ratio=1.0 ---
+low-contention rc=0
+### low-contention / nvtx_sum ###
+Generating SQLite file /root/p8_out/prof/low-contention.sqlite from /root/p8_out/prof/low-contention.nsys-rep
+Processing [/root/p8_out/prof/low-contention.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+44.3,423724219,1,423724219.0,423724219.0,423724219,423724219,0.0,PushPop,NCCL:ncclCommInitAll
+36.0,343586624,4,85896656.0,139050.0,94976,343213548,171544599.1,PushPop,NCCL:ncclCommDestroy
+9.6,91643233,20,4582161.7,48579.0,46680,90665845,20261997.7,PushPop,NCCL:ncclGroupEnd
+9.5,91106288,1,91106288.0,91106288.0,91106288,91106288,0.0,PushPop,:calibrate
+0.3,3225242,1,3225242.0,3225242.0,3225242,3225242,0.0,PushPop,:sequential
+0.2,2166199,1,2166199.0,2166199.0,2166199,2166199,0.0,PushPop,:overlapped
+0.0,124593,80,1557.4,1047.0,735,12244,1704.8,PushPop,NCCL:ncclAllReduce
+0.0,7093,20,354.6,265.0,146,1160,237.6,PushPop,NCCL:ncclGroupStart
+
+### low-contention / cuda_gpu_kern_sum ###
+### low-contention / cuda_api_sum ###
+--- nsys efficient-overlap : 16M memory ratio=1.0 ---
+efficient-overlap rc=0
+### efficient-overlap / nvtx_sum ###
+Generating SQLite file /root/p8_out/prof/efficient-overlap.sqlite from /root/p8_out/prof/efficient-overlap.nsys-rep
+Processing [/root/p8_out/prof/efficient-overlap.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+49.6,448684452,1,448684452.0,448684452.0,448684452,448684452,0.0,PushPop,NCCL:ncclCommInitAll
+16.8,152242851,4,38060712.8,137575.5,104752,151862948,75868163.0,PushPop,NCCL:ncclCommDestroy
+13.3,119783381,1,119783381.0,119783381.0,119783381,119783381,0.0,PushPop,:calibrate
+12.0,108652538,20,5432626.9,71307.0,49447,106966201,23898560.6,PushPop,NCCL:ncclGroupEnd
+5.1,46423011,1,46423011.0,46423011.0,46423011,46423011,0.0,PushPop,:sequential
+3.1,27664944,1,27664944.0,27664944.0,27664944,27664944,0.0,PushPop,:overlapped
+0.0,223508,80,2793.8,1908.5,927,18529,2699.5,PushPop,NCCL:ncclAllReduce
+0.0,32250,20,1612.5,738.5,292,7208,2090.7,PushPop,NCCL:ncclGroupStart
+
+### efficient-overlap / cuda_gpu_kern_sum ###
+### efficient-overlap / cuda_api_sum ###
+--- nsys strong-contention : 128M compute ratio=1.0 ---
+strong-contention rc=0
+### strong-contention / nvtx_sum ###
+Generating SQLite file /root/p8_out/prof/strong-contention.sqlite from /root/p8_out/prof/strong-contention.nsys-rep
+Processing [/root/p8_out/prof/strong-contention.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+25.4,392192673,1,392192673.0,392192673.0,392192673,392192673,0.0,PushPop,NCCL:ncclCommInitAll
+21.1,325060170,1,325060170.0,325060170.0,325060170,325060170,0.0,PushPop,:sequential
+17.9,275707048,20,13785352.4,65660.0,49872,273914624,61228121.9,PushPop,NCCL:ncclGroupEnd
+15.0,231163188,4,57790797.0,189547.0,128393,230655701,115243281.6,PushPop,NCCL:ncclCommDestroy
+13.8,212298663,1,212298663.0,212298663.0,212298663,212298663,0.0,PushPop,:overlapped
+6.9,105735073,1,105735073.0,105735073.0,105735073,105735073,0.0,PushPop,:calibrate
+0.0,260102,80,3251.3,1958.0,702,22763,3287.3,PushPop,NCCL:ncclAllReduce
+0.0,110503,20,5525.1,4550.5,888,16170,3536.4,PushPop,NCCL:ncclGroupStart
+
+### strong-contention / cuda_gpu_kern_sum ###
+### strong-contention / cuda_api_sum ###
+===== NCU ATTEMPT =====
+ncu rc=1
+==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance Counters on the target device 3. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM
+# overlap benchmark: 4 GPUs
+# device 0: NVIDIA A40 sm_86
+# device 1: NVIDIA A40 sm_86
+# device 2: NVIDIA A40 sm_86
+# device 3: NVIDIA A40 sm_86
+# canAccessPeer 0->1: yes
+# canAccessPeer 0->2: yes
+# canAccessPeer 0->3: yes
+# NCCL's own transport choice is the authority here; run with
+# NCCL_DEBUG=INFO to capture it alongside these results.
+# workload standalone characterisation (per repetition, per GPU):
+#   compute-gemm    1843.41 us  gemm 512x512  0.27 GFLOP  -> 145.6 GFLOP/s  (AI ~ 85 flop/byte, design)
+#   memory-triad    1578.75 us  96 MiB moved -> 63.8 GB/s          (AI ~ 0.17 flop/byte, design)
+#   mixed           1968.11 us  64 MiB moved -> 34.1 GB/s          (AI ~ 8 flop/byte, design)
+# arithmetic intensity is BY CONSTRUCTION; it is counter-verified only if
+# Nsight Compute was available on this host (recorded separately).
+experiment,workload,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+micro,memory-triad,1048576,1.00,125,0,0,224060.949,3168.112,228669.257,220811.526,224060.949,1.7051,0.000,220437.988,220439.590,0
+==PROF== Disconnected from process 2395
+===== PROFILE DONE =====

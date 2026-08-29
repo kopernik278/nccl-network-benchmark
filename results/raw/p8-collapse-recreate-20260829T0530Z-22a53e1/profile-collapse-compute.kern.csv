@@ -1,0 +1,8 @@
+Generating SQLite file /root/p8c_out/collapse-compute.sqlite from /root/p8c_out/collapse-compute.nsys-rep
+Processing [/root/p8c_out/collapse-compute.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/cuda_gpu_kern_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+61.2,2969846808,80,37123085.1,36691882.0,35164810,52256500,2152351.9,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+38.1,1849731375,71620,25827.0,23137.0,22944,358947,10752.7,ampere_sgemm_64x32_sliced1x4_nn
+0.4,20181302,100,201813.0,201634.0,199969,204897,970.7,"streamTriad(float *, const float *, const float *, float, unsigned long)"
+0.3,14910674,100,149106.7,149345.0,144673,152353,1568.2,"mixedKernel(float *, const float *, unsigned long, int)"
+

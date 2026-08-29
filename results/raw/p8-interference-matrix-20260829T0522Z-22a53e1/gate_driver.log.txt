@@ -1,0 +1,24 @@
+===== A. P2P ENABLED confirmation (warm, bounded 120s) =====
+/root/p8_gate.sh: line 5:   758 Killed                  timeout 120 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro --sizes 16M --ratios 1.0 --workloads compute > /root/p8_p2p_on.txt 2>&1
+rc=137
+0
+===== B. P2P DISABLED transport evidence =====
+rc=0
+5ba9b255293f:852:874 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:852:874 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:852:875 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:852:875 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:852:876 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:852:876 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:852:877 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+5ba9b255293f:852:877 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+===== C. smoke gate: all 3 workloads =====
+rc=0
+#   compute-gemm      51.43 us  gemm 512x512  0.27 GFLOP  -> 5219.8 GFLOP/s  (AI ~ 85 flop/byte, design)
+#   memory-triad     324.08 us  96 MiB moved -> 310.6 GB/s          (AI ~ 0.17 flop/byte, design)
+#   mixed            165.27 us  64 MiB moved -> 406.1 GB/s          (AI ~ 8 flop/byte, design)
+experiment,workload,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+micro,compute-gemm,16777216,1.00,92,0,0,4074.713,4777.399,8126.358,5513.412,4777.399,0.7802,1438.699,5482.240,4844.736,0
+micro,memory-triad,16777216,1.00,15,0,0,3170.082,4730.168,7925.887,5140.280,4730.168,0.8717,1970.197,3836.032,5136.064,0
+micro,mixed,16777216,1.00,29,0,0,4558.798,4710.977,9287.555,5648.415,4710.977,0.7952,1089.617,5709.952,5038.560,0
+===== DONE =====

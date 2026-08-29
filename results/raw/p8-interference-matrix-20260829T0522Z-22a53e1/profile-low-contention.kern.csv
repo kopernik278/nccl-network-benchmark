@@ -1,0 +1,8 @@
+Generating SQLite file /root/p8_out/prof/low-contention.sqlite from /root/p8_out/prof/low-contention.nsys-rep
+Processing [/root/p8_out/prof/low-contention.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/cuda_gpu_kern_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+54.8,57076018,80,713450.2,303058.5,258402,16927425,2293431.8,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+19.4,20192992,100,201929.9,201889.5,199170,205601,1015.5,"streamTriad(float *, const float *, const float *, float, unsigned long)"
+14.3,14893488,100,148934.9,149009.0,144065,153090,1551.6,"mixedKernel(float *, const float *, unsigned long, int)"
+11.5,11931577,460,25938.2,23360.0,22944,51392,6032.7,ampere_sgemm_64x32_sliced1x4_nn
+

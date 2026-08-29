@@ -1,0 +1,16 @@
+#!/bin/bash
+cd /root/repo
+B=./src/overlap/build/overlap_bench
+echo "===== A. P2P ENABLED confirmation (warm, bounded 120s) ====="
+timeout 120 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro --sizes 16M --ratios 1.0 --workloads compute > /root/p8_p2p_on.txt 2>&1
+echo "rc=$?"
+grep -c "^micro" /root/p8_p2p_on.txt || true
+echo "===== B. P2P DISABLED transport evidence ====="
+NCCL_P2P_DISABLE=1 NCCL_DEBUG=INFO timeout 120 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro --sizes 16M --ratios 1.0 --workloads compute > /root/p8_shm_trace.txt 2>&1
+echo "rc=$?"
+grep -E "via SHM|via P2P|via NET" /root/p8_shm_trace.txt | sort -u
+echo "===== C. smoke gate: all 3 workloads ====="
+NCCL_P2P_DISABLE=1 timeout 300 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro --sizes 16M --ratios 1.0 --workloads compute,memory,mixed > /root/p8_smoke.txt 2>&1
+echo "rc=$?"
+cat /root/p8_smoke.txt | grep -E "^#   |^experiment|^micro"
+echo "===== DONE ====="

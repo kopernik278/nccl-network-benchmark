@@ -1,0 +1,46 @@
+#!/bin/bash
+# Phase 8 profiling. Profiled binary is built separately so the measured
+# binary in build/ is never the one that produced reported timings.
+set -u
+cd /root/repo
+NSYS=$(ls /opt/nvidia/nsight-systems/*/target-linux-x64/nsys | head -1)
+NCU=$(command -v ncu || ls /opt/nvidia/nsight-compute/*/ncu | head -1)
+OUT=/root/p8_out
+mkdir -p "$OUT/prof"
+export NCCL_P2P_DISABLE=1
+
+make -C src/overlap SM=86 USE_NVTX=1 BUILD=build_nvtx >/dev/null 2>&1
+B=./src/overlap/build_nvtx/overlap_bench
+echo "profiled binary: $(ls -la $B | awk '{print $5}') bytes"
+
+prof() {  # prof <tag> <size> <workload> <ratio>
+  local tag=$1 sz=$2 wl=$3 r=$4
+  echo "--- nsys $tag : $sz $wl ratio=$r ---"
+  timeout -k 20 600 "$NSYS" profile -t cuda,nvtx --force-overwrite true \
+    -o "$OUT/prof/$tag" \
+    $B -g 4 -w 2 -n 3 --repeats 1 --only-micro \
+    --sizes "$sz" --ratios "$r" --workloads "$wl" > "$OUT/prof/$tag.run.txt" 2>&1
+  echo "$tag rc=$?"
+  for rpt in nvtx_sum cuda_gpu_kern_sum cuda_api_sum; do
+    echo "### $tag / $rpt ###"
+    "$NSYS" stats --report $rpt --format csv "$OUT/prof/$tag.nsys-rep" 2>/dev/null \
+      | head -14 | tee -a "$OUT/prof/$tag.stats.csv"
+  done
+}
+
+prof low-contention   1M   compute "$1"
+prof efficient-overlap 16M  memory  "$1"
+prof strong-contention 128M "$2"    "$1"
+
+echo "===== NCU ATTEMPT ====="
+# One attempt only. Hardware counters usually require CAP_SYS_ADMIN / the
+# NVreg_RestrictProfilingToAdminUsers=0 module option, neither of which a
+# container tenant controls. Record the outcome, do not retry.
+timeout -k 20 300 "$NCU" --metrics \
+  dram__bytes.sum,l1tex__t_bytes.sum,sm__throughput.avg.pct_of_peak_sustained_elapsed \
+  --target-processes all --launch-count 3 --launch-skip 40 \
+  $B -g 4 -w 0 -n 1 --repeats 1 --only-micro --sizes 1M --ratios 1.0 --workloads memory \
+  > "$OUT/prof/ncu_attempt.txt" 2>&1
+echo "ncu rc=$?"
+tail -20 "$OUT/prof/ncu_attempt.txt"
+echo "===== PROFILE DONE ====="

@@ -1,0 +1,12 @@
+Generating SQLite file /root/p8_out/prof/strong-contention.sqlite from /root/p8_out/prof/strong-contention.nsys-rep
+Processing [/root/p8_out/prof/strong-contention.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+25.4,392192673,1,392192673.0,392192673.0,392192673,392192673,0.0,PushPop,NCCL:ncclCommInitAll
+21.1,325060170,1,325060170.0,325060170.0,325060170,325060170,0.0,PushPop,:sequential
+17.9,275707048,20,13785352.4,65660.0,49872,273914624,61228121.9,PushPop,NCCL:ncclGroupEnd
+15.0,231163188,4,57790797.0,189547.0,128393,230655701,115243281.6,PushPop,NCCL:ncclCommDestroy
+13.8,212298663,1,212298663.0,212298663.0,212298663,212298663,0.0,PushPop,:overlapped
+6.9,105735073,1,105735073.0,105735073.0,105735073,105735073,0.0,PushPop,:calibrate
+0.0,260102,80,3251.3,1958.0,702,22763,3287.3,PushPop,NCCL:ncclAllReduce
+0.0,110503,20,5525.1,4550.5,888,16170,3536.4,PushPop,NCCL:ncclGroupStart
+

@@ -1,0 +1,13 @@
+--- collapse: 128 MiB, ratios 1.5 and 2.0, all workload classes ---
+collapse rc=0  rows=18
+--- transport evidence ---
+transport rc=0
+cf5cc1501285:300:320 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+cf5cc1501285:300:320 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+cf5cc1501285:300:321 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+cf5cc1501285:300:321 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+cf5cc1501285:300:322 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+cf5cc1501285:300:322 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+cf5cc1501285:300:323 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+cf5cc1501285:300:323 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+===== COLLAPSE DONE =====

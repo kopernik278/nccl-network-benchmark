@@ -1,0 +1,17 @@
+{
+  "command": "NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 128M --ratios 1.5,2.0 --workloads compute,memory,mixed",
+  "created_at_utc": "2026-08-29T05:30:00Z",
+  "exit_code": 0,
+  "experiment_id": "p8-collapse-recreate-20260829T0530Z-22a53e1",
+  "git_commit": "22a53e17ccdf64b79b10f438028d7e5f2c8f4616",
+  "gpu_count": 4,
+  "measured_iterations": 3,
+  "network": "none-single-node",
+  "node_count": 1,
+  "notes": "Phase 8 addendum. The Phase 7B overlap collapse sat at 128 MiB / ratio 2.0, outside the 25-100 % intensity sweep, so it needed its own run. Second pod, same GPU model and topology as the interference matrix, repo pinned to the same commit. Ratio 1.5 included so the approach to the collapse is visible.",
+  "provider": "runpod",
+  "provider_instance_id": "1urcvdqtp3p4yw",
+  "transport": "SHM/direct",
+  "value_kind": "measured",
+  "warmup_iterations": 5
+}

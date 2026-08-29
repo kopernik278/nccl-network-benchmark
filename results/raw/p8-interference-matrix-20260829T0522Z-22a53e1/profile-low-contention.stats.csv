@@ -1,0 +1,12 @@
+Generating SQLite file /root/p8_out/prof/low-contention.sqlite from /root/p8_out/prof/low-contention.nsys-rep
+Processing [/root/p8_out/prof/low-contention.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+44.3,423724219,1,423724219.0,423724219.0,423724219,423724219,0.0,PushPop,NCCL:ncclCommInitAll
+36.0,343586624,4,85896656.0,139050.0,94976,343213548,171544599.1,PushPop,NCCL:ncclCommDestroy
+9.6,91643233,20,4582161.7,48579.0,46680,90665845,20261997.7,PushPop,NCCL:ncclGroupEnd
+9.5,91106288,1,91106288.0,91106288.0,91106288,91106288,0.0,PushPop,:calibrate
+0.3,3225242,1,3225242.0,3225242.0,3225242,3225242,0.0,PushPop,:sequential
+0.2,2166199,1,2166199.0,2166199.0,2166199,2166199,0.0,PushPop,:overlapped
+0.0,124593,80,1557.4,1047.0,735,12244,1704.8,PushPop,NCCL:ncclAllReduce
+0.0,7093,20,354.6,265.0,146,1160,237.6,PushPop,NCCL:ncclGroupStart
+

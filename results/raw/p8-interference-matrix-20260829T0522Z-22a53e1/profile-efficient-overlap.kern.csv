@@ -1,0 +1,8 @@
+Generating SQLite file /root/p8_out/prof/efficient-overlap.sqlite from /root/p8_out/prof/efficient-overlap.nsys-rep
+Processing [/root/p8_out/prof/efficient-overlap.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/cuda_gpu_kern_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+58.3,426093778,80,5326172.2,4697197.0,3301053,27998625,3250740.5,ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+39.3,287586654,1360,211460.8,202577.5,199393,382884,22498.6,"streamTriad(float *, const float *, const float *, float, unsigned long)"
+2.0,14928443,100,149284.4,149361.5,144737,152673,1613.5,"mixedKernel(float *, const float *, unsigned long, int)"
+0.3,2351215,100,23512.2,23456.0,23296,24672,225.4,ampere_sgemm_64x32_sliced1x4_nn
+

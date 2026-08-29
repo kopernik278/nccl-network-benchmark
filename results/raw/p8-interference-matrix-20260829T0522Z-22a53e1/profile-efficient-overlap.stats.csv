@@ -1,0 +1,12 @@
+Generating SQLite file /root/p8_out/prof/efficient-overlap.sqlite from /root/p8_out/prof/efficient-overlap.nsys-rep
+Processing [/root/p8_out/prof/efficient-overlap.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+49.6,448684452,1,448684452.0,448684452.0,448684452,448684452,0.0,PushPop,NCCL:ncclCommInitAll
+16.8,152242851,4,38060712.8,137575.5,104752,151862948,75868163.0,PushPop,NCCL:ncclCommDestroy
+13.3,119783381,1,119783381.0,119783381.0,119783381,119783381,0.0,PushPop,:calibrate
+12.0,108652538,20,5432626.9,71307.0,49447,106966201,23898560.6,PushPop,NCCL:ncclGroupEnd
+5.1,46423011,1,46423011.0,46423011.0,46423011,46423011,0.0,PushPop,:sequential
+3.1,27664944,1,27664944.0,27664944.0,27664944,27664944,0.0,PushPop,:overlapped
+0.0,223508,80,2793.8,1908.5,927,18529,2699.5,PushPop,NCCL:ncclAllReduce
+0.0,32250,20,1612.5,738.5,292,7208,2090.7,PushPop,NCCL:ncclGroupStart
+

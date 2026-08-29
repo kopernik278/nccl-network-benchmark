@@ -1,0 +1,595 @@
+schema_version,experiment_id,phase,timestamp,value_kind,git_commit,provider,hostname,os,cpu_model,node_count,gpu_model,gpu_count,topology_summary,network,nvlink_present,p2p_enabled,transport,cuda_version,driver_version,nccl_version,compiler_version,benchmark_tool,config_label,workload_class,collective,datatype,message_size_bytes,bucket_bytes,n_buckets,compute_reps,placement,warmup_iterations,measured_iterations,repeat_index,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,compute_during_overlap_us,comm_during_overlap_us,latency_us,correctness_ok,command,raw_output_path,notes,algorithmic_bandwidth_gbps,bandwidth_ratio_ok,bus_bandwidth_gbps,count_elements,cpu_cores,env,exit_code,git_dirty,gpus,hosts,kernel,launcher,mpi_implementation,mpi_version,nccl_algo,nccl_extra_env,nccl_proto,nccl_tests_commit,nccl_version_source,net_interface,out_of_bounds_ok,provider_instance_id,rank_to_host,ranks_per_node,redop,root,tier,topology,transport_verified,wrong_count
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,1048576,,,6,in_place,5,3,0,246.133,336.622,586.043,368.255,336.622,0.8732,122.121,342.208,350.048,368.255,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,1048576,,,6,in_place,5,3,1,246.155,341.09,594.821,368.015,341.09,0.8939,121.86,356.416,339.424,368.015,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,1048576,,,6,in_place,5,3,2,247.305,348.42,593.639,369.764,348.42,0.913,122.459,345.408,351.936,369.764,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,1048576,,,2,in_place,5,3,0,430.737,341.438,777.058,592.284,430.737,0.5335,161.547,499.584,576.608,592.284,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,1048576,,,2,in_place,5,3,1,429.03,338.78,771.444,590.645,429.03,0.528,161.615,502.752,569.92,590.645,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,1048576,,,2,in_place,5,3,2,429.63,337.097,772.058,588.867,429.63,0.535,159.237,502.432,564.992,588.867,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,1048576,,,2,in_place,5,3,0,323.932,336.769,655.847,486.29,336.769,0.5314,162.358,386.272,474.752,486.29,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,1048576,,,2,in_place,5,3,1,322.656,342.172,663.028,495.409,342.172,0.5224,172.753,384.8,476.576,495.409,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,1048576,,,2,in_place,5,3,2,324.985,346.427,659.753,493.706,346.427,0.5299,168.721,390.336,470.272,493.706,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,16777216,,,93,in_place,5,3,0,3440.788,4771.015,8178.19,5258.981,4771.015,0.8568,1818.193,5216.416,4781.696,5258.981,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,16777216,,,93,in_place,5,3,1,3460.791,4736.683,8183.123,5215.635,4736.683,0.861,1754.844,5206.144,4763.616,5215.635,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,16777216,,,93,in_place,5,3,2,3433.574,4742.799,8173.541,5195.561,4742.799,0.868,1761.987,5214.08,4777.856,5195.561,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,16777216,,,22,in_place,5,3,0,4635.435,4760.215,9398.004,5458.931,4760.215,0.8493,823.496,5411.712,5186.4,5458.931,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,16777216,,,22,in_place,5,3,1,4625.78,4753.906,9385.866,5509.914,4753.906,0.8368,884.134,5526.144,5287.808,5509.914,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,16777216,,,22,in_place,5,3,2,4628.194,4763.785,9387.62,5501.251,4763.785,0.8405,873.057,5426.112,5202.048,5501.251,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,16777216,,,29,in_place,5,3,0,4542.124,4784.702,9295.167,5460.307,4784.702,0.8502,918.183,5459.488,4810.336,5460.307,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,16777216,,,29,in_place,5,3,1,4548.375,4777.846,9290.371,5376.33,4777.846,0.8674,827.955,5411.616,4691.648,5376.33,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,16777216,,,29,in_place,5,3,2,4552.759,4804.28,9248.584,5395.856,4804.28,0.8669,843.097,5339.84,4651.68,5395.856,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,134217728,,,729,in_place,5,3,0,26755.747,37376.15,63999.461,41537.708,37376.15,0.8437,14781.961,41763.87,37404.736,41537.708,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,134217728,,,729,in_place,5,3,1,26652.579,37354.323,64298.86,41596.205,37354.323,0.8426,14943.626,41721.184,37582.878,41596.205,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1,compute-gemm,all_reduce,float,134217728,,,729,in_place,5,3,2,26845.979,37049.208,64095.879,41616.954,37049.208,0.8311,14770.975,41599.136,37283.234,41616.954,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,134217728,,,171,in_place,5,3,0,35896.968,37331.278,72990.094,41258.983,37331.278,0.8899,5362.015,40967.777,38859.455,41258.983,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,134217728,,,171,in_place,5,3,1,35893.537,37235.935,73217.868,41141.173,37235.935,0.8915,5247.636,41020.226,38952.991,41141.173,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-memory-triad,memory-triad,all_reduce,float,134217728,,,171,in_place,5,3,2,35869.588,37126.496,73331.883,41261.212,37126.496,0.8858,5391.624,41244.766,39279.938,41261.212,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,134217728,,,227,in_place,5,3,0,35519.086,37300.676,72587.23,41377.312,37300.676,0.8845,5858.226,41165.024,35784.512,41377.312,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,134217728,,,227,in_place,5,3,1,35521.749,37067.303,73134.676,41599.249,37067.303,0.8743,6077.5,41705.761,36174.37,41599.249,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,
+1,p8-interference-matrix-20260829T0522Z-22a53e1,phase8,2026-08-29T05:22:02Z,measured,22a53e17ccdf64b79b10f438028d7e5f2c8f4616,runpod,5ba9b255293f,Ubuntu 24.04.3 LTS,Intel(R) Xeon(R) Gold 6342 CPU @ 2.80GHz,1,NVIDIA A40,4,SYS,none-single-node,False,False,SHM/direct,12.8,580.159.03,2.25.1,gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0,overlap-bench,micro-ratio1-mixed,mixed,all_reduce,float,134217728,,,227,in_place,5,3,2,35510.471,37283.474,72783.465,41460.737,37283.474,0.8823,5950.267,41443.935,35631.359,41460.737,True,"NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",results/raw/p8-interference-matrix-20260829T0522Z-22a53e1/overlap_bench.stdout.txt,experiment=micro ratio_target=1.0,,,,,96,{},0,True,"[{""index"":0,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:4F:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":1,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D1:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":2,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D2:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16},{""index"":3,""memory_total_mib"":46068,""name"":""NVIDIA A40"",""pci_bus_id"":""00000000:D6:00.0"",""pcie_link_gen_current"":1,""pcie_link_gen_max"":4,""pcie_link_width_current"":16,""pcie_link_width_max"":16}]",,6.8.0-134-generic,,,,,,,,nccl.h (/usr/include/nccl.h),,,,,,sum,,full,"	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	SYS	SYS	SYS	SYS	SYS	0-23,48-71	0		N/A
+GPU1	SYS	 X 	PIX	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	SYS	PIX	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	SYS	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	SYS	NODE	NODE	NODE	 X 	PIX				
+NIC1	SYS	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1",True,

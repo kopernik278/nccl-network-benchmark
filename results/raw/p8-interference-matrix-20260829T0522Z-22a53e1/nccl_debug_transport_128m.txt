@@ -1,0 +1,106 @@
+# overlap benchmark: 4 GPUs
+# device 0: NVIDIA A40 sm_86
+# device 1: NVIDIA A40 sm_86
+# device 2: NVIDIA A40 sm_86
+# device 3: NVIDIA A40 sm_86
+# canAccessPeer 0->1: yes
+# canAccessPeer 0->2: yes
+# canAccessPeer 0->3: yes
+# NCCL's own transport choice is the authority here; run with
+# NCCL_DEBUG=INFO to capture it alongside these results.
+5ba9b255293f:1693:1693 [3] NCCL INFO cudaDriverVersion 13000
+5ba9b255293f:1693:1693 [3] NCCL INFO Bootstrap: Using eth0:172.24.0.2<0>
+5ba9b255293f:1693:1693 [0] NCCL INFO NCCL version 2.25.1+cuda12.8
+5ba9b255293f:1693:1703 [3] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. Using internal network plugin.
+5ba9b255293f:1693:1703 [3] NCCL INFO Failed to open libibverbs.so[.1]
+5ba9b255293f:1693:1703 [3] NCCL INFO NET/Socket : Using [0]eth0:172.24.0.2<0>
+5ba9b255293f:1693:1703 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so.
+5ba9b255293f:1693:1703 [3] NCCL INFO Using network Socket
+5ba9b255293f:1693:1700 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so.
+5ba9b255293f:1693:1700 [0] NCCL INFO Using network Socket
+5ba9b255293f:1693:1702 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so.
+5ba9b255293f:1693:1702 [2] NCCL INFO Using network Socket
+5ba9b255293f:1693:1701 [1] NCCL INFO Using network Socket
+5ba9b255293f:1693:1703 [3] NCCL INFO ncclCommInitAll comm 0x5e138153c8a0 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId d6000 commId 0xdbd0872c8ce67580 - Init START
+5ba9b255293f:1693:1700 [0] NCCL INFO ncclCommInitAll comm 0x5e13813b9530 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 4f000 commId 0xdbd0872c8ce67580 - Init START
+5ba9b255293f:1693:1702 [2] NCCL INFO ncclCommInitAll comm 0x5e13814bb710 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId d2000 commId 0xdbd0872c8ce67580 - Init START
+5ba9b255293f:1693:1701 [1] NCCL INFO ncclCommInitAll comm 0x5e138143a580 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId d1000 commId 0xdbd0872c8ce67580 - Init START
+5ba9b255293f:1693:1700 [0] NCCL INFO RAS client listening socket at ::1<28028>
+5ba9b255293f:1693:1701 [1] NCCL INFO Bootstrap timings total 0.015144 (create 0.000031, send 0.000090, recv 0.000994, ring 0.000109, delay 0.000000)
+5ba9b255293f:1693:1703 [3] NCCL INFO Bootstrap timings total 0.015343 (create 0.000047, send 0.000148, recv 0.000564, ring 0.000096, delay 0.000000)
+5ba9b255293f:1693:1700 [0] NCCL INFO Bootstrap timings total 0.015255 (create 0.000065, send 0.000193, recv 0.000699, ring 0.000123, delay 0.000000)
+5ba9b255293f:1693:1702 [2] NCCL INFO Bootstrap timings total 0.015203 (create 0.000056, send 0.000174, recv 0.001122, ring 0.000107, delay 0.000000)
+5ba9b255293f:1693:1701 [1] NCCL INFO NCCL_P2P_DISABLE set by environment to 1
+5ba9b255293f:1693:1701 [1] NCCL INFO Setting affinity for GPU 1 to ffffff00,0000ffff,ff000000
+5ba9b255293f:1693:1701 [1] NCCL INFO NVLS multicast support is not available on dev 1
+5ba9b255293f:1693:1703 [3] NCCL INFO Setting affinity for GPU 3 to ffffff00,0000ffff,ff000000
+5ba9b255293f:1693:1703 [3] NCCL INFO NVLS multicast support is not available on dev 3
+5ba9b255293f:1693:1700 [0] NCCL INFO Setting affinity for GPU 0 to ff,ffff0000,00ffffff
+5ba9b255293f:1693:1700 [0] NCCL INFO NVLS multicast support is not available on dev 0
+5ba9b255293f:1693:1702 [2] NCCL INFO Setting affinity for GPU 2 to ffffff00,0000ffff,ff000000
+5ba9b255293f:1693:1702 [2] NCCL INFO NVLS multicast support is not available on dev 2
+5ba9b255293f:1693:1703 [3] NCCL INFO comm 0x5e138153c8a0 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+5ba9b255293f:1693:1701 [1] NCCL INFO comm 0x5e138143a580 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+5ba9b255293f:1693:1702 [2] NCCL INFO comm 0x5e13814bb710 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+5ba9b255293f:1693:1703 [3] NCCL INFO Trees [0] -1/-1/-1->3->0 [1] -1/-1/-1->3->0
+5ba9b255293f:1693:1700 [0] NCCL INFO comm 0x5e13813b9530 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+5ba9b255293f:1693:1703 [3] NCCL INFO P2P Chunksize set to 131072
+5ba9b255293f:1693:1701 [1] NCCL INFO Trees [0] 2/-1/-1->1->-1 [1] 2/-1/-1->1->-1
+5ba9b255293f:1693:1701 [1] NCCL INFO P2P Chunksize set to 131072
+5ba9b255293f:1693:1700 [0] NCCL INFO Channel 00/02 : 0 1 2 3
+5ba9b255293f:1693:1700 [0] NCCL INFO Channel 01/02 : 0 1 2 3
+5ba9b255293f:1693:1700 [0] NCCL INFO Trees [0] 3/-1/-1->0->2 [1] 3/-1/-1->0->2
+5ba9b255293f:1693:1700 [0] NCCL INFO P2P Chunksize set to 131072
+5ba9b255293f:1693:1700 [0] NCCL INFO Check P2P Type intraNodeP2pSupport 0 directMode 1
+5ba9b255293f:1693:1702 [2] NCCL INFO Trees [0] 0/-1/-1->2->1 [1] 0/-1/-1->2->1
+5ba9b255293f:1693:1702 [2] NCCL INFO P2P Chunksize set to 131072
+5ba9b255293f:1693:1705 [3] NCCL INFO [Proxy Service] Device 3 CPU core 80
+5ba9b255293f:1693:1706 [1] NCCL INFO [Proxy Service] Device 1 CPU core 40
+5ba9b255293f:1693:1707 [2] NCCL INFO [Proxy Service] Device 2 CPU core 25
+5ba9b255293f:1693:1708 [0] NCCL INFO [Proxy Service] Device 0 CPU core 23
+5ba9b255293f:1693:1710 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 86
+5ba9b255293f:1693:1709 [3] NCCL INFO [Proxy Service UDS] Device 3 CPU core 78
+5ba9b255293f:1693:1711 [2] NCCL INFO [Proxy Service UDS] Device 2 CPU core 24
+5ba9b255293f:1693:1712 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 67
+5ba9b255293f:1693:1703 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+5ba9b255293f:1693:1703 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5ba9b255293f:1693:1701 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+5ba9b255293f:1693:1701 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5ba9b255293f:1693:1700 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+5ba9b255293f:1693:1700 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5ba9b255293f:1693:1700 [0] NCCL INFO CC Off, workFifoBytes 1048576
+5ba9b255293f:1693:1702 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+5ba9b255293f:1693:1702 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+5ba9b255293f:1693:1701 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so libnccl-net.so. Using internal tuner plugin.
+5ba9b255293f:1693:1701 [1] NCCL INFO ncclCommInitAll comm 0x5e138143a580 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId d1000 commId 0xdbd0872c8ce67580 - Init COMPLETE
+5ba9b255293f:1693:1701 [1] NCCL INFO Init timings - ncclCommInitAll: rank 1 nranks 4 total 0.39 (kernels 0.26, alloc 0.04, bootstrap 0.02, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.02, rest 0.02)
+5ba9b255293f:1693:1703 [3] NCCL INFO ncclCommInitAll comm 0x5e138153c8a0 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId d6000 commId 0xdbd0872c8ce67580 - Init COMPLETE
+5ba9b255293f:1693:1703 [3] NCCL INFO Init timings - ncclCommInitAll: rank 3 nranks 4 total 0.39 (kernels 0.26, alloc 0.04, bootstrap 0.02, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.02, rest 0.02)
+5ba9b255293f:1693:1700 [0] NCCL INFO ncclCommInitAll comm 0x5e13813b9530 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 4f000 commId 0xdbd0872c8ce67580 - Init COMPLETE
+5ba9b255293f:1693:1700 [0] NCCL INFO Init timings - ncclCommInitAll: rank 0 nranks 4 total 0.39 (kernels 0.26, alloc 0.04, bootstrap 0.02, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.02, rest 0.01)
+5ba9b255293f:1693:1702 [2] NCCL INFO ncclCommInitAll comm 0x5e13814bb710 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId d2000 commId 0xdbd0872c8ce67580 - Init COMPLETE
+5ba9b255293f:1693:1702 [2] NCCL INFO Init timings - ncclCommInitAll: rank 2 nranks 4 total 0.39 (kernels 0.26, alloc 0.04, bootstrap 0.02, allgathers 0.00, topo 0.04, graphs 0.00, connections 0.04, rest 0.00)
+# workload standalone characterisation (per repetition, per GPU):
+#   compute-gemm      51.86 us  gemm 512x512  0.27 GFLOP  -> 5175.9 GFLOP/s  (AI ~ 85 flop/byte, design)
+#   memory-triad     219.08 us  96 MiB moved -> 459.5 GB/s          (AI ~ 0.17 flop/byte, design)
+#   mixed            164.97 us  64 MiB moved -> 406.8 GB/s          (AI ~ 8 flop/byte, design)
+# arithmetic intensity is BY CONSTRUCTION; it is counter-verified only if
+# Nsight Compute was available on this host (recorded separately).
+experiment,workload,comm_bytes,ratio_target,gemm_reps,bucket_bytes,n_buckets,t_compute_us,t_comm_us,t_seq_us,t_overlap_us,t_ideal_us,overlap_efficiency,exposed_comm_us,comp_during_overlap_us,comm_during_overlap_us,repeat
+5ba9b255293f:1693:1713 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:1693:1714 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:1693:1715 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:1693:1713 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+5ba9b255293f:1693:1716 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+5ba9b255293f:1693:1714 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+5ba9b255293f:1693:1715 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+5ba9b255293f:1693:1716 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+5ba9b255293f:1693:1713 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+5ba9b255293f:1693:1714 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+5ba9b255293f:1693:1715 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+5ba9b255293f:1693:1716 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+micro,compute-gemm,134217728,1.00,718,0,0,26236.932,37238.526,66463.480,43490.307,37238.526,0.7861,17253.375,43404.415,37981.312,0
+5ba9b255293f:1693:1720 [0] NCCL INFO comm 0x5e13813b9530 rank 0 nranks 4 cudaDev 0 busId 4f000 - Destroy COMPLETE
+5ba9b255293f:1693:1720 [3] NCCL INFO comm 0x5e138153c8a0 rank 3 nranks 4 cudaDev 3 busId d6000 - Destroy COMPLETE
+5ba9b255293f:1693:1720 [2] NCCL INFO comm 0x5e13814bb710 rank 2 nranks 4 cudaDev 2 busId d2000 - Destroy COMPLETE
+5ba9b255293f:1693:1720 [1] NCCL INFO comm 0x5e138143a580 rank 1 nranks 4 cudaDev 1 busId d1000 - Destroy COMPLETE

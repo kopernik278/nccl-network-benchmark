@@ -1,0 +1,23 @@
+#!/bin/bash
+# Phase 8 addendum: recreate the Phase 7B 128 MiB overlap collapse, which sat at
+# ratio 2.0 (compute twice as long as the collective) — beyond the 25-100 %
+# intensity sweep — and test whether it depends on the workload class.
+set -u
+cd /root/repo
+B=./src/overlap/build/overlap_bench
+OUT=/root/p8c_out
+mkdir -p "$OUT"
+export NCCL_P2P_DISABLE=1     # P2P transport hangs on this host class
+
+echo "--- collapse: 128 MiB, ratios 1.5 and 2.0, all workload classes ---"
+timeout -k 20 1800 $B -g 4 -w 5 -n 3 --repeats 3 --only-micro \
+  --sizes 128M --ratios 1.5,2.0 --workloads compute,memory,mixed \
+  > "$OUT/collapse.txt" 2>&1
+echo "collapse rc=$?  rows=$(grep -c '^micro' "$OUT/collapse.txt" || true)"
+
+echo "--- transport evidence ---"
+NCCL_DEBUG=INFO timeout -k 20 600 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro \
+  --sizes 128M --ratios 2.0 --workloads compute > "$OUT/transport.txt" 2>&1
+echo "transport rc=$?"
+grep -E 'via SHM|via P2P|via NET' "$OUT/transport.txt" | sort -u
+echo "===== COLLAPSE DONE ====="

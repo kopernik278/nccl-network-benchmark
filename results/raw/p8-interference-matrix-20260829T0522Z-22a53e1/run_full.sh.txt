@@ -1,0 +1,32 @@
+#!/bin/bash
+# Phase 8 full data collection. Run on the pod.
+set -u
+cd /root/repo
+B=./src/overlap/build/overlap_bench
+OUT=/root/p8_out
+mkdir -p "$OUT"
+export NCCL_P2P_DISABLE=1     # P2P transport hangs on this host; see phase 8 report
+
+run() {  # run <name> <timeout> <args...>
+  local name=$1 tmo=$2; shift 2
+  echo "--- $name : $* ---"
+  timeout -k 20 "$tmo" $B "$@" > "$OUT/$name.txt" 2>&1
+  echo "$name rc=$?  rows=$(grep -c '^micro' "$OUT/$name.txt" || true)"
+}
+
+# 1. interference matrix: 3 workload classes x 3 message sizes, matched ratio
+run matrix 1500 -g 4 -w 5 -n 3 --repeats 3 --only-micro \
+  --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed
+
+# 2. compute-intensity sweep at 128 MiB (25/50/75/100 % of comm duration)
+run sweep 1800 -g 4 -w 5 -n 3 --repeats 3 --only-micro \
+  --sizes 128M --ratios 0.25,0.5,0.75,1.0 --workloads compute,memory,mixed
+
+# 3. transport evidence for the measured configuration
+echo "--- transport evidence ---"
+NCCL_DEBUG=INFO timeout -k 20 600 $B -g 4 -w 5 -n 3 --repeats 1 --only-micro \
+  --sizes 128M --ratios 1.0 --workloads compute > "$OUT/transport_128m.txt" 2>&1
+echo "transport rc=$?"
+grep -E 'via SHM|via P2P|via NET' "$OUT/transport_128m.txt" | sort -u
+
+echo "===== FULL DONE ====="

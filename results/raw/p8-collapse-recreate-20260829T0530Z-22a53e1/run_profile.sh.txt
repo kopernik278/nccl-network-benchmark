@@ -1,0 +1,16 @@
+#!/bin/bash
+set -u
+cd /root/repo
+NS=$(ls /opt/nvidia/nsight-systems/*/target-linux-x64/nsys | head -1)
+OUT=/root/p8c_out; mkdir -p $OUT
+export NCCL_P2P_DISABLE=1
+B=./src/overlap/build_nvtx/overlap_bench
+for wl in compute memory; do
+  timeout -k 20 600 $NS profile -t cuda,nvtx --force-overwrite true -o $OUT/collapse-$wl \
+    $B -g 4 -w 2 -n 3 --repeats 1 --only-micro --sizes 128M --ratios 2.0 --workloads $wl \
+    > $OUT/collapse-$wl.run.txt 2>&1
+  echo "$wl rc=$?"
+  $NS stats --force-export=true --report cuda_gpu_kern_sum --format csv $OUT/collapse-$wl.nsys-rep 2>/dev/null > $OUT/collapse-$wl.kern.csv
+  grep -v '^Processing\|^Generating\|^$' $OUT/collapse-$wl.kern.csv | head -5 | cut -c1-150
+done
+echo '===== CPROF DONE ====='

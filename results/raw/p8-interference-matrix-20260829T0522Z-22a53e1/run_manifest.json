@@ -1,0 +1,17 @@
+{
+  "command": "NCCL_P2P_DISABLE=1 ./src/overlap/build/overlap_bench -g 4 -w 5 -n 3 --repeats 3 --only-micro --sizes 1M,16M,128M --ratios 1.0 --workloads compute,memory,mixed",
+  "created_at_utc": "2026-08-29T05:22:02Z",
+  "exit_code": 0,
+  "experiment_id": "p8-interference-matrix-20260829T0522Z-22a53e1",
+  "git_commit": "22a53e17ccdf64b79b10f438028d7e5f2c8f4616",
+  "gpu_count": 4,
+  "measured_iterations": 3,
+  "network": "none-single-node",
+  "node_count": 1,
+  "notes": "Phase 8 interference matrix: 3 workload classes x 3 message sizes at a compute:comm duration ratio of 1.0. NCCL_P2P_DISABLE=1 because the P2P transport hangs on this host (see nccl_debug_p2p_enabled_hang.txt); every ring link is therefore SHM/direct, proven in nccl_debug_transport_128m.txt.",
+  "provider": "runpod",
+  "provider_instance_id": "8k78uif3jx90kc",
+  "transport": "SHM/direct",
+  "value_kind": "measured",
+  "warmup_iterations": 5
+}
