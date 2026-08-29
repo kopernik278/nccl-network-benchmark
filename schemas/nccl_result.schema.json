@@ -502,7 +502,7 @@
         "null"
       ],
       "minimum": 0,
-      "description": "max(t_compute, t_comm) \u2014 perfect overlap."
+      "description": "max(t_compute, t_comm) — perfect overlap."
     },
     "overlap_efficiency": {
       "type": [
@@ -525,7 +525,7 @@
         "null"
       ],
       "minimum": 0,
-      "description": "Compute-stream duration measured by CUDA events while communication ran \u2014 for interference."
+      "description": "Compute-stream duration measured by CUDA events while communication ran — for interference."
     },
     "comm_during_overlap_us": {
       "type": [
@@ -533,7 +533,7 @@
         "null"
       ],
       "minimum": 0,
-      "description": "Comm-stream duration measured by CUDA events while compute ran \u2014 for interference."
+      "description": "Comm-stream duration measured by CUDA events while compute ran — for interference."
     },
     "bucket_bytes": {
       "type": [
@@ -564,6 +564,180 @@
         "null"
       ],
       "description": "Phase 8 compute workload class: compute-gemm | memory-triad | mixed. Arithmetic intensity is by construction unless counter-verified."
+    },
+    "workload_kind": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Phase 9: what produced the row — ddp-training | single-gpu-training | serial-reduction | nosync-probe."
+    },
+    "model_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_params": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "model_config": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true,
+      "description": "Phase 9 model shape: layers, heads, embd, vocab, seq."
+    },
+    "precision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "bf16 | fp32 | ..."
+    },
+    "batch_per_gpu": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "sequence_length": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "tokens_per_step": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "bucket_cap_mb": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Requested DDP bucket_cap_mb. NOT the same as the actual collective sizes; see ddp_bucket_sizes."
+    },
+    "ddp_bucket_sizes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "integer"
+      },
+      "description": "Actual bucket byte sizes DDP reported after rebuild, from _get_ddp_logging_data()."
+    },
+    "ddp_bucket_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "gradient_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Total gradient volume DDP reduces per step, per rank."
+    },
+    "step_time_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "forward_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "backward_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "In DDP mode this includes the gradient AllReduce tail: DDP joins its comm stream before backward returns."
+    },
+    "optimizer_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "step_wall_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "tokens_per_s": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "backward_nosync_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Backward with DDP's reducer suppressed via no_sync() — pure compute."
+    },
+    "sync_cost_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "backward_ms - backward_nosync_ms. Bundles the exposed tail with the interference Phases 7B/8 measured; never presented as a pure tail."
+    },
+    "loss_finite": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "grads_finite": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "param_sync_max_abs_diff": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Max |p_rank - p_rank0| across all parameters after the correctness steps."
+    },
+    "peak_memory_gib": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
     }
   }
 }
