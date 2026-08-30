@@ -1,0 +1,8 @@
+nsys=/opt/nvidia/nsight-systems/2024.6.2/target-linux-x64/nsys  transport=<NCCL defaults>
+final-25mb rc=0
+   {"device": 0, "backward_span_ms": 108.114, "nvtx_backward_ranges_seen": 24, "nccl_kernels_in_window": 20, "first_allreduce_start_ms_after_backward_start": 38.181, "first_allreduce_start_pct_of_backward": 35.3, "last_allreduce_end_ms_after_backward_end": 163.171, "nccl_busy_ms_total": 113.44, "nccl_resident_during_backward_ms": 47.921, "nccl_resident_pct_of_backward": 44.3, "nccl_after_backward_ms": 65.519, "backward_kernels_in_span": 325}
+final-4mb rc=0
+   {"device": 0, "backward_span_ms": 109.176, "nvtx_backward_ranges_seen": 24, "nccl_kernels_in_window": 52, "first_allreduce_start_ms_after_backward_start": 38.519, "first_allreduce_start_pct_of_backward": 35.3, "last_allreduce_end_ms_after_backward_end": 158.978, "nccl_busy_ms_total": 127.59, "nccl_resident_during_backward_ms": 53.809, "nccl_resident_pct_of_backward": 49.3, "nccl_after_backward_ms": 73.78, "backward_kernels_in_span": 325}
+final-64mb rc=0
+   {"device": 0, "backward_span_ms": 107.554, "nvtx_backward_ranges_seen": 24, "nccl_kernels_in_window": 8, "first_allreduce_start_ms_after_backward_start": 42.408, "first_allreduce_start_pct_of_backward": 39.4, "last_allreduce_end_ms_after_backward_end": 171.924, "nccl_busy_ms_total": 93.81, "nccl_resident_during_backward_ms": 34.214, "nccl_resident_pct_of_backward": 31.8, "nccl_after_backward_ms": 59.596, "backward_kernels_in_span": 325}
+===== PROF DONE =====

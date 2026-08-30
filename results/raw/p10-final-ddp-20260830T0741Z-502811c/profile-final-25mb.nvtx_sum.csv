@@ -1,0 +1,20 @@
+
+NOTICE: Existing SQLite export found: /root/p10_out/prof/final-25mb.sqlite
+        It is assumed file was previously exported from: /root/p10_out/prof/final-25mb.nsys-rep
+        Consider using --force-export=true if needed.
+
+Processing [/root/p10_out/prof/final-25mb.sqlite] with [/opt/nvidia/nsight-systems/2024.6.2/host-linux-x64/reports/nvtx_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+37.2,1791050286,24,74627095.3,85852926.5,27991452,110736162,36520762.3,PushPop,:backward
+28.7,1382128818,4,345532204.5,336589758.5,326992326,381956975,24701052.3,PushPop,NCCL:ncclCommInitRankConfig
+11.9,573158892,24,23881620.5,23503197.0,4308363,44172370,19225278.8,PushPop,:forward
+9.2,445548278,4,111387069.5,27965773.0,14582917,375033815,176159424.4,PushPop,NCCL:ncclCommDestroy
+7.6,368042474,4,92010618.5,92137241.5,89269458,94498533,2267206.4,PushPop,NCCL:ncclAllGather
+2.5,120289973,64,1879530.8,254596.5,102113,12045726,2988507.9,PushPop,CCCL:cub::DeviceRadixSort
+0.8,38968807,64,608887.6,42385.5,17193,12450534,2249011.2,PushPop,CCCL:cub::DeviceScan::ExclusiveScan
+0.6,31074039,612,50774.6,49727.5,21495,149503,22458.4,PushPop,NCCL:ncclAllReduce
+0.6,29682920,296,100280.1,22585.0,17490,6375440,650822.6,PushPop,NCCL:ncclBroadcast
+0.3,16141176,24,672549.0,685978.5,549910,826912,61906.1,PushPop,:optimizer
+0.3,14584620,64,227884.7,39339.5,15706,1796390,407611.3,PushPop,CCCL:cub::DeviceSelect::UniqueByKey
+0.1,6298653,4,1574663.3,1764882.5,957635,1811253,412103.4,PushPop,NCCL:ncclCommFinalize
+

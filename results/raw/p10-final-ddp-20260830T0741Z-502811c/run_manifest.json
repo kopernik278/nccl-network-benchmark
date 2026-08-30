@@ -1,0 +1,19 @@
+{
+  "command": "bash scripts/preflight_ddp.sh /root/p10_out 4 && bash scripts/run_final_ddp.sh /root/p10_out '' --layers 8 --heads 12 --embd 768 --vocab 16384 --seq 1024 --batch 16 --pool 4 --precision bf16",
+  "created_at_utc": "2026-08-30T07:41:15Z",
+  "exit_code": 0,
+  "experiment_id": "p10-final-ddp-20260830T0741Z-502811c",
+  "git_commit": "502811cab1c30d09b2c0877a3d5ba573bf881684",
+  "gpu_count": 4,
+  "launcher": "torchrun",
+  "model_name": "gpt-compact-82.6M",
+  "nccl_extra_env": null,
+  "network": "none-single-node",
+  "node_count": 1,
+  "notes": "Phase 10 final configuration. The preflight functional gate ACCEPTED NCCL's default transport on this host \u2014 a mixed P2P/CUMEM + SHM/direct ring with param_sync_max_abs_diff = 0.0 \u2014 unlike the three hosts of Phases 8 and 9 where the same gate caught a deadlock. The 'shm-*' labels are the same three capacities forced onto SHM with NCCL_P2P_DISABLE=1, kept as a comparability anchor to phase 9. Repeats are independent torchrun launches.",
+  "provider": "runpod",
+  "provider_instance_id": "p3wii8aj59d11e",
+  "transport": "P2P/CUMEM+SHM/direct",
+  "transport_verified": true,
+  "value_kind": "measured"
+}

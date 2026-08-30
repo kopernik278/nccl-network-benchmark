@@ -1,0 +1,21 @@
+{
+  "device": 0,
+  "backward_span_ms": 108.128,
+  "nvtx_backward_ranges_this_rank": 6,
+  "window_end_ms_after_backward_end": 48.886,
+  "nccl_kernels_in_window": 4,
+  "first_allreduce_start_ms_after_backward_start": 41.944,
+  "first_allreduce_start_pct_of_backward": 38.8,
+  "last_allreduce_end_ms_after_backward_end": 13.597,
+  "nccl_busy_ms_total": 47.413,
+  "nccl_resident_during_backward_ms": 34.214,
+  "nccl_resident_pct_of_backward": 31.6,
+  "nccl_after_backward_ms": 13.199,
+  "allreduce_durations_ms": [
+    10.617,
+    12.198,
+    11.399,
+    13.199
+  ],
+  "backward_kernels_in_span": 349
+}

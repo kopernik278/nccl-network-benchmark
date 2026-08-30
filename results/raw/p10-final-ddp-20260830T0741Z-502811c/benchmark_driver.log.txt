@@ -1,0 +1,76 @@
+### PRIMARY: transport selected by preflight = '<NCCL defaults>'
+# model: --layers 8 --heads 12 --embd 768 --vocab 16384 --seq 1024 --batch 16 --pool 4 --precision bf16
+# transport env: <NCCL defaults>
+# warmup=12 steps=30 independent_launches=3
+
+===== single-GPU reference (compute floor) =====
+  single-L0              rc=0   step=141.2783 ms
+  single-L1              rc=0   step=140.8936 ms
+  single-L2              rc=0   step=141.1961 ms
+
+===== DDP: reference, optimized, negative control =====
+  final-25mb-L0          rc=0   step=152.8236 ms
+  final-25mb-L1          rc=0   step=152.0183 ms
+  final-25mb-L2          rc=0   step=152.3503 ms
+  final-4mb-L0           rc=0   step=151.4846 ms
+  final-4mb-L1           rc=0   step=151.6225 ms
+  final-4mb-L2           rc=0   step=151.6378 ms
+  final-64mb-L0          rc=0   step=157.1180 ms
+  final-64mb-L1          rc=0   step=157.1886 ms
+  final-64mb-L2          rc=0   step=157.0023 ms
+
+===== non-overlapped control (one flat AllReduce after backward) =====
+  serial-L0              rc=0   step=189.8556 ms
+  serial-L1              rc=0   step=189.5191 ms
+  serial-L2              rc=0   step=189.8212 ms
+
+===== transport evidence for the benchmarked configuration =====
+  rc=0
+  Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+  Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+  Channel 00/0 : 1[1] -> 2[2] via P2P/CUMEM
+  Channel 00/0 : 2[2] -> 3[3] via P2P/CUMEM
+  Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+  Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+  Channel 01/0 : 1[1] -> 2[2] via P2P/CUMEM
+  Channel 01/0 : 2[2] -> 3[3] via P2P/CUMEM
+
+===== FINAL BENCHMARK DONE =====
+
+### ANCHOR: same three capacities forced onto SHM, for comparability with phase 9
+# model: --layers 8 --heads 12 --embd 768 --vocab 16384 --seq 1024 --batch 16 --pool 4 --precision bf16
+# transport env: NCCL_P2P_DISABLE=1
+# warmup=12 steps=30 independent_launches=3
+
+===== DDP: reference, optimized, negative control =====
+  shm-25mb-L0            rc=0   step=164.2135 ms
+  shm-25mb-L1            rc=0   step=164.2495 ms
+  shm-25mb-L2            rc=0   step=164.3509 ms
+  shm-4mb-L0             rc=0   step=162.6388 ms
+  shm-4mb-L1             rc=0   step=162.7365 ms
+  shm-4mb-L2             rc=0   step=162.7343 ms
+  shm-64mb-L0            rc=0   step=172.4067 ms
+  shm-64mb-L1            rc=0   step=172.5804 ms
+  shm-64mb-L2            rc=0   step=172.5961 ms
+
+===== transport evidence for the benchmarked configuration =====
+  rc=0
+  Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+  Channel 00 : 0[0] -> 2[2] via SHM/direct/direct
+  Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+  Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+  Channel 00 : 2[2] -> 0[0] via SHM/direct/direct
+  Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+  Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+  Channel 00 : 3[3] -> 2[2] via SHM/direct/direct
+  Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+  Channel 01 : 0[0] -> 2[2] via SHM/direct/direct
+  Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+  Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+  Channel 01 : 2[2] -> 0[0] via SHM/direct/direct
+  Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+  Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+  Channel 01 : 3[3] -> 2[2] via SHM/direct/direct
+
+===== FINAL BENCHMARK DONE =====
+===== ALL BENCHMARKS DONE =====

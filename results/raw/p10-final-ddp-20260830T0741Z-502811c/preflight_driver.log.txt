@@ -1,0 +1,39 @@
+===== 1. hardware and topology =====
+0, NVIDIA A40, 46068 MiB, 550.127.05
+1, NVIDIA A40, 46068 MiB, 550.127.05
+2, NVIDIA A40, 46068 MiB, 550.127.05
+3, NVIDIA A40, 46068 MiB, 550.127.05
+	[4mGPU0	GPU1	GPU2	GPU3	NIC0	NIC1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	NODE	NODE	NODE	NODE	NODE	24-47,72-95	1		N/A
+GPU1	NODE	 X 	PXB	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU2	NODE	PXB	 X 	PXB	NODE	NODE	24-47,72-95	1		N/A
+GPU3	NODE	PXB	PXB	 X 	NODE	NODE	24-47,72-95	1		N/A
+NIC0	NODE	NODE	NODE	NODE	 X 	PIX				
+NIC1	NODE	NODE	NODE	NODE	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+
+===== 2. software versions =====
+torch=2.8.0+cu128 cuda=12.8 nccl=2.27.3 bf16=True devices=4
+
+===== 3. peer capability (declarative — NOT trusted on its own) =====
+GPU0:   - yes yes yes
+GPU1: yes   - yes yes
+GPU2: yes yes   - yes
+GPU3: yes yes yes   -
+# cudaDeviceCanAccessPeer only. Phases 6/8/9 each found this bit set on a path that did not work. It is recorded, not believed.
+
+===== 4. functional collective validation + correctness gate =====
+--- candidate: <NCCL default, P2P enabled> ---
+  rc=0  transport: via P2P/CUMEM via SHM/direct/direct 
+  # CORRECTNESS loss_finite=True grads_finite=True param_sync_max_abs_diff=0.000e+00 steps_completed=6
+  VERDICT: accepted (param_sync_max_abs_diff=0.000e+00)
+
+===== 5. transport decision =====
+chosen: NCCL defaults (P2P functional on this host)
+  measured transport: via P2P/CUMEM
+  measured transport: via SHM/direct/direct
+PREFLIGHT OK

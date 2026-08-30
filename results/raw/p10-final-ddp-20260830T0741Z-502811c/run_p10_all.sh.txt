@@ -1,0 +1,11 @@
+#!/bin/bash
+set -u
+cd /root/repo
+M='--layers 8 --heads 12 --embd 768 --vocab 16384 --seq 1024 --batch 16 --pool 4 --precision bf16'
+TRANSPORT=$(cat /root/p10_out/transport_env.txt 2>/dev/null)
+echo "### PRIMARY: transport selected by preflight = '${TRANSPORT:-<NCCL defaults>}'"
+TAG=final bash scripts/run_final_ddp.sh /root/p10_out "$TRANSPORT" $M
+echo
+echo "### ANCHOR: same three capacities forced onto SHM, for comparability with phase 9"
+TAG=shm SKIP_REF=1 bash scripts/run_final_ddp.sh /root/p10_out 'NCCL_P2P_DISABLE=1' $M
+echo '===== ALL BENCHMARKS DONE ====='

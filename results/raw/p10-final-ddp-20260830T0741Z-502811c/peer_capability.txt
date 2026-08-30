@@ -1,0 +1,5 @@
+GPU0:   - yes yes yes
+GPU1: yes   - yes yes
+GPU2: yes yes   - yes
+GPU3: yes yes yes   -
+# cudaDeviceCanAccessPeer only. Phases 6/8/9 each found this bit set on a path that did not work. It is recorded, not believed.
