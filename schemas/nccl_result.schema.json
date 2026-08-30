@@ -36,7 +36,8 @@
     },
     "phase": {
       "type": "string",
-      "pattern": "^phase[0-9]$"
+      "pattern": "^phase([0-9]|[1-9][0-9])$",
+      "description": "Phase that produced the row, e.g. phase1 ... phase10. Widened from a single digit when the project reached phase 10; every previously valid value still validates."
     },
     "timestamp": {
       "type": "string",

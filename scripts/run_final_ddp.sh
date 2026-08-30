@@ -31,6 +31,11 @@ mkdir -p "$OUT"
 WARMUP=${WARMUP:-12}      # DDP rebuilds its buckets in the first steps
 STEPS=${STEPS:-30}
 LAUNCHES=${LAUNCHES:-3}
+# SKIP_REF=1 runs only the three DDP capacities — used when the same matrix is
+# repeated under a second transport as a comparability anchor, where the
+# single-GPU floor and the serialised control do not need repeating.
+SKIP_REF=${SKIP_REF:-0}
+TAG=${TAG:-final}
 
 # shellcheck disable=SC2086
 export ${TRANSPORT_ENV:-DUMMY_UNUSED=1}
@@ -50,6 +55,7 @@ launch() {  # launch <tag> <port> <args...>
   [ "$rc" -eq 0 ] || echo "     !! non-zero exit; this configuration is not reportable"
 }
 
+if [ "$SKIP_REF" != "1" ]; then
 echo
 echo "===== single-GPU reference (compute floor) ====="
 for L in $(seq 0 $((LAUNCHES - 1))); do
@@ -57,19 +63,21 @@ for L in $(seq 0 $((LAUNCHES - 1))); do
   launch "single-L$L" 0 python3 "$T" --mode single --label single \
     --warmup $WARMUP --steps $STEPS --repeats 1 $MODEL
 done
+fi
 
 echo
 echo "===== DDP: reference, optimized, negative control ====="
 for MB in 25 4 64; do
   for L in $(seq 0 $((LAUNCHES - 1))); do
     # shellcheck disable=SC2086
-    launch "final-${MB}mb-L$L" 0 torchrun --nproc_per_node=4 \
+    launch "${TAG}-${MB}mb-L$L" 0 torchrun --nproc_per_node=4 \
       --master_port=$((29700 + MB * 10 + L)) "$T" --mode ddp --bucket-mb "$MB" \
-      --label "final-${MB}mb" --warmup $WARMUP --steps $STEPS --repeats 1 \
+      --label "${TAG}-${MB}mb" --warmup $WARMUP --steps $STEPS --repeats 1 \
       --nosync-probe $MODEL
   done
 done
 
+if [ "$SKIP_REF" != "1" ]; then
 echo
 echo "===== non-overlapped control (one flat AllReduce after backward) ====="
 for L in $(seq 0 $((LAUNCHES - 1))); do
@@ -78,16 +86,17 @@ for L in $(seq 0 $((LAUNCHES - 1))); do
     --master_port=$((29790 + L)) "$T" --mode serial --label serial \
     --warmup $WARMUP --steps $STEPS --repeats 1 $MODEL
 done
+fi
 
 echo
 echo "===== transport evidence for the benchmarked configuration ====="
 # shellcheck disable=SC2086
 NCCL_DEBUG=INFO timeout -k 20 600 torchrun --nproc_per_node=4 --master_port=29799 \
   "$T" --mode ddp --bucket-mb 4 --warmup 3 --steps 3 --repeats 1 $MODEL \
-  > "$OUT/nccl_debug_transport_final.txt" 2>&1
+  > "$OUT/nccl_debug_transport_${TAG}.txt" 2>&1
 echo "  rc=$?"
 grep -oE 'Channel [0-9]+[^:]*: [0-9]+\[[0-9]+\] -> [0-9]+\[[0-9]+\] via .*' \
-  "$OUT/nccl_debug_transport_final.txt" | sort -u | sed 's/^/  /'
+  "$OUT/nccl_debug_transport_${TAG}.txt" | sort -u | sed 's/^/  /'
 
 echo
 echo "===== FINAL BENCHMARK DONE ====="

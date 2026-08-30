@@ -36,7 +36,8 @@ def load(paths: list[Path]) -> list[dict]:
     return rows
 
 
-def group(rows: list[dict], relaunch: bool = False) -> dict[str, dict]:
+def group(rows: list[dict], relaunch: bool = False,
+          prefix: str | None = None) -> dict[str, dict]:
     """One entry per configuration, medians over repeats plus the spread.
 
     DDP rows are keyed by bucket capacity rather than by label so that the four
@@ -49,6 +50,8 @@ def group(rows: list[dict], relaunch: bool = False) -> dict[str, dict]:
         is_relaunch = label.startswith("relaunch-")
         if r["workload_kind"] == "ddp-training":
             if is_relaunch != relaunch:
+                continue
+            if prefix and not label.startswith(prefix):
                 continue
             key = f"{r['bucket_cap_mb']:g} MiB"
         elif relaunch:
@@ -144,11 +147,13 @@ def main() -> int:
                     help="bucket_cap_mb of the reference configuration")
     ap.add_argument("--optimized", type=float, default=None,
                     help="bucket_cap_mb of the configuration being proposed")
+    ap.add_argument("--prefix", default=None,
+                    help="only DDP rows whose config_label starts with this")
     a = ap.parse_args()
 
     rows = load(a.jsonl)
-    cells = group(rows)
-    relaunches = group(rows, relaunch=True)
+    cells = group(rows, prefix=a.prefix)
+    relaunches = group(rows, relaunch=True, prefix=a.prefix)
     print(f"# rows={len(rows)} configurations={len(cells)} "
           f"relaunch groups={len(relaunches)}\n")
 
