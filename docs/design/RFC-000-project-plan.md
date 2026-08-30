@@ -615,7 +615,26 @@ outright and Phase 8's collective timing predicted the real AllReduce within
 7.8%. NCCL's P2P transport deadlocked on a **third** distinct host. See
 `docs/experiments/p9-ddp-training.md`.*
 
-### Phase 10 — Reproducibility and final portfolio documentation
+### Phase 10 — Final optimization and synthesis
+
+The validated findings turned into a final DDP configuration, measured against
+its baseline and against a deliberately bad negative control on one host.
+
+*Status: complete (2026-08-30). Measured on 4 x NVIDIA A40. The functional
+preflight **accepted NCCL's default P2P/CUMEM + SHM ring on this host**, unlike
+the three hosts of Phases 8 and 9 where the same gate caught a deadlock — the
+lesson was always "test the path", never "P2P is broken". Reducing
+`bucket_cap_mb` from 25 to 4 cut the synchronisation penalty by 8.5%
+(10.72 -> 9.81 ms) but moved step time only 0.48% (152.35 -> 151.62 ms), which
+is **inside the run-to-run noise** on this transport; with P2P disabled the same
+change is a resolvable but sub-1% 0.93%. The robust result is the negative
+control: `bucket_cap_mb = 64` costs 3.6% (6.1% on SHM) despite producing 22%
+less total NCCL kernel work per step — isolated collective efficiency is not the
+optimization objective. Overlap is worth 20.1% of step time against a
+non-overlapped reduction; scaling efficiency 93.1%. See
+`docs/experiments/p10-final-optimization.md`.*
+
+### Phase 11 — Reproducibility and final portfolio documentation
 
 Reproducible experiments, final benchmark tables, plots, architecture
 documentation, bottleneck analysis, before/after optimization comparison,
