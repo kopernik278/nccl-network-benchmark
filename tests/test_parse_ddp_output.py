@@ -117,6 +117,29 @@ class TestDDPParsing(unittest.TestCase):
             self.assertAlmostEqual(ddp[0]["sync_cost_ms"], 50.0)
             self.assertAlmostEqual(ddp[1]["sync_cost_ms"], 52.0)
 
+    def test_probe_is_matched_within_its_own_launch(self):
+        # Independent launches of one configuration share a config_label, so
+        # matching on the label alone would subtract one launch's probe from
+        # another launch's backward. Two files, two different probes.
+        other = (STDOUT.replace("train,nosync,ddp-25mb-nosync,25,4,0,150.0000,40.0000,90.0000",
+                                "train,nosync,ddp-25mb-nosync,25,4,0,120.0000,40.0000,60.0000")
+                       .replace("train,ddp,ddp-25mb,25,4,0,200.0000,40.0000,140.0000",
+                                "train,ddp,ddp-25mb,25,4,0,180.0000,40.0000,120.0000"))
+        with tempfile.TemporaryDirectory() as td:
+            raw = make_raw(Path(td))
+            (raw / "ddp-25mb-L1.stdout.txt").write_text(other, encoding="utf-8")
+            rows, _ = P.build_rows(raw)
+            by_file = {}
+            for r in rows:
+                if r["workload_kind"] == "ddp-training":
+                    by_file.setdefault(Path(r["raw_output_path"]).name, []).append(r)
+            a = by_file["ddp-25mb.stdout.txt"][0]
+            b = by_file["ddp-25mb-L1.stdout.txt"][0]
+            self.assertAlmostEqual(a["backward_nosync_ms"], 90.0)
+            self.assertAlmostEqual(a["sync_cost_ms"], 50.0)
+            self.assertAlmostEqual(b["backward_nosync_ms"], 60.0)
+            self.assertAlmostEqual(b["sync_cost_ms"], 60.0)
+
     def test_missing_probe_leaves_sync_cost_null_and_is_reported(self):
         stdout = "\n".join(l for l in STDOUT.splitlines()
                            if not l.startswith("train,nosync"))

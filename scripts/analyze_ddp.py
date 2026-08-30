@@ -140,6 +140,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("jsonl", nargs="+", type=Path)
+    ap.add_argument("--baseline", type=float, default=None,
+                    help="bucket_cap_mb of the reference configuration")
+    ap.add_argument("--optimized", type=float, default=None,
+                    help="bucket_cap_mb of the configuration being proposed")
     a = ap.parse_args()
 
     rows = load(a.jsonl)
@@ -192,6 +196,37 @@ def main() -> int:
             print(f"  best DDP   : step {best['step_ms']:.2f} ms  {best['tokens_per_s']:,.0f} tok/s")
             print(f"  overlap saves {ser['step_ms'] - best['step_ms']:.2f} ms/step "
                   f"({(1 - best['step_ms'] / ser['step_ms']) * 100:.1f} %)")
+
+    if a.baseline is not None and a.optimized is not None:
+        ddp = {v["bucket_mb"]: v for v in cells.values() if v["kind"] == "ddp-training"}
+        b, o = ddp.get(a.baseline), ddp.get(a.optimized)
+        if b and o:
+            print(f"\n## baseline ({a.baseline:g} MiB) -> optimized ({a.optimized:g} MiB)\n")
+
+            def delta(name, bv, ov, unit="", higher_is_better=False):
+                if bv is None or ov is None:
+                    print(f"  {name:<28} n/a")
+                    return
+                pct = (ov - bv) / bv * 100.0
+                arrow = "better" if ((pct > 0) == higher_is_better) else "worse"
+                if abs(pct) < 1e-9:
+                    arrow = "unchanged"
+                print(f"  {name:<28} {bv:>10.2f}{unit} -> {ov:>10.2f}{unit}  "
+                      f"{pct:+6.2f} %  ({arrow})")
+
+            delta("step time", b["step_ms"], o["step_ms"], " ms")
+            delta("throughput", b["tokens_per_s"], o["tokens_per_s"], " tok/s",
+                  higher_is_better=True)
+            delta("sync cost (comm penalty)", b["sync_cost_ms"], o["sync_cost_ms"], " ms")
+            delta("backward", b["bwd_ms"], o["bwd_ms"], " ms")
+            print(f"  {'collectives per step':<28} {b['bucket_count']:>10} -> "
+                  f"{o['bucket_count']:>10}         "
+                  f"({o['bucket_count'] / b['bucket_count']:.1f}x more calls — the cost side)")
+            if single:
+                eb = b["tokens_per_s"] / (b["gpus"] * single["tokens_per_s"])
+                eo = o["tokens_per_s"] / (o["gpus"] * single["tokens_per_s"])
+                print(f"  {'scaling efficiency':<28} {eb * 100:>10.2f} % -> "
+                      f"{eo * 100:>10.2f} %  {(eo - eb) * 100:+6.2f} pp")
 
     if single:
         ddp = {k: v for k, v in cells.items() if v["kind"] == "ddp-training"}

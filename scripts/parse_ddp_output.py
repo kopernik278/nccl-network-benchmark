@@ -277,13 +277,16 @@ def build_rows(raw_dir: Path, phase: str = "phase9") -> tuple[list[dict[str, Any
 
 
 def attach_sync_cost(rows: list[dict], problems: list[str]) -> None:
-    """Pair each DDP row with the nosync probe that shares its label.
+    """Pair each DDP row with the nosync probe from its OWN launch.
 
-    The probe label is '<label>-nosync' by construction in train_ddp.py. A DDP
-    row with no probe keeps null sync_cost_ms rather than borrowing another
-    configuration's number.
+    The probe label is '<label>-nosync' by construction in train_ddp.py, but
+    independent launches of one configuration share a label — so matching on
+    the label alone would let one launch's probe be subtracted from another
+    launch's backward. The launch is identified by its output file, so the key
+    is (raw_output_path, label). A DDP row with no probe in its own file keeps
+    null sync_cost_ms rather than borrowing a number from elsewhere.
     """
-    probe = {r["config_label"][:-len("-nosync")]: r["backward_ms"]
+    probe = {(r["raw_output_path"], r["config_label"][:-len("-nosync")]): r["backward_ms"]
              for r in rows
              if r["workload_kind"] == "nosync-probe"
              and str(r["config_label"]).endswith("-nosync")
@@ -291,9 +294,10 @@ def attach_sync_cost(rows: list[dict], problems: list[str]) -> None:
     for r in rows:
         if r["workload_kind"] != "ddp-training":
             continue
-        base = probe.get(r["config_label"])
+        base = probe.get((r["raw_output_path"], r["config_label"]))
         if base is None:
-            problems.append(f"{r['config_label']}: no nosync probe -> sync_cost_ms null")
+            problems.append(f"{r['config_label']}: no nosync probe in its own run "
+                            f"-> sync_cost_ms null")
             continue
         r["backward_nosync_ms"] = base
         r["sync_cost_ms"] = round(r["backward_ms"] - base, 4)
