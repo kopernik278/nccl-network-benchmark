@@ -311,10 +311,9 @@ experiments this project did not run:
 
 ```text
 docs/
-  design/          RFCs: project plan, result schema
+  design/          RFC-001: result schema
   experiments/     one report per phase — the primary record
   REPRODUCING.md   environment, dependencies, minimal reproduction path
-  PORTFOLIO.md     project summary, resume bullets, interview guide
 schemas/           machine-readable result schema (JSON Schema)
 scripts/           env capture, preflight, benchmark runners, parsers, analysis, plots
 src/
@@ -334,7 +333,4 @@ benchmarks/        per-transport benchmark configurations
 ## Documentation
 
 - [`docs/REPRODUCING.md`](docs/REPRODUCING.md) — reproducibility guide
-- [`docs/PORTFOLIO.md`](docs/PORTFOLIO.md) — summary, resume bullets, interview guide
-- [`docs/design/RFC-000-project-plan.md`](docs/design/RFC-000-project-plan.md) — project plan and phase status
 - [`docs/design/RFC-001-result-schema.md`](docs/design/RFC-001-result-schema.md) — result schema
-- [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) — project context and phase definitions

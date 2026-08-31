@@ -3,7 +3,7 @@
 Status: designed, not yet executed
 Author: Claude Code (infrastructure/execution agent)
 Design date: 2026-08-26
-Related: `docs/design/RFC-000-project-plan.md`, `docs/design/RFC-001-result-schema.md`
+Related: `docs/design/RFC-001-result-schema.md`
 
 > This document contains **no measured results**. It defines what will be
 > measured, how, and what would count as success. Every number appearing in

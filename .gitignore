@@ -43,3 +43,6 @@ results/raw/*/*
 
 profiles/raw/*
 !profiles/raw/.gitkeep
+
+# Agent operating rules: kept locally, deliberately not published.
+CLAUDE.md
