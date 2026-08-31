@@ -14,6 +14,14 @@ Builds on: [Phase 8](p8-contention.md) · [Phase 7B](p7b-overlap.md)
 > percentage is a diagnostic and is reported next to step time, never instead
 > of it.
 
+> **Follow-up note added in Phase 11 (2026-08-31).** §5's bucket ordering was
+> re-measured in [Phase 10](p10-final-optimization.md) on a host with a
+> functionally healthy P2P transport. The 64 MiB penalty reproduced (3.6 %
+> there, 6.1 % on an SHM anchor); the 4 MiB advantage over 25 MiB **did not** —
+> it fell below run-to-run noise once the collective got faster. Read §5 as a
+> result for the SHM transport it was measured on.
+
+
 ---
 
 ## 1. Setup, topology and transport

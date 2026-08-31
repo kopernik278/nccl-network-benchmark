@@ -9,6 +9,16 @@ Builds on: [Phase 7A](p7a-harness-validation.md) · [Phase 6](p6-ring-allreduce.
 > communication hides behind compute and how much stays exposed. All numbers are
 > measured; profiler runs are used for mechanism only, never as timing samples.
 
+> **Refined by later phases (note added 2026-08-31).** The "4–16 MiB plateau"
+> below was measured on a *synthetic* bucket pipeline. [Phase 9](p9-ddp-training.md)
+> re-tested it in real DDP and found a shallow but statistically resolvable
+> gradient rather than a flat plateau, and [Phase 10](p10-final-optimization.md)
+> found that on a host with a functionally healthy P2P transport the 4 MiB vs
+> 25 MiB difference falls **below run-to-run noise**. The large-bucket penalty
+> reproduced everywhere; the small-bucket advantage did not. This report is
+> preserved as measured.
+
+
 ---
 
 ## 1. Setup and transport

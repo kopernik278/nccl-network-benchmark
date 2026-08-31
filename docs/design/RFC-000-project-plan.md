@@ -634,13 +634,25 @@ optimization objective. Overlap is worth 20.1% of step time against a
 non-overlapped reduction; scaling efficiency 93.1%. See
 `docs/experiments/p10-final-optimization.md`.*
 
-### Phase 11 — Reproducibility and final portfolio documentation
+### Phase 11 — Portfolio and reproducibility finalization
 
 Reproducible experiments, final benchmark tables, plots, architecture
 documentation, bottleneck analysis, before/after optimization comparison,
 explicit limitations, and portfolio-quality documentation.
 
-*Status: not started.*
+*Status: complete (2026-08-31). No paid GPU resources were provisioned. The
+project was renamed **NCCL Communication Performance Lab** and the README
+rewritten as a portfolio landing page with a causal 1-10 phase narrative, ten
+headline results, six figures, a Mermaid flow diagram, an experiment index, the
+reliability preflight, a cost summary distinguishing billed from
+lifecycle-estimated, and a "what did not work" section. Added
+`docs/REPRODUCING.md` (environment assumptions, dependencies, a six-step minimal
+path, and a GPU-free verification procedure) and `docs/PORTFOLIO.md` (summary,
+resume bullets, three-level interview guide). A claim audit added dated
+correction notes to Phases 5, 7B, 8 and 9 rather than rewriting them.
+**All 13 experiment summaries were confirmed to regenerate byte-for-byte from
+committed raw data (2 469 rows).** Two `FAILED-RUN-NOTE.md` files that the
+`.gitignore` allowlist had silently excluded were found and tracked.*
 
 ---
 

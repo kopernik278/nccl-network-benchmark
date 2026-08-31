@@ -36,6 +36,10 @@ results/raw/*/*
 !results/raw/*/*.txt
 !results/raw/*/*.json
 !results/raw/*/*.csv
+# Failure notes explain preserved failed runs and are referenced from the
+# experiment reports; the allowlist above silently excluded them until the
+# Phase 11 audit. Build logs stay excluded — they are artifacts, not evidence.
+!results/raw/*/*.md
 
 profiles/raw/*
 !profiles/raw/.gitkeep

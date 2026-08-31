@@ -19,6 +19,14 @@ Builds on: [Phase 7B](p7b-overlap.md) · [Phase 7A](p7a-harness-validation.md)
 > distinction is deliberate: the headline result of this phase is a *negative*
 > one, and negative results are easy to overstate.
 
+> **Follow-up note added in Phase 11 (2026-08-31).** §1.1's P2P deadlock later
+> reproduced on a third host in [Phase 9](p9-ddp-training.md) — and then did
+> **not** occur on a fourth host in [Phase 10](p10-final-optimization.md), where
+> the same functional gate accepted NCCL's default P2P ring. The finding is
+> therefore "the capability bit is not a functional test", not "P2P is broken on
+> this GPU or this provider".
+
+
 ---
 
 ## 1. Setup and transport

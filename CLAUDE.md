@@ -2,7 +2,7 @@
 
 ## Project
 
-NCCL / RDMA Communication Benchmark
+NCCL Communication Performance Lab (formerly "NCCL / RDMA Communication Benchmark")
 
 Target roles:
 

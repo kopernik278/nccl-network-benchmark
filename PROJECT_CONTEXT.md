@@ -2,7 +2,21 @@
 
 ## Project Name
 
-NCCL / RDMA Communication Benchmark
+**NCCL Communication Performance Lab**
+
+*Topology, collectives, Ring AllReduce, communication/compute overlap, and real
+DDP training optimization.*
+
+Positioned as an AI Training Infrastructure / distributed-training
+performance-engineering project, not as an NCCL benchmark repository. Renamed in
+Phase 11; the earlier working title was "NCCL / RDMA Communication Benchmark".
+
+**Phase status.** Phases 1, 2, 5, 6, 7A, 7B, 8, 9 and 10 are complete and
+measured; Phase 3 was deferred on cost and Phase 4 by user decision; Phase 11
+(portfolio and reproducibility finalization) is complete. The phase list below
+is the original plan — see
+[`docs/design/RFC-000-project-plan.md`](docs/design/RFC-000-project-plan.md)
+and [`README.md`](README.md) for current status.
 
 ## Career Target
 

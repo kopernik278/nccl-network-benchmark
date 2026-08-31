@@ -220,7 +220,7 @@ share the identical chunk arithmetic.
 
 ## 6. Results
 
-![Ring AllReduce vs NCCL](../../plots/p6-ring-allreduce.png)
+![Ring AllReduce vs NCCL](../../results/plots/p6-ring-allreduce.png)
 
 Latency (µs), 4 ranks, host-staged, mean of 20 iterations:
 

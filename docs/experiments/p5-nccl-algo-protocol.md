@@ -12,6 +12,15 @@ Previous: [Phase 2](p2-multigpu-scaling.md) · [Phase 3 design](phase3_multinode
 > it does not tune. No RoCE, InfiniBand, RDMA, or NVLink behaviour is measured
 > or claimed; none of that hardware was present.
 
+> **Scope note added in Phase 11 (2026-08-31).** The statement in §3 that "Tree
+> is defined for AllReduce/Broadcast/Reduce only" was established from a single
+> runtime rejection on **NCCL 2.25.1 with this build of nccl-tests**, and holds
+> for that configuration. It is a record of what this runtime rejected, not a
+> claim about NCCL in general or about other versions. §12's AUTO conclusions
+> are already labelled as *inferred from timings, not read from a log* (§9), and
+> that labelling stands.
+
+
 ---
 
 ## 1. Purpose
@@ -135,7 +144,7 @@ combination.
 
 ## 6. Results
 
-![NCCL algorithm and protocol characterization](../../plots/p5-algo-protocol.png)
+![NCCL algorithm and protocol characterization](../../results/plots/p5-algo-protocol.png)
 
 ### 6.1 AllReduce latency (µs), median of 3 — coarse scan
 

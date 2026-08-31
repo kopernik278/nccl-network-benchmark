@@ -185,7 +185,7 @@ happens during allocation, **not** per iteration.
 
 ## 6. Corrected results
 
-![Phase 7A harness validation](../../plots/p7a-harness-validation.png)
+![Phase 7A harness validation](../../results/plots/p7a-harness-validation.png)
 
 Latency (µs), median of **3 repeats**, spread in parentheses:
 

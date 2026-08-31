@@ -164,7 +164,7 @@ All pass at both rank counts.
 
 ## 6. Results
 
-![2 vs 4 GPU scaling curves](../../plots/p2-scaling-curves.png)
+![2 vs 4 GPU scaling curves](../../results/plots/p2-scaling-curves.png)
 
 Out-of-place, median of 3 repeats. GB/s = 10⁹ bytes/s.
 
@@ -190,7 +190,7 @@ Out-of-place, median of 3 repeats. GB/s = 10⁹ bytes/s.
 | Peak bus bandwidth | 0.28× | 0.24× | 0.29× |
 | **Bus bandwidth retained** | **28.0%** | **24.4%** | **28.9%** |
 
-![Scaling efficiency](../../plots/p2-scaling-efficiency.png)
+![Scaling efficiency](../../results/plots/p2-scaling-efficiency.png)
 
 ### Run-to-run variance (≥ 1 MiB, 3 repeats)
 
